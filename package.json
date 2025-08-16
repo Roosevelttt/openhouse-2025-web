@@ -1,0 +1,29 @@
+{
+  "name": "openhouse-2025-web",
+  "version": "1.0.0",
+  "description": "Skeleton for the new web frontend.",
+  "type": "module",
+  "scripts": {
+    "preinstall": "npx -y only-allow npm || true",
+    "postinstall": "svelte-kit sync",
+    "predev": "svelte-kit sync",
+    "dev": "vite dev",
+    "build": "vite build",
+    "preview": "vite preview",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@sveltejs/adapter-auto": "^6.1.0",
+    "@sveltejs/kit": "^2.31.0",
+    "@tsconfig/svelte": "^5.0.4",
+    "eslint": "^9.33.0",
+    "prettier": "^3.6.2",
+    "svelte": "^5.38.1",
+    "svelte-check": "^4.3.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2"
+  }
+}
