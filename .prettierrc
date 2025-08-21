@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "prettier-plugin-svelte",
+    "prettier-plugin-tailwindcss"
+  ],
+  "pluginSearchDirs": false,
+  "semi": true,
+  "singleQuote": true,
+  "svelteSortOrder": "options-scripts-markup-styles",
+  "svelteStrictMode": true,
+  "svelteAllowShorthand": true,
+  "svelteBracketNewLine": true
+}

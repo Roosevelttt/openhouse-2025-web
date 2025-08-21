@@ -1,0 +1,5 @@
+# Ignore all files
+/src/routes/
+
+# Except admin directory
+!/src/routes/admin/
