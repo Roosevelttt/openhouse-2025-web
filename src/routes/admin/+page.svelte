@@ -2,6 +2,8 @@
   import { get } from "$lib/api";
   import { onMount } from "svelte";
   import logoSmall from "$lib/images/logo_oh_small.png";
+  import Swal from "sweetalert2";
+  import ValidateButton from "./ValidateButton.svelte";
 
   type Participant = {
     id: string;
@@ -9,6 +11,7 @@
     name: string;
     line_id: string;
     phone: string;
+    ukm_id: string;
     ukm_name: string;
     payment: string;
     file_validated: number;
@@ -104,15 +107,18 @@
   $effect(() => {
     console.log("Current totalPages:", totalPages);
   });
+
+  function showPicture(src: string) {
+    Swal.fire({
+      imageUrl: `${src}`,
+      imageAlt: "A tall image",
+    });
+  }
 </script>
 
 <svelte:head>
   <title>OH Admin | Participants</title>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <link
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap"
-    rel="stylesheet"
-  />
 </svelte:head>
 
 <div class="font-plus-jakarta-sans flex h-screen">
@@ -224,14 +230,37 @@
             {#each paginatedData() as participant (`${participant.id}-${participant.ukm_name}`)}
               <tr>
                 <td class="p-2">{participant.nrp}</td>
-                <td class="p-2">{participant.name}</td>
+                <td class="p-2 text-nowrap">{participant.name}</td>
                 <td class="p-2">{participant.ukm_name}</td>
-                <td class="p-2">{participant.payment}</td>
+                <td class="p-2">
+                  {#if participant.payment}
+                    <button
+                      onclick={() => showPicture(participant.payment)}
+                      class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
+                      >Show</button
+                    >
+                  {/if}
+                </td>
                 <td class="p-2">{participant.line_id}</td>
                 <td class="p-2">{participant.phone}</td>
-                <td class="p-2">{participant.created_at}</td>
+                <td class="p-2"
+                  >{new Date(participant.created_at).toLocaleString("en-US", {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  })}</td
+                >
                 <td class="p-2">{participant.is_invited}</td>
                 <td class="p-2">{participant.payment_validated}</td>
+                <td class="text-nowrap">
+                  <ValidateButton
+                    nrp={participant.nrp}
+                    ukm={participant.ukm_id}
+                  />
+                  <button
+                    class="rounded bg-red-500 p-1 text-white hover:bg-red-400 active:bg-red-600"
+                    >Reject</button
+                  >
+                </td>
               </tr>
             {/each}
           </tbody>
