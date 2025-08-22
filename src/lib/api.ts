@@ -1,6 +1,6 @@
-import { PUBLIC_API_BASE } from '$env/static/public';
+import { PUBLIC_API_BASE } from "$env/static/public";
 
-const API_BASE = PUBLIC_API_BASE || '';
+const API_BASE = PUBLIC_API_BASE || "";
 
 export async function get<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { ...init });
@@ -8,3 +8,37 @@ export async function get<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json();
 }
 
+export async function post<T, U = object>(
+  path: string,
+  body: U,
+  init?: RequestInit,
+): Promise<T> {
+  const isJson = !(body instanceof FormData);
+
+  const headers = new Headers(init?.headers);
+  if (isJson && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    ...init,
+    headers,
+    body: isJson ? JSON.stringify(body) : (body as any),
+  });
+
+  const text = await res.text();
+  if (!res.ok) {
+    // Same robust error handling as GET
+    try {
+      const jsonError = JSON.parse(text);
+      throw new Error(jsonError.error || jsonError.message || text);
+    } catch {
+      throw new Error(text);
+    }
+  }
+
+  // If successful, parse the text as JSON. Handle empty responses.
+  // @ts-ignore
+  return text ? JSON.parse(text) : undefined;
+}
