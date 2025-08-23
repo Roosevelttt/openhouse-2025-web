@@ -219,6 +219,7 @@
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
+        fill="none"
         viewBox="0 0 24 24"
         stroke-width="1.5"
         stroke="currentColor"
@@ -265,6 +266,7 @@
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
+                    fill="currentColor"
                     class="size-6"
                   >
                     <path
@@ -291,6 +293,7 @@
 
             <svg
               xmlns="http://www.w3.org/2000/svg"
+              fill="none"
               viewBox="0 0 24 24"
               stroke-width="1.5"
               stroke="currentColor"
@@ -324,6 +327,7 @@
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
+                  fill="currentColor"
                   class="size-6"
                 >
                   <path
@@ -350,6 +354,7 @@
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
@@ -434,6 +439,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
@@ -462,6 +468,7 @@
                       {#if sortDirection === "asc"}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="1.5"
                           stroke="currentColor"
@@ -476,6 +483,7 @@
                       {:else}
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
                           viewBox="0 0 24 24"
                           stroke-width="1.5"
                           stroke="currentColor"
@@ -491,6 +499,7 @@
                     {:else}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
                         viewBox="0 0 24 24"
                         stroke-width="1.5"
                         stroke="currentColor"
@@ -571,6 +580,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
@@ -586,6 +596,7 @@
         <button onclick={previousPage} aria-label="Previous Page" class="p-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
@@ -604,6 +615,7 @@
         <button onclick={nextPage} aria-label="Next Page" class="p-2">
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
@@ -625,6 +637,7 @@
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
             stroke-width="1.5"
             stroke="currentColor"
