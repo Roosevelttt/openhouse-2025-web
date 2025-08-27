@@ -15,13 +15,8 @@
   let isLoading = $state(false);
 
   // --- The Refactored Fetch Function ---
-  async function validate(type: "payment" | "file"): Promise<void> {
+  async function reject(type: "payment" | "file"): Promise<void> {
     isLoading = true;
-
-    const fileType = {
-      file: "Selection",
-      payment: "Payment",
-    };
 
     try {
       const requestBody = { nrp, ukm, type };
@@ -29,7 +24,7 @@
       // The post helper now directly returns the data we need or throws an error.
       // No more manual response checking!
       const data = await post<PaymentValidationResponse>(
-        "/api/payment/validate",
+        "/api/payment/reject",
         requestBody,
       );
 
@@ -37,11 +32,19 @@
 
       // If we get here, the request was successful (res.ok was true)
       if (data.message === "true") {
-        await Swal.fire({
-          title: `${fileType[type]} Validated Successfully`,
-          text: `NRP: ${nrp}`,
-          icon: "success",
-        });
+        if (type === "file") {
+          await Swal.fire({
+            title: "Selection Rejected Successfully",
+            text: `NRP: ${nrp}`,
+            icon: "success",
+          });
+        } else {
+          await Swal.fire({
+            title: "Payment Rejected Successfully",
+            text: `NRP: ${nrp}`,
+            icon: "success",
+          });
+        }
         window.location.reload();
       } else {
         // 'warning' case from the backend
@@ -52,11 +55,8 @@
         });
       }
     } catch (error: Error | any) {
-      // The catch block now handles ALL errors (network, 4xx, 5xx)
       const errors: Record<string, string> = {
-        false: `${fileType[type]} has already been validated`,
-        not_yet: "The selection file hasn't been validated",
-        warning: "This participant has been rejected",
+        false: "Payment has been validated",
       };
       const errorMessage =
         errors[JSON.parse(error.message).message] ||
@@ -72,9 +72,9 @@
     }
   }
 
-  function handleValidate() {
+  function handleReject() {
     Swal.fire({
-      title: "Which to validate?",
+      title: "Which to reject?",
       text: `${nrp}`,
       icon: "question",
       showCancelButton: false,
@@ -85,22 +85,22 @@
       denyButtonText: "PAYMENT",
     }).then((result) => {
       if (result.isDenied) {
-        validate("payment");
+        reject("payment");
       } else if (result.isConfirmed) {
-        validate("file");
+        reject("file");
       }
     });
   }
 </script>
 
 <button
-  class="rounded bg-green-500 p-1 text-white hover:bg-green-400 active:bg-green-600"
-  onclick={handleValidate}
+  class="rounded bg-red-500 p-1 text-white hover:bg-red-400 active:bg-red-600"
+  onclick={handleReject}
   disabled={isLoading}
 >
   {#if isLoading}
-    Validating...
+    Rejecting...
   {:else}
-    Validate
+    Reject
   {/if}
 </button>

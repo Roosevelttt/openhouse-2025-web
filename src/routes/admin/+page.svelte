@@ -5,6 +5,7 @@
   import logoSmall from "$lib/images/logo_oh_small.png";
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
+  import RejectButton from "./RejectButton.svelte";
 
   type Ukm = {
     id: string;
@@ -45,8 +46,8 @@
       { Header: "Payment", accessor: "payment" },
       { Header: "Phone", accessor: "phone" },
       { Header: "Line ID", accessor: "line_id" },
-      { Header: "Tanggal Bayar", accessor: "file_validated" },
-      { Header: "Is Invited", accessor: "created_at" },
+      { Header: "Tanggal Bayar", accessor: "created_at" },
+      { Header: "File Validated", accessor: "file_validated" },
       { Header: "Payment Validated", accessor: "payment_validated" },
     ],
   });
@@ -370,7 +371,7 @@
       </div>
     </div>
   </nav>
-  <nav class="flex flex-col gap-6 p-6 md:ms-64">
+  <nav class="flex w-full flex-col gap-6 p-6 md:ms-64">
     <h1 class="text-2xl font-bold tracking-wide text-gray-800">
       List Pendaftar & Validasi
     </h1>
@@ -455,7 +456,7 @@
       </div>
 
       <div class="overflow-auto">
-        <table class="table-fixed">
+        <table class="min-w-full table-fixed">
           <thead>
             <tr class="border-b border-b-gray-300 text-gray-800">
               {#each tableData.columns as column}
@@ -543,17 +544,17 @@
                     timeStyle: "short",
                   })}</td
                 >
-                <td class="p-2 ps-6">{participant.is_invited}</td>
+                <td class="p-2 ps-6">{participant.file_validated}</td>
                 <td class="p-2 ps-6">{participant.payment_validated}</td>
                 <td class="text-nowrap">
                   <ValidateButton
                     nrp={participant.nrp}
                     ukm={participant.ukm_id}
                   />
-                  <button
-                    class="rounded bg-red-500 p-1 text-white hover:bg-red-400 active:bg-red-600"
-                    >Reject</button
-                  >
+                  <RejectButton
+                    nrp={participant.nrp}
+                    ukm={participant.ukm_id}
+                  />
                 </td>
               </tr>
             {/each}
