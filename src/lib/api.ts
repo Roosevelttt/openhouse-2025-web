@@ -23,7 +23,11 @@ export async function post<T, U = object>(
     headers.set("Content-Type", "application/json");
   }
 
-  const res = await fetch(`${API_BASE}${path}`, {
+  const fullUrl = `${API_BASE}${path}`;
+  console.log('POST URL:', fullUrl);
+  console.log('Body type:', body instanceof FormData ? 'FormData' : 'JSON');
+
+  const res = await fetch(fullUrl, {
     method: "POST",
     credentials: "include",
     ...init,
