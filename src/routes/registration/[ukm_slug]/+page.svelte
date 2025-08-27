@@ -1,0 +1,239 @@
+<script lang="ts">
+  import { page } from '$app/stores';
+  import { onMount } from 'svelte';
+  import { get, post } from '$lib/api';
+
+  // Get the slug from the URL parameter
+  $: slug = $page.params.ukm_slug;
+
+  let ukm: { id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number } | null = null;
+  let userNrp: string | null = null;
+  let loading = true;
+  let error: string | null = null;
+  let success = false;
+
+  // Form data
+  let code: string = '';
+  let paymentFile: FileList;
+  let driveUrl: string = '';
+  let submitting = false;
+
+  onMount(async () => {
+    try {
+      // For now, let's skip session check and use a placeholder NRP
+      // You can implement proper session management later
+      userNrp = "050423075"; // Using a more realistic existing NRP format
+
+      // Fetch all UKMs and find the one with matching slug
+      const ukms = await get('/api/ukms');
+      ukm = ukms.find((u: any) => u.slug === slug) || null;
+      
+      if (!ukm) {
+        error = 'UKM not found';
+      }
+    } catch (e: any) {
+      error = e.message || 'Failed to load UKM data';
+      console.error('Error loading UKM:', e);
+    } finally {
+      loading = false;
+    }
+  });
+
+  async function handleSubmit() {
+    if (!ukm || !userNrp || !code.trim() || !paymentFile || paymentFile.length === 0 || !driveUrl.trim()) {
+      error = 'Please fill all fields and select a payment proof file.';
+      return;
+    }
+
+    submitting = true;
+    error = null;
+
+    try {
+      const formData = new FormData();
+      formData.append('ukm_id', ukm.id); // Hidden field
+      formData.append('nrp', userNrp);
+      formData.append('code', code.trim());
+      formData.append('payment', paymentFile[0]);
+      formData.append('drive_url', driveUrl.trim());
+
+      console.log('Submitting registration data:', {
+        ukm_id: ukm.id,
+        nrp: userNrp,
+        code: code.trim(),
+        drive_url: driveUrl.trim(),
+        payment_file: paymentFile[0].name
+      });
+
+      await post('/api/registrations', formData);
+      success = true;
+    } catch (e: any) {
+      console.error('Registration error:', e);
+      error = e.message || 'Registration failed. Please try again.';
+      
+      // Additional debugging info
+      if (e.message === 'Failed to fetch') {
+        error = 'Cannot connect to server. Please check if the API server is running.';
+      }
+    } finally {
+      submitting = false;
+    }
+  }
+   
+
+  function goBack() {
+    window.location.href = '/registration';
+  }
+</script>
+
+<svelte:head>
+  <title>{ukm ? `Register for ${ukm.name}` : 'UKM Registration'}</title>
+</svelte:head>
+
+<div class="container mx-auto p-8 max-w-2xl">
+  {#if loading}
+    <div class="flex justify-center items-center py-16">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <p class="ml-4 text-gray-600">Loading UKM details...</p>
+    </div>
+  {:else if error && !ukm}
+    <div class="text-center py-16">
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+        <span class="font-medium">Error:</span> {error}
+      </div>
+      <button 
+        on:click={goBack}
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
+      >
+        Back to UKM List
+      </button>
+    </div>
+  {:else if success}
+    <div class="text-center py-16">
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6">
+        <h2 class="text-xl font-bold mb-2">Registration Successful! ✅</h2>
+        <p>Your registration for <strong>{ukm?.name}</strong> has been submitted successfully.</p>
+        <p class="text-sm mt-2">You will receive confirmation once your payment is verified.</p>
+      </div>
+      <button 
+        on:click={goBack}
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium"
+      >
+        Back to UKM List
+      </button>
+    </div>
+  {:else if ukm}
+    <!-- UKM Info Header -->
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6 mb-8">
+      <div class="flex items-center justify-between mb-4">
+        <h1 class="text-3xl font-bold text-gray-800">{ukm.name}</h1>
+        <button 
+          on:click={goBack}
+          class="text-gray-500 hover:text-gray-700 text-sm underline"
+        >
+          ← Back to UKM List
+        </button>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <p class="text-sm text-gray-600">Registration Fee</p>
+          <p class="text-xl font-bold text-blue-600">
+            {ukm.regist_fee > 0 ? `Rp ${ukm.regist_fee.toLocaleString('id-ID')}` : 'Free'}
+          </p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg">
+          <p class="text-sm text-gray-600">Available Slots</p>
+          <p class="text-xl font-bold text-green-600">{ukm.max_slot - ukm.current_slot} left</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Registration Form -->
+    <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Registration Form</h2>
+
+      {#if error}
+        <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+          <span class="font-medium">Error:</span> {error}
+        </div>
+      {/if}
+
+      <form on:submit|preventDefault={handleSubmit} class="space-y-6">
+        <!-- Hidden UKM ID field -->
+        <input type="hidden" value={ukm.id} />
+
+        <!-- Code Field -->
+        <div>
+          <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
+            Code <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="code" 
+            bind:value={code}
+            placeholder="Enter registration code"
+            required
+            class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          <p class="mt-1 text-sm text-gray-500">
+            Enter the registration code provided by the UKM
+          </p>
+        </div>
+
+        <!-- Payment Proof Upload -->
+        <div>
+          <label for="payment" class="block text-sm font-medium text-gray-700 mb-2">
+            Payment Proof <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="file" 
+            id="payment" 
+            bind:files={paymentFile}
+            accept="image/*,.pdf"
+            required
+            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          <p class="mt-1 text-sm text-gray-500">
+            Upload proof of payment (PNG, JPG, or PDF, max 5MB)
+          </p>
+        </div>
+
+        <!-- Google Drive URL -->
+        <div>
+          <label for="drive_url" class="block text-sm font-medium text-gray-700 mb-2">
+            Google Drive URL <span class="text-red-500">*</span>
+          </label>
+          <input 
+            type="url" 
+            id="drive_url" 
+            bind:value={driveUrl}
+            placeholder="https://drive.google.com/..."
+            required
+            class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          <p class="mt-1 text-sm text-gray-500">
+            Share a Google Drive link to your application documents
+          </p>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-6">
+          <button 
+            type="submit"
+            disabled={submitting}
+            class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 {submitting ? 'cursor-not-allowed' : ''}"
+          >
+            {submitting ? 'Submitting...' : 'Submit Registration'}
+          </button>
+        </div>
+      </form>
+    </div>
+  {/if}
+</div>
+
+<style>
+  .container {
+    max-width: 800px;
+  }
+</style>
+
