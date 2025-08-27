@@ -9,10 +9,12 @@
   interface PaymentValidationResponse {
     message: "true" | "false" | "not_yet" | string;
   }
-
-  // Props to pass NRP and UKM to this component
-
   let isLoading = $state(false);
+
+  const fileType = {
+    file: "Selection",
+    payment: "Payment",
+  };
 
   // --- The Refactored Fetch Function ---
   async function reject(type: "payment" | "file"): Promise<void> {
@@ -32,19 +34,11 @@
 
       // If we get here, the request was successful (res.ok was true)
       if (data.message === "true") {
-        if (type === "file") {
-          await Swal.fire({
-            title: "Selection Rejected Successfully",
-            text: `NRP: ${nrp}`,
-            icon: "success",
-          });
-        } else {
-          await Swal.fire({
-            title: "Payment Rejected Successfully",
-            text: `NRP: ${nrp}`,
-            icon: "success",
-          });
-        }
+        await Swal.fire({
+          title: `${fileType[type]} Rejected Successfully`,
+          text: `NRP: ${nrp}`,
+          icon: "success",
+        });
         window.location.reload();
       } else {
         // 'warning' case from the backend
@@ -56,7 +50,7 @@
       }
     } catch (error: Error | any) {
       const errors: Record<string, string> = {
-        false: "Payment has been validated",
+        false: `${fileType[type]} has already been rejected.`,
       };
       const errorMessage =
         errors[JSON.parse(error.message).message] ||
