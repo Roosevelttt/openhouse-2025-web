@@ -196,7 +196,7 @@
   function showPicture(src: string) {
     Swal.fire({
       imageUrl: `${src}`,
-      imageAlt: "A tall image",
+      imageAlt: `${src}`,
     });
   }
 </script>
@@ -213,7 +213,7 @@
     class="inset-y-0 min-w-64 flex-col gap-6 bg-white text-sm font-semibold text-nowrap text-gray-800 shadow-lg md:fixed md:flex"
   >
     <button
-      class="m-4 md:hidden"
+      class="float-right m-4 md:hidden"
       onclick={toggleMenu}
       aria-label="Toggle menu"
       aria-expanded={isMenuOpen}
@@ -247,13 +247,13 @@
     <!--  Mobile view  -->
     {#if isMenuOpen}
       <div
-        class="flex h-full flex-col"
+        class="flex h-full w-full flex-col"
         class:nav-mobile-open={isMenuOpen}
         class:nav-mobile-closed={!isMenuOpen}
         transition:slide
       >
-        <div class="flex justify-center">
-          <img src={logoSmall} alt="Logo" class="w-32" />
+        <div class="flex">
+          <img src={logoSmall} alt="Logo" class="ms-8 w-32" />
         </div>
         <div class="flex h-full flex-col md:justify-between">
           <ul>
@@ -292,20 +292,22 @@
               </span>
             </div>
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-              />
-            </svg>
+            <a href="/api/admin/logout" aria-label="logout">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
@@ -353,20 +355,22 @@
             </span>
           </div>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-            />
-          </svg>
+          <a href="/api/admin/logout" aria-label="logout">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+              />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
