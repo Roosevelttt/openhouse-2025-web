@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import { get } from "$lib/api";
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
@@ -64,6 +65,9 @@
       error = e.message;
     }
   });
+
+  // Construct the full, absolute URL for the download link
+  const exportUrl = `${PUBLIC_API_BASE}/api/export/participants`;
 
   let isMenuOpen = $state(false);
 
@@ -393,9 +397,13 @@
             <option value={ukm.name}>{ukm.name}</option>
           {/each}
         </select>
-        <button class="min-h-10 rounded border border-gray-300 p-2">
-          Download CSV
-        </button>
+        <a
+          href={exportUrl}
+          class="min-h-10 rounded border border-gray-300 p-2"
+          download
+        >
+          Download Excel
+        </a>
         <button
           onclick={() => filterFileValidated("accepted")}
           class={[
