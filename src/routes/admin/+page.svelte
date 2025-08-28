@@ -52,8 +52,8 @@
       { Header: "Nama", accessor: "name" },
       { Header: "UKM", accessor: "ukm_name" },
       { Header: "File", accessor: "payment" },
-      { Header: "Phone", accessor: "phone" },
       { Header: "Line ID", accessor: "line_id" },
+      { Header: "Phone", accessor: "phone" },
       // { Header: "Tanggal Bayar", accessor: "created_at" }, // GA PAKAI kata rose
       // { Header: "File Validated", accessor: "file_validated" }, // GA PAKAI kata rose
       { Header: "Validated", accessor: "payment_validated" },
