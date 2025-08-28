@@ -26,10 +26,17 @@
     ukm_id: string;
     ukm_name: string;
     payment: string;
+    drive_url: string;
     file_validated: number;
     payment_validated: number;
     created_at: string;
     is_invited: number;
+  };
+
+  const validationStatus: Record<number, string> = {
+    0: "Pending",
+    1: "Accepted",
+    2: "Rejected",
   };
 
   // Define a type for our column configuration
@@ -44,12 +51,12 @@
       { Header: "NRP", accessor: "nrp" },
       { Header: "Nama", accessor: "name" },
       { Header: "UKM", accessor: "ukm_name" },
-      { Header: "Payment", accessor: "payment" },
+      { Header: "File", accessor: "payment" },
       { Header: "Phone", accessor: "phone" },
       { Header: "Line ID", accessor: "line_id" },
-      { Header: "Tanggal Bayar", accessor: "created_at" },
-      { Header: "File Validated", accessor: "file_validated" },
-      { Header: "Payment Validated", accessor: "payment_validated" },
+      // { Header: "Tanggal Bayar", accessor: "created_at" }, // GA PAKAI kata rose
+      // { Header: "File Validated", accessor: "file_validated" }, // GA PAKAI kata rose
+      { Header: "Validated", accessor: "payment_validated" },
     ],
   });
 
@@ -112,17 +119,17 @@
       switch (fileValidatedStatusFilters) {
         case "pending":
           processedData = processedData.filter(
-            (item) => item.file_validated === 0,
+            (item) => item.payment_validated === 0,
           );
           break;
         case "accepted":
           processedData = processedData.filter(
-            (item) => item.file_validated === 1,
+            (item) => item.payment_validated === 1,
           );
           break;
         case "rejected":
           processedData = processedData.filter(
-            (item) => item.file_validated === 2,
+            (item) => item.payment_validated === 2,
           );
           break;
       }
@@ -539,25 +546,34 @@
                 <td class="p-2 ps-6">{participant.nrp}</td>
                 <td class="p-2 ps-6 text-nowrap">{participant.name}</td>
                 <td class="p-2 ps-6">{participant.ukm_name}</td>
-                <td class="p-2 ps-6">
+                <td class="flex gap-4 p-2 ps-6">
                   {#if participant.payment}
                     <button
                       onclick={() => showPicture(participant.payment)}
                       class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
-                      >Show</button
+                      >Payment</button
+                    >
+                  {/if}
+                  {#if participant.drive_url}
+                    <a
+                      href={participant.drive_url}
+                      class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
+                      >Portfolio</a
                     >
                   {/if}
                 </td>
                 <td class="p-2 ps-6">{participant.line_id}</td>
                 <td class="p-2 ps-6">{participant.phone}</td>
-                <td class="p-2 ps-6"
-                  >{new Date(participant.created_at).toLocaleString("en-US", {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  })}</td
+                <td
+                  class={[
+                    "p-2 px-6 font-bold",
+                    participant.payment_validated === 0
+                      ? "text-sky-500"
+                      : participant.payment_validated === 1
+                        ? "text-green-500"
+                        : "text-red-500",
+                  ]}>{validationStatus[participant.payment_validated]}</td
                 >
-                <td class="p-2 ps-6">{participant.file_validated}</td>
-                <td class="p-2 ps-6">{participant.payment_validated}</td>
                 <td class="text-nowrap">
                   <ValidateButton
                     nrp={participant.nrp}

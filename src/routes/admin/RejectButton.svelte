@@ -50,7 +50,8 @@
       }
     } catch (error: Error | any) {
       const errors: Record<string, string> = {
-        false: `${fileType[type]} has already been rejected.`,
+        false: `${nrp} has already been rejected.`,
+        validated: `${nrp} has already been validated.`,
       };
       const errorMessage =
         errors[JSON.parse(error.message).message] ||
@@ -68,20 +69,20 @@
 
   function handleReject() {
     Swal.fire({
-      title: "Which to reject?",
+      title: "Are you sure to Reject?",
       text: `${nrp}`,
       icon: "question",
       showCancelButton: false,
       showDenyButton: true,
-      confirmButtonColor: "#4ed630",
-      denyButtonColor: "#30aad6",
-      confirmButtonText: "SELECTION",
-      denyButtonText: "PAYMENT",
+      confirmButtonColor: "#cf142b",
+      denyButtonColor: "#4ed630",
+      confirmButtonText: "REJECT",
+      denyButtonText: "CANCEL",
     }).then((result) => {
-      if (result.isDenied) {
+      if (result.isConfirmed) {
         reject("payment");
-      } else if (result.isConfirmed) {
-        reject("file");
+        // } else if (result.isConfirmed) {
+        //   reject("file");
       }
     });
   }
