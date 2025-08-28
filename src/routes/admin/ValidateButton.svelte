@@ -54,9 +54,8 @@
     } catch (error: Error | any) {
       // The catch block now handles ALL errors (network, 4xx, 5xx)
       const errors: Record<string, string> = {
-        false: `${fileType[type]} has already been validated`,
-        not_yet: "The selection file hasn't been validated",
-        warning: "This participant has been rejected",
+        false: `${nrp} has already been validated`,
+        warning: `${nrp} has already been rejected`,
       };
       const errorMessage =
         errors[JSON.parse(error.message).message] ||
@@ -74,20 +73,21 @@
 
   function handleValidate() {
     Swal.fire({
-      title: "Which to validate?",
+      title: "Are you sure to Accept?",
       text: `${nrp}`,
       icon: "question",
       showCancelButton: false,
       showDenyButton: true,
       confirmButtonColor: "#4ed630",
-      denyButtonColor: "#30aad6",
-      confirmButtonText: "SELECTION",
-      denyButtonText: "PAYMENT",
+      denyButtonColor: "#cf142b",
+      confirmButtonText: "YES",
+      denyButtonText: "CANCEL",
     }).then((result) => {
-      if (result.isDenied) {
+      if (result.isConfirmed) {
         validate("payment");
-      } else if (result.isConfirmed) {
-        validate("file");
+        // // Gak jadi dipake oeeee apaan
+        // } else if (result.isConfirmed) {
+        //   validate("file");
       }
     });
   }
