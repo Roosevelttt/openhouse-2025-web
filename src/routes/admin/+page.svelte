@@ -214,6 +214,33 @@
       imageAlt: `${src}`,
     });
   }
+
+  async function handleLogout() {
+    try {
+      const response = await fetch(`${PUBLIC_API_BASE}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed');
+        Swal.fire({
+          icon: 'error',
+          title: 'Logout Failed',
+          text: 'There was an error logging out. Please try again.'
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Logout Failed',
+        text: 'There was an error logging out. Please try again.'
+      });
+    }
+  }
 </script>
 
 <svelte:head>
@@ -307,7 +334,7 @@
               </span>
             </div>
 
-            <a href="/api/admin/logout" aria-label="logout">
+            <button onclick={handleLogout} aria-label="logout">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -322,7 +349,7 @@
                   d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
                 />
               </svg>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -370,7 +397,7 @@
             </span>
           </div>
 
-          <a href="/api/admin/logout" aria-label="logout">
+          <button onclick={handleLogout} aria-label="logout">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -385,7 +412,7 @@
                 d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
               />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </div>
