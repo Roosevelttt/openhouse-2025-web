@@ -10,7 +10,7 @@ import { logger } from '$lib/stores/logger';
     let sessionValues = {};
 
     try {
-      const response = await fetch(`${PUBLIC_API_BASE}/api/session/values`, {
+      const response = await fetch(`${PUBLIC_API_BASE}/api/user/session/values`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
