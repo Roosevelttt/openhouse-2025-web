@@ -1,10 +1,12 @@
 <script lang="ts">
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import { get } from "$lib/api";
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
   import logoSmall from "$lib/images/logo_oh_small.png";
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
+  import RejectButton from "./RejectButton.svelte";
 
   type Ukm = {
     id: string;
@@ -24,10 +26,17 @@
     ukm_id: string;
     ukm_name: string;
     payment: string;
+    drive_url: string;
     file_validated: number;
     payment_validated: number;
     created_at: string;
     is_invited: number;
+  };
+
+  const validationStatus: Record<number, string> = {
+    0: "Pending",
+    1: "Accepted",
+    2: "Rejected",
   };
 
   // Define a type for our column configuration
@@ -42,12 +51,12 @@
       { Header: "NRP", accessor: "nrp" },
       { Header: "Nama", accessor: "name" },
       { Header: "UKM", accessor: "ukm_name" },
-      { Header: "Payment", accessor: "payment" },
-      { Header: "Phone", accessor: "phone" },
+      { Header: "File", accessor: "payment" },
       { Header: "Line ID", accessor: "line_id" },
-      { Header: "Tanggal Bayar", accessor: "file_validated" },
-      { Header: "Is Invited", accessor: "created_at" },
-      { Header: "Payment Validated", accessor: "payment_validated" },
+      { Header: "Phone", accessor: "phone" },
+      // { Header: "Tanggal Bayar", accessor: "created_at" }, // GA PAKAI kata rose
+      // { Header: "File Validated", accessor: "file_validated" }, // GA PAKAI kata rose
+      { Header: "Validated", accessor: "payment_validated" },
     ],
   });
 
@@ -63,6 +72,9 @@
       error = e.message;
     }
   });
+
+  // Construct the full, absolute URL for the download link
+  const exportUrl = `${PUBLIC_API_BASE}/api/export/participants`;
 
   let isMenuOpen = $state(false);
 
@@ -107,17 +119,17 @@
       switch (fileValidatedStatusFilters) {
         case "pending":
           processedData = processedData.filter(
-            (item) => item.file_validated === 0,
+            (item) => item.payment_validated === 0,
           );
           break;
         case "accepted":
           processedData = processedData.filter(
-            (item) => item.file_validated === 1,
+            (item) => item.payment_validated === 1,
           );
           break;
         case "rejected":
           processedData = processedData.filter(
-            (item) => item.file_validated === 2,
+            (item) => item.payment_validated === 2,
           );
           break;
       }
@@ -195,7 +207,7 @@
   function showPicture(src: string) {
     Swal.fire({
       imageUrl: `${src}`,
-      imageAlt: "A tall image",
+      imageAlt: `${src}`,
     });
   }
 </script>
@@ -212,7 +224,7 @@
     class="inset-y-0 min-w-64 flex-col gap-6 bg-white text-sm font-semibold text-nowrap text-gray-800 shadow-lg md:fixed md:flex"
   >
     <button
-      class="m-4 md:hidden"
+      class="float-right m-4 md:hidden"
       onclick={toggleMenu}
       aria-label="Toggle menu"
       aria-expanded={isMenuOpen}
@@ -246,13 +258,13 @@
     <!--  Mobile view  -->
     {#if isMenuOpen}
       <div
-        class="flex h-full flex-col"
+        class="flex h-full w-full flex-col"
         class:nav-mobile-open={isMenuOpen}
         class:nav-mobile-closed={!isMenuOpen}
         transition:slide
       >
-        <div class="flex justify-center">
-          <img src={logoSmall} alt="Logo" class="w-32" />
+        <div class="flex">
+          <img src={logoSmall} alt="Logo" class="ms-8 w-32" />
         </div>
         <div class="flex h-full flex-col md:justify-between">
           <ul>
@@ -291,20 +303,22 @@
               </span>
             </div>
 
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-              />
-            </svg>
+            <a href="/api/admin/logout" aria-label="logout">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+                />
+              </svg>
+            </a>
           </div>
         </div>
       </div>
@@ -352,25 +366,27 @@
             </span>
           </div>
 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-            />
-          </svg>
+          <a href="/api/admin/logout" aria-label="logout">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
+              />
+            </svg>
+          </a>
         </div>
       </div>
     </div>
   </nav>
-  <nav class="flex flex-col gap-6 p-6 md:ms-64">
+  <nav class="flex w-full flex-col gap-6 p-6 md:ms-64">
     <h1 class="text-2xl font-bold tracking-wide text-gray-800">
       List Pendaftar & Validasi
     </h1>
@@ -388,9 +404,13 @@
             <option value={ukm.name}>{ukm.name}</option>
           {/each}
         </select>
-        <button class="min-h-10 rounded border border-gray-300 p-2">
-          Download CSV
-        </button>
+        <a
+          href={exportUrl}
+          class="min-h-10 rounded border border-gray-300 p-2"
+          download
+        >
+          Download Excel
+        </a>
         <button
           onclick={() => filterFileValidated("accepted")}
           class={[
@@ -455,7 +475,7 @@
       </div>
 
       <div class="overflow-auto">
-        <table class="table-fixed">
+        <table class="min-w-full table-fixed">
           <thead>
             <tr class="border-b border-b-gray-300 text-gray-800">
               {#each tableData.columns as column}
@@ -526,34 +546,43 @@
                 <td class="p-2 ps-6">{participant.nrp}</td>
                 <td class="p-2 ps-6 text-nowrap">{participant.name}</td>
                 <td class="p-2 ps-6">{participant.ukm_name}</td>
-                <td class="p-2 ps-6">
+                <td class="flex gap-4 p-2 ps-6">
                   {#if participant.payment}
                     <button
                       onclick={() => showPicture(participant.payment)}
                       class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
-                      >Show</button
+                      >Payment</button
+                    >
+                  {/if}
+                  {#if participant.drive_url}
+                    <a
+                      href={participant.drive_url}
+                      class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
+                      >Portfolio</a
                     >
                   {/if}
                 </td>
                 <td class="p-2 ps-6">{participant.line_id}</td>
                 <td class="p-2 ps-6">{participant.phone}</td>
-                <td class="p-2 ps-6"
-                  >{new Date(participant.created_at).toLocaleString("en-US", {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  })}</td
+                <td
+                  class={[
+                    "p-2 px-6 font-bold",
+                    participant.payment_validated === 0
+                      ? "text-sky-500"
+                      : participant.payment_validated === 1
+                        ? "text-green-500"
+                        : "text-red-500",
+                  ]}>{validationStatus[participant.payment_validated]}</td
                 >
-                <td class="p-2 ps-6">{participant.is_invited}</td>
-                <td class="p-2 ps-6">{participant.payment_validated}</td>
                 <td class="text-nowrap">
                   <ValidateButton
                     nrp={participant.nrp}
                     ukm={participant.ukm_id}
                   />
-                  <button
-                    class="rounded bg-red-500 p-1 text-white hover:bg-red-400 active:bg-red-600"
-                    >Reject</button
-                  >
+                  <RejectButton
+                    nrp={participant.nrp}
+                    ukm={participant.ukm_id}
+                  />
                 </td>
               </tr>
             {/each}

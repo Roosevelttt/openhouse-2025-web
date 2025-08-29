@@ -9,19 +9,16 @@
   interface PaymentValidationResponse {
     message: "true" | "false" | "not_yet" | string;
   }
-
-  // Props to pass NRP and UKM to this component
-
   let isLoading = $state(false);
 
-  // --- The Refactored Fetch Function ---
-  async function validate(type: "payment" | "file"): Promise<void> {
-    isLoading = true;
+  const fileType = {
+    file: "Selection",
+    payment: "Payment",
+  };
 
-    const fileType = {
-      file: "Selection",
-      payment: "Payment",
-    };
+  // --- The Refactored Fetch Function ---
+  async function reject(type: "payment" | "file"): Promise<void> {
+    isLoading = true;
 
     try {
       const requestBody = { nrp, ukm, type };
@@ -29,7 +26,7 @@
       // The post helper now directly returns the data we need or throws an error.
       // No more manual response checking!
       const data = await post<PaymentValidationResponse>(
-        "/api/payment/validate",
+        "/api/payment/reject",
         requestBody,
       );
 
@@ -38,7 +35,7 @@
       // If we get here, the request was successful (res.ok was true)
       if (data.message === "true") {
         await Swal.fire({
-          title: `${fileType[type]} Validated Successfully`,
+          title: `${fileType[type]} Rejected Successfully`,
           text: `NRP: ${nrp}`,
           icon: "success",
         });
@@ -52,10 +49,9 @@
         });
       }
     } catch (error: Error | any) {
-      // The catch block now handles ALL errors (network, 4xx, 5xx)
       const errors: Record<string, string> = {
-        false: `${nrp} has already been validated`,
-        warning: `${nrp} has already been rejected`,
+        false: `${nrp} has already been rejected.`,
+        validated: `${nrp} has already been validated.`,
       };
       const errorMessage =
         errors[JSON.parse(error.message).message] ||
@@ -71,36 +67,35 @@
     }
   }
 
-  function handleValidate() {
+  function handleReject() {
     Swal.fire({
-      title: "Are you sure to Accept?",
+      title: "Are you sure to Reject?",
       text: `${nrp}`,
       icon: "question",
       showCancelButton: false,
       showDenyButton: true,
-      confirmButtonColor: "#4ed630",
-      denyButtonColor: "#cf142b",
-      confirmButtonText: "YES",
+      confirmButtonColor: "#cf142b",
+      denyButtonColor: "#4ed630",
+      confirmButtonText: "REJECT",
       denyButtonText: "CANCEL",
     }).then((result) => {
       if (result.isConfirmed) {
-        validate("payment");
-        // // Gak jadi dipake oeeee apaan
+        reject("payment");
         // } else if (result.isConfirmed) {
-        //   validate("file");
+        //   reject("file");
       }
     });
   }
 </script>
 
 <button
-  class="rounded bg-green-500 p-1 text-white hover:bg-green-400 active:bg-green-600"
-  onclick={handleValidate}
+  class="rounded bg-red-500 p-1 text-white hover:bg-red-400 active:bg-red-600"
+  onclick={handleReject}
   disabled={isLoading}
 >
   {#if isLoading}
-    Validating...
+    Rejecting...
   {:else}
-    Validate
+    Reject
   {/if}
 </button>
