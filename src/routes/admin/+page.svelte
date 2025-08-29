@@ -7,6 +7,10 @@
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
   import RejectButton from "./RejectButton.svelte";
+  import type { PageData } from './$types';
+  
+  // Get admin data from server load
+  let { data }: { data: PageData } = $props();
 
   type Ukm = {
     id: string;
@@ -66,15 +70,15 @@
   let error: string | null = $state(null);
   onMount(async () => {
     try {
-      ukms = await get("/api/ukms");
-      participants = await get("/api/participants");
+      ukms = await get("/api/user/ukms");
+      participants = await get("/api/admin/participants");
     } catch (e: any) {
       error = e.message;
     }
   });
 
   // Construct the full, absolute URL for the download link
-  const exportUrl = `${PUBLIC_API_BASE}/api/export/participants`;
+  const exportUrl = `${PUBLIC_API_BASE}/api/admin/export/participants`;
 
   let isMenuOpen = $state(false);
 
@@ -292,7 +296,7 @@
           </ul>
           <div class="ms-4 flex items-center justify-between p-4">
             <div class="flex">
-              Admin c14230260
+              Admin {data.admin.name} ({data.admin.nrp})
               <span class="relative flex size-3">
                 <span
                   class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75"
@@ -355,7 +359,7 @@
         </ul>
         <div class="ms-4 flex justify-between p-4">
           <div class="flex">
-            Admin c14230260
+           {data.admin.name} ({data.admin.nrp})
             <span class="relative flex size-3">
               <span
                 class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75"

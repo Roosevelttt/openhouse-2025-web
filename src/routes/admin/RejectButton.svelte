@@ -26,7 +26,7 @@
       // The post helper now directly returns the data we need or throws an error.
       // No more manual response checking!
       const data = await post<PaymentValidationResponse>(
-        "/api/payment/reject",
+        "/api/admin/payment/reject",
         requestBody,
       );
 

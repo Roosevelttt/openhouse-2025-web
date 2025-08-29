@@ -4,7 +4,7 @@
   let ukms: Array<{ id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number }>=[];
   let error: string | null = null;
   onMount(async () => {
-    try { ukms = await get('/api/ukms'); } catch (e: any) { error = e.message; }
+    try { ukms = await get('/api/user/ukms'); } catch (e: any) { error = e.message; }
   });
 </script>
 
