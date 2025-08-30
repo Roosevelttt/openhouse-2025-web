@@ -70,7 +70,7 @@
   let error: string | null = $state(null);
   onMount(async () => {
     try {
-      ukms = await get("/api/user/ukms");
+      ukms = await get("/api/ukms");
       participants = await get("/api/admin/participants");
     } catch (e: any) {
       error = e.message;
