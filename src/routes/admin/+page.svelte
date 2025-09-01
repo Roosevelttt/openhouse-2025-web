@@ -67,7 +67,7 @@
   onMount(async () => {
     try {
       ukms = await get("/api/ukms");
-      participants = await get("/api/participants");
+      participants = await get("/api/admin/participants");
     } catch (e: any) {
       error = e.message;
     }
@@ -205,9 +205,12 @@
   });
 
   function showPicture(src: string) {
+    // Construct the full URL to the payment file on the API server
+    const imageUrl = `${PUBLIC_API_BASE}/uploads/payments/${src}`;
+    
     Swal.fire({
-      imageUrl: `${src}`,
-      imageAlt: `${src}`,
+      imageUrl: imageUrl,
+      imageAlt: `Payment proof: ${src}`,
     });
   }
 </script>
