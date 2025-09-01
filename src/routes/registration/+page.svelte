@@ -1,21 +1,33 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { get } from "$lib/api";
+  import { get, getCurrentUserInfo } from "$lib/api";
+  import { goto } from "$app/navigation";
 
   let ukms: Array<{ id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number }> = [];
   let error: string | null = null;
+  let isAuthenticated = false;
   
   onMount(async () => {
     try { 
+      // Check if user is authenticated
+      const userInfo = await getCurrentUserInfo();
+      isAuthenticated = !!userInfo;
+      
       ukms = await get('/api/ukms'); 
     } catch (e: any) { 
       error = e.message; 
     }
   });
 
-  function handleRegisterClick(ukmSlug: string, ukmName: string) {
-    // Redirect to the dynamic registration page using the UKM slug
-    window.location.href = `/registration/${ukmSlug}`;
+  async function handleRegisterClick(ukmSlug: string, ukmName: string) {
+    if (!isAuthenticated) {
+      alert('Please log in first to register for UKM');
+      goto('/login');
+      return;
+    }
+
+    // Always redirect to biodata page with UKM slug
+    goto(`/biodata?ukm_slug=${ukmSlug}`);
   }
 </script>
 
@@ -88,14 +100,20 @@
             
             <button 
               on:click={() => handleRegisterClick(ukm.slug, ukm.name)}
-              disabled={ukm.current_slot >= ukm.max_slot}
+              disabled={ukm.current_slot >= ukm.max_slot || !isAuthenticated}
               class="w-full py-2.5 px-4 rounded-lg font-medium text-sm transition-colors duration-200 {
-                ukm.current_slot >= ukm.max_slot 
+                ukm.current_slot >= ukm.max_slot || !isAuthenticated
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed' 
                   : 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg'
               }"
             >
-              {ukm.current_slot >= ukm.max_slot ? 'Registration Closed' : 'Register Now'}
+              {#if ukm.current_slot >= ukm.max_slot}
+                Registration Closed
+              {:else if !isAuthenticated}
+                Please Login First
+              {:else}
+                Register Now
+              {/if}
             </button>
           </div>
         </div>

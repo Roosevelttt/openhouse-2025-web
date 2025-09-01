@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { get, post, getCurrentUserInfo } from '$lib/api';
+  import { get, post, getCurrentUserInfo, getUserBiodata } from '$lib/api';
+  import { goto } from '$app/navigation';
 
   // Get the slug from the URL parameter
   $: slug = $page.params.ukm_slug;
@@ -31,6 +32,24 @@
       
       userNrp = userInfo.nrp;
       userName = userInfo.name;
+
+      // Check if user has completed biodata
+      try {
+        const biodata = await getUserBiodata();
+        
+        if (!biodata || !biodata.line_id || !biodata.phone) {
+          // User biodata is incomplete, redirect to biodata page with UKM slug
+          alert('Please complete your biodata first before registering for UKM');
+          goto(`/biodata?ukm_slug=${slug}`);
+          return;
+        }
+      } catch (e) {
+        // If there's an error fetching biodata, assume user needs to complete it
+        console.error('Error checking biodata:', e);
+        alert('Please complete your biodata first before registering for UKM');
+        goto(`/biodata?ukm_slug=${slug}`);
+        return;
+      }
 
       // Fetch all UKMs and find the one with matching slug
       const ukms = await get('/api/ukms');
@@ -206,7 +225,7 @@
         <!-- Google Drive URL -->
         <div>
           <label for="drive_url" class="block text-sm font-medium text-gray-700 mb-2">
-            Google Drive URL <span class="text-red-500">*</span>
+            Portfolio Link (Google Drive URL) <span class="text-red-500">*</span>
           </label>
           <input 
             type="url" 
@@ -217,7 +236,7 @@
             class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           <p class="mt-1 text-sm text-gray-500">
-            Share a Google Drive link to your application documents
+            Share a Google Drive link to your portfolio documents
           </p>
         </div>
 
