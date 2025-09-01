@@ -7,6 +7,10 @@
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
   import RejectButton from "./RejectButton.svelte";
+  import type { PageData } from './$types';
+  
+  // Get admin data from server load
+  let { data }: { data: PageData } = $props();
 
   type Ukm = {
     id: string;
@@ -74,7 +78,7 @@
   });
 
   // Construct the full, absolute URL for the download link
-  const exportUrl = `${PUBLIC_API_BASE}/api/export/participants`;
+  const exportUrl = `${PUBLIC_API_BASE}/api/admin/export/participants`;
 
   let isMenuOpen = $state(false);
 
@@ -213,6 +217,33 @@
       imageAlt: `Payment proof: ${src}`,
     });
   }
+
+  async function handleLogout() {
+    try {
+      const response = await fetch(`${PUBLIC_API_BASE}/api/auth/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      if (response.ok) {
+        window.location.href = '/login';
+      } else {
+        console.error('Logout failed');
+        Swal.fire({
+          icon: 'error',
+          title: 'Logout Failed',
+          text: 'There was an error logging out. Please try again.'
+        });
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Logout Failed',
+        text: 'There was an error logging out. Please try again.'
+      });
+    }
+  }
 </script>
 
 <svelte:head>
@@ -295,7 +326,7 @@
           </ul>
           <div class="ms-4 flex items-center justify-between p-4">
             <div class="flex">
-              Admin c14230260
+              Admin {data.admin.name} ({data.admin.nrp})
               <span class="relative flex size-3">
                 <span
                   class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75"
@@ -306,7 +337,7 @@
               </span>
             </div>
 
-            <a href="/api/admin/logout" aria-label="logout">
+            <button onclick={handleLogout} aria-label="logout">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -321,7 +352,7 @@
                   d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
                 />
               </svg>
-            </a>
+            </button>
           </div>
         </div>
       </div>
@@ -358,7 +389,7 @@
         </ul>
         <div class="ms-4 flex justify-between p-4">
           <div class="flex">
-            Admin c14230260
+           {data.admin.name} ({data.admin.nrp})
             <span class="relative flex size-3">
               <span
                 class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75"
@@ -369,7 +400,7 @@
             </span>
           </div>
 
-          <a href="/api/admin/logout" aria-label="logout">
+          <button onclick={handleLogout} aria-label="logout">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -384,7 +415,7 @@
                 d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
               />
             </svg>
-          </a>
+          </button>
         </div>
       </div>
     </div>
