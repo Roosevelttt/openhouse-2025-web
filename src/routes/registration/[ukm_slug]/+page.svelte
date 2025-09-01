@@ -7,7 +7,7 @@
   // Get the slug from the URL parameter
   $: slug = $page.params.ukm_slug;
 
-  let ukm: { id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number } | null = null;
+  let ukm: { id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number; qris_url?: string } | null = null;
   let userNrp: string | null = null;
   let userName: string | null = null;
   let loading = true;
@@ -204,6 +204,26 @@
         <!-- Hidden UKM ID field -->
         <input type="hidden" value={ukm.id} />
        
+        <!-- QRIS Payment Code -->
+        {#if ukm.qris_url}
+          <div class="text-center mb-6">
+            <h3 class="text-lg font-medium text-gray-800 mb-4">Payment QR Code</h3>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 inline-block">
+              <img 
+                src="/src/lib/images/{ukm.qris_url}" 
+                alt="QRIS Payment Code for {ukm.name}"
+                class="max-w-xs mx-auto rounded-lg shadow-sm"
+              />
+            </div>
+            <p class="mt-2 text-sm text-gray-600">
+              Scan this QR code to make payment for {ukm.name}
+            </p>
+            <p class="text-sm font-medium text-blue-600">
+              Amount: {ukm.regist_fee > 0 ? `Rp ${ukm.regist_fee.toLocaleString('id-ID')}` : 'Free'}
+            </p>
+          </div>
+        {/if}
+
         <!-- Payment Proof Upload -->
         <div>
           <label for="payment" class="block text-sm font-medium text-gray-700 mb-2">
