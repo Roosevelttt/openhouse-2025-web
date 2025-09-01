@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { get, getCurrentUserInfo } from "$lib/api";
   import { goto } from "$app/navigation";
+  import Swal from "sweetalert2";
 
   let ukms: Array<{ id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number }> = [];
   let error: string | null = null;
@@ -21,13 +22,44 @@
 
   async function handleRegisterClick(ukmSlug: string, ukmName: string) {
     if (!isAuthenticated) {
-      alert('Please log in first to register for UKM');
-      goto('/login');
+      await Swal.fire({
+        icon: 'warning',
+        title: 'Login Required',
+        text: 'Please log in first to register for UKM',
+        confirmButtonText: 'Go to Login'
+      });
+      
+      Swal.fire({
+        title: 'Redirecting...',
+        text: 'Taking you to the login page',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+      
+      setTimeout(() => {
+        Swal.close();
+        goto('/login');
+      }, 1000);
       return;
     }
 
-    // Always redirect to biodata page with UKM slug
-    goto(`/biodata?ukm_slug=${ukmSlug}`);
+    // Show loading while redirecting to biodata
+    Swal.fire({
+      title: 'Redirecting...',
+      text: `Taking you to complete biodata for ${ukmName}`,
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Close the swal and redirect after a short delay
+    setTimeout(() => {
+      Swal.close();
+      goto(`/biodata?ukm_slug=${ukmSlug}`);
+    }, 1000);
   }
 </script>
 

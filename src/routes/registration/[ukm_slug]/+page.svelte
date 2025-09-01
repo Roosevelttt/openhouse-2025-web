@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { get, post, getCurrentUserInfo, getUserBiodata } from '$lib/api';
   import { goto } from '$app/navigation';
+  import Swal from "sweetalert2";
 
   // Get the slug from the URL parameter
   $: slug = $page.params.ukm_slug;
@@ -39,15 +40,51 @@
         
         if (!biodata || !biodata.line_id || !biodata.phone) {
           // User biodata is incomplete, redirect to biodata page with UKM slug
-          alert('Please complete your biodata first before registering for UKM');
-          goto(`/biodata?ukm_slug=${slug}`);
+          await Swal.fire({
+            icon: 'info',
+            title: 'Complete Your Biodata',
+            text: 'Please complete your biodata first before registering for UKM',
+            confirmButtonText: 'Go to Biodata'
+          });
+          
+          Swal.fire({
+            title: 'Redirecting...',
+            text: 'Please wait while we redirect you to the biodata page',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          
+          setTimeout(() => {
+            Swal.close();
+            goto(`/biodata?ukm_slug=${slug}`);
+          }, 1000);
           return;
         }
       } catch (e) {
         // If there's an error fetching biodata, assume user needs to complete it
         console.error('Error checking biodata:', e);
-        alert('Please complete your biodata first before registering for UKM');
-        goto(`/biodata?ukm_slug=${slug}`);
+        await Swal.fire({
+          icon: 'info',
+          title: 'Complete Your Biodata',
+          text: 'Please complete your biodata first before registering for UKM',
+          confirmButtonText: 'Go to Biodata'
+        });
+        
+        Swal.fire({
+          title: 'Redirecting...',
+          text: 'Please wait while we redirect you to the biodata page',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        
+        setTimeout(() => {
+          Swal.close();
+          goto(`/biodata?ukm_slug=${slug}`);
+        }, 1000);
         return;
       }
 
@@ -68,12 +105,26 @@
 
   async function handleSubmit() {
     if (!ukm || !userNrp || !paymentFile || paymentFile.length === 0 || !driveUrl.trim()) {
-      error = 'Please fill all fields and select a payment proof file.';
+      await Swal.fire({
+        icon: 'error',
+        title: 'Incomplete Form',
+        text: 'Please fill all fields and select a payment proof file.'
+      });
       return;
     }
 
     submitting = true;
     error = null;
+
+    // Show loading swal
+    Swal.fire({
+      title: 'Submitting Registration...',
+      text: 'Please wait while we process your registration',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
 
     try {
       const formData = new FormData();
@@ -90,15 +141,33 @@
       });
 
       await post('/api/registrations', formData);
+      
+      // Show success message
+      await Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful!',
+        text: `You have successfully registered for ${ukm.name}`,
+        confirmButtonText: 'OK'
+      });
+      
       success = true;
     } catch (e: any) {
       console.error('Registration error:', e);
-      error = e.message || 'Registration failed. Please try again.';
+      
+      let errorMessage = e.message || 'Registration failed. Please try again.';
       
       // Additional debugging info
       if (e.message === 'Failed to fetch') {
-        error = 'Cannot connect to server. Please check if the API server is running.';
+        errorMessage = 'Cannot connect to server. Please check if the API server is running.';
       }
+      
+      await Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: errorMessage
+      });
+      
+      error = errorMessage;
     } finally {
       submitting = false;
     }
@@ -106,7 +175,19 @@
    
 
   function goBack() {
-    window.location.href = '/registration';
+    Swal.fire({
+      title: 'Redirecting...',
+      text: 'Taking you back to UKM list',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+    
+    setTimeout(() => {
+      Swal.close();
+      window.location.href = '/registration';
+    }, 1000);
   }
 </script>
 
