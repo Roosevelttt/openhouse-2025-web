@@ -1,28 +1,36 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { get, post } from '$lib/api';
+  import { get, post, getCurrentUserInfo } from '$lib/api';
 
   // Get the slug from the URL parameter
   $: slug = $page.params.ukm_slug;
 
   let ukm: { id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number } | null = null;
   let userNrp: string | null = null;
+  let userName: string | null = null;
   let loading = true;
   let error: string | null = null;
   let success = false;
 
   // Form data
-  let code: string = '';
   let paymentFile: FileList;
   let driveUrl: string = '';
   let submitting = false;
 
   onMount(async () => {
     try {
-      // For now, let's skip session check and use a placeholder NRP
-      // You can implement proper session management later
-      userNrp = "050423075"; // Using a more realistic existing NRP format
+      // Get user info (NRP and name) from session
+      const userInfo = await getCurrentUserInfo();
+      
+      if (!userInfo) {
+        error = 'You must be logged in to register for UKM';
+        loading = false;
+        return;
+      }
+      
+      userNrp = userInfo.nrp;
+      userName = userInfo.name;
 
       // Fetch all UKMs and find the one with matching slug
       const ukms = await get('/api/ukms');
@@ -40,7 +48,7 @@
   });
 
   async function handleSubmit() {
-    if (!ukm || !userNrp || !code.trim() || !paymentFile || paymentFile.length === 0 || !driveUrl.trim()) {
+    if (!ukm || !userNrp || !paymentFile || paymentFile.length === 0 || !driveUrl.trim()) {
       error = 'Please fill all fields and select a payment proof file.';
       return;
     }
@@ -52,14 +60,12 @@
       const formData = new FormData();
       formData.append('ukm_id', ukm.id); // Hidden field
       formData.append('nrp', userNrp);
-      formData.append('code', code.trim());
       formData.append('payment', paymentFile[0]);
       formData.append('drive_url', driveUrl.trim());
 
       console.log('Submitting registration data:', {
         ukm_id: ukm.id,
         nrp: userNrp,
-        code: code.trim(),
         drive_url: driveUrl.trim(),
         payment_file: paymentFile[0].name
       });
@@ -148,6 +154,23 @@
       </div>
     </div>
 
+    <!-- User Info Section -->
+    {#if userName && userNrp}
+      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-blue-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"></path>
+          </svg>
+          <div>
+            <p class="text-sm text-blue-800">
+              <span class="font-medium">Registering as:</span> {userName}
+            </p>
+            <p class="text-xs text-blue-600">NRP: {userNrp}</p>
+          </div>
+        </div>
+      </div>
+    {/if}
+
     <!-- Registration Form -->
     <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Registration Form</h2>
@@ -161,25 +184,7 @@
       <form on:submit|preventDefault={handleSubmit} class="space-y-6">
         <!-- Hidden UKM ID field -->
         <input type="hidden" value={ukm.id} />
-
-        <!-- Code Field -->
-        <div>
-          <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
-            Code <span class="text-red-500">*</span>
-          </label>
-          <input 
-            type="text" 
-            id="code" 
-            bind:value={code}
-            placeholder="Enter registration code"
-            required
-            class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <p class="mt-1 text-sm text-gray-500">
-            Enter the registration code provided by the UKM
-          </p>
-        </div>
-
+       
         <!-- Payment Proof Upload -->
         <div>
           <label for="payment" class="block text-sm font-medium text-gray-700 mb-2">

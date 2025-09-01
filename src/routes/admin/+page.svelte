@@ -203,9 +203,12 @@
   });
 
   function showPicture(src: string) {
+    // Construct the full URL to the payment file on the API server
+    const imageUrl = `${PUBLIC_API_BASE}/uploads/payments/${src}`;
+    
     Swal.fire({
-      imageUrl: `${src}`,
-      imageAlt: `${src}`,
+      imageUrl: imageUrl,
+      imageAlt: `Payment proof: ${src}`,
     });
   }
 </script>
