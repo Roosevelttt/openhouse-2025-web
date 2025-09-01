@@ -46,3 +46,21 @@ export async function post<T, U = object>(
   // @ts-ignore
   return text ? JSON.parse(text) : undefined;
 }
+
+export async function put<T>(
+  path: string,
+  body: object,
+  init?: RequestInit,
+): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "PUT",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+    ...init,
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(text);
+  // @ts-ignore
+  return text ? JSON.parse(text) : undefined;
+}
