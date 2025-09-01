@@ -47,16 +47,43 @@ export async function post<T, U = object>(
   return text ? JSON.parse(text) : undefined;
 }
 
-export async function put<T>(
+export async function put<T, U = object>(
   path: string,
-  body: object,
+  body: U,
   init?: RequestInit,
 ): Promise<T> {
+  const isJson = !(body instanceof FormData);
+
+  const headers = new Headers(init?.headers);
+  if (isJson && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
     method: "PUT",
     credentials: "include",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    ...init,
+    headers,
+    body: isJson ? JSON.stringify(body) : (body as any),
+  });
+  
+  const text = await res.text();
+  if (!res.ok) {
+    try {
+      const jsonError = JSON.parse(text);
+      throw new Error(jsonError.error || jsonError.message || text);
+    } catch {
+      throw new Error(text);
+    }
+  }
+  // @ts-ignore
+  return text ? JSON.parse(text) : undefined;
+}
+
+export async function del<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "DELETE",
+    credentials: "include",
     ...init,
   });
   const text = await res.text();
