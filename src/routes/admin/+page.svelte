@@ -214,9 +214,11 @@
   <title>OH Admin | Participants</title>
 </svelte:head>
 
-<h1 class="text-2xl font-bold tracking-wide text-gray-800">
-  List Pendaftar & Validasi
-</h1>
+<div class="flex justify-between items-center mb-6">
+  <h1 class="text-2xl font-bold tracking-wide text-gray-800">
+    List Pendaftar & Validasi
+  </h1>
+</div>
 
 <div class="flex flex-col gap-2 rounded-2xl p-6 text-sm shadow-md">
   <div class="flex flex-wrap gap-2 font-semibold text-gray-600">
