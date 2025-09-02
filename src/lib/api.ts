@@ -132,3 +132,16 @@ export async function updateUserBiodata(lineId: string, phone: string): Promise<
     };
   }
 }
+
+// Slot reservation functions
+export async function reserveSlot(ukmId: string): Promise<{reservation_id: string; expires_at: string}> {
+  return post('/api/registrations/reserve', { ukm_id: ukmId });
+}
+
+export async function registerWithReservation(reservationId: string, registrationData: {
+  ukm_id: string;
+  payment: string;
+  drive_url: string;
+}): Promise<{message: string; registration: any; reservation_id: string}> {
+  return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);
+}

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
-  import { get, post, getCurrentUserInfo, getUserBiodata } from '$lib/api';
+  import { get, post, getCurrentUserInfo, getUserBiodata, reserveSlot, registerWithReservation } from '$lib/api';
   import { goto } from '$app/navigation';
   import Swal from "sweetalert2";
 
@@ -19,6 +19,8 @@
   let paymentFile: FileList;
   let driveUrl: string = '';
   let submitting = false;
+  let reservationId: string | null = null;
+  let reservationExpiry: Date | null = null;
 
   onMount(async () => {
     try {
@@ -116,31 +118,44 @@
     submitting = true;
     error = null;
 
-    // Show loading swal
-    Swal.fire({
-      title: 'Submitting Registration...',
-      text: 'Please wait while we process your registration',
-      allowOutsideClick: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
-
     try {
-      const formData = new FormData();
-      formData.append('ukm_id', ukm.id); // Hidden field
-      formData.append('nrp', userNrp);
-      formData.append('payment', paymentFile[0]);
-      formData.append('drive_url', driveUrl.trim());
-
-      console.log('Submitting registration data:', {
-        ukm_id: ukm.id,
-        nrp: userNrp,
-        drive_url: driveUrl.trim(),
-        payment_file: paymentFile[0].name
+      // Step 1: Reserve a slot first
+      Swal.fire({
+        title: 'Reserving Slot...',
+        text: 'Securing your spot for registration',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
       });
 
-      await post('/api/registrations', formData);
+      const reservation = await reserveSlot(ukm.id);
+      reservationId = reservation.reservation_id;
+      reservationExpiry = new Date(reservation.expires_at);
+
+      // Step 2: Show upload progress
+      Swal.fire({
+        title: 'Uploading Registration...',
+        text: 'Please wait while we process your registration',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // Step 3: Submit registration with reservation
+      const registrationData = {
+        ukm_id: ukm.id,
+        payment: paymentFile[0].name, // For now just store filename, later we'll handle file upload
+        drive_url: driveUrl.trim()
+      };
+
+      console.log('Submitting registration with reservation:', {
+        reservation_id: reservationId,
+        registration_data: registrationData
+      });
+
+      await registerWithReservation(reservationId, registrationData);
       
       // Show success message
       await Swal.fire({
@@ -156,8 +171,12 @@
       
       let errorMessage = e.message || 'Registration failed. Please try again.';
       
-      // Additional debugging info
-      if (e.message === 'Failed to fetch') {
+      // Handle specific errors
+      if (e.message === 'No slots available') {
+        errorMessage = 'Sorry, all slots for this UKM are full. Please try registering for another UKM.';
+      } else if (e.message === 'reservation has expired') {
+        errorMessage = 'Your slot reservation has expired. Please try again.';
+      } else if (e.message === 'Failed to fetch') {
         errorMessage = 'Cannot connect to server. Please check if the API server is running.';
       }
       
@@ -168,6 +187,8 @@
       });
       
       error = errorMessage;
+      reservationId = null;
+      reservationExpiry = null;
     } finally {
       submitting = false;
     }
@@ -251,7 +272,7 @@
           <p class="text-sm text-gray-600">Available Slots</p>
           <p class="text-xl font-bold text-green-600">{ukm.max_slot - ukm.current_slot} left</p>
         </div>
-      </div>
+      </div>  
     </div>
 
     <!-- User Info Section -->
@@ -343,12 +364,30 @@
 
         <!-- Submit Button -->
         <div class="pt-6">
+          {#if reservationId}
+            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                  <p class="font-medium">Slot Reserved!</p>
+                  <p class="text-sm">Your slot expires at: {reservationExpiry?.toLocaleTimeString()}</p>
+                </div>
+              </div>
+            </div>
+          {/if}
+          
           <button 
             type="submit"
             disabled={submitting}
             class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 {submitting ? 'cursor-not-allowed' : ''}"
           >
-            {submitting ? 'Submitting...' : 'Submit Registration'}
+            {#if submitting}
+              {reservationId ? 'Completing Registration...' : 'Reserving Slot...'}
+            {:else}
+              Reserve Slot & Register
+            {/if}
           </button>
         </div>
       </form>

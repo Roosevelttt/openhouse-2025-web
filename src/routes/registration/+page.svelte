@@ -110,7 +110,7 @@
               </div>
               
               <div class="flex justify-between items-center">
-                <span class="text-sm font-medium text-gray-700">Available Slots:</span>
+                <span class="text-sm font-medium text-gray-700">Current Slots:</span>
                 <span class="text-sm font-semibold text-blue-600">
                   {ukm.current_slot}/{ukm.max_slot}
                 </span>
