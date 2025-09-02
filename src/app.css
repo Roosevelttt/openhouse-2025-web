@@ -16,3 +16,7 @@
     --font-lexend: "Lexend", sans-serif;
     --font-moomello: "Moomello", sans-serif;
 }
+
+::-webkit-scrollbar {
+  display: none;
+}
