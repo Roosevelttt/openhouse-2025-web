@@ -2,7 +2,6 @@ export const prerender = false;
 export const ssr = true;
 
 import { PUBLIC_API_BASE } from "$env/static/public";
-import { logger } from "$lib/stores/logger";
 
 // buat ngambil value session
 async function session(keysArray: string[]) {
@@ -26,11 +25,11 @@ async function session(keysArray: string[]) {
       const errData = await response.json();
       let error = errData.error || "Failed to get session values.";
       console.log(error);
-      logger.error(error);
+      // logger.error(error);
       return null;
     }
   } catch (e) {
-    logger.error(e);
+    // logger.error(e);
     console.error(e);
     return null;
   }
