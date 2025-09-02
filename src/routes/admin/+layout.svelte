@@ -2,17 +2,23 @@
   // Get admin data from server load and children
   let { data, children }: { data: PageData; children: Snippet } = $props();
   import { PUBLIC_API_BASE } from "$env/static/public";
-  import { get } from "$lib/api";
+  import { get, getSessionValues } from "$lib/api";
   import { onMount, type Snippet } from "svelte";
   import { slide } from "svelte/transition";
   import logoSmall from "$lib/images/logo_oh_small.png";
   import Swal from "sweetalert2";
   import type { PageData } from "./$types";
 
+  let adminData: Record<string, any> = $state({});
   let manageUKM = $state(false);
   // Check if admin has an UKM
   onMount(async () => {
     try {
+      adminData = await getSessionValues([
+        "admin_ukm_id",
+        "admin_ukm_name",
+        "admin_division_slug",
+      ]);
       await get<{ groupchat_link: string }>("/api/admin/ukm/groupchat");
       manageUKM = true;
     } catch (e: any) {}
@@ -124,29 +130,31 @@
                 <span>Participants</span>
               </a>
             </li>
-            <li>
-              <a
-                href="/admin/ukm"
-                class="ms-4 flex items-center gap-2 p-4"
-                aria-label="Manage UKMs"
-              >
-                <span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="size-6"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </span>
-                <span>Manage UKMs</span>
-              </a>
-            </li>
+            {#if adminData.admin_division_slug === "bph" || adminData.admin_division_slug === "it"}
+              <li>
+                <a
+                  href="/admin/ukm"
+                  class="ms-4 flex items-center gap-2 p-4"
+                  aria-label="Manage UKMs"
+                >
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      class="size-6"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </span>
+                  <span>Manage UKMs</span>
+                </a>
+              </li>
+            {/if}
             {#if manageUKM}
               <li>
                 <a
@@ -238,29 +246,31 @@
               <span>Participants</span>
             </a>
           </li>
-          <li>
-            <a
-              href="/admin/ukm"
-              class="ms-4 flex items-center gap-2 p-4"
-              aria-label="Manage UKMs"
-            >
-              <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-              </span>
-              <span>Manage UKMs</span>
-            </a>
-          </li>
+          {#if adminData.admin_division_slug === "bph" || adminData.admin_division_slug === "it"}
+            <li>
+              <a
+                href="/admin/ukm"
+                class="ms-4 flex items-center gap-2 p-4"
+                aria-label="Manage UKMs"
+              >
+                <span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <span>Manage UKMs</span>
+              </a>
+            </li>
+          {/if}
           {#if manageUKM}
             <li>
               <a

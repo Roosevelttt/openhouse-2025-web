@@ -40,6 +40,7 @@ console.log(
     "nrp",
     "role",
     "admin_ukm_id",
+    "admin_ukm_name",
     "admin_division_id",
     "admin_division_slug",
   ]),

@@ -48,15 +48,18 @@
           icon: "error",
         });
       }
-    } catch (error: Error | any) {
-      const errors: Record<string, string> = {
-        false: `${nrp} has already been rejected.`,
-        validated: `${nrp} has already been validated.`,
-      };
-      const errorMessage =
-        errors[JSON.parse(error.message).message] ||
-        "An unknown error occurred.";
+    } catch (error: any) {
+      let errorMessage: string = "An unknown error occurred.";
+
+      try {
+        const parsed = JSON.parse(error.message);
+        errorMessage = parsed.message || parsed.error || errorMessage;
+      } catch {
+        errorMessage = error.message || errorMessage;
+      }
+
       console.error("Fetch operation failed:", error);
+
       Swal.fire({
         title: "Request Failed",
         text: errorMessage,
