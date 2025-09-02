@@ -12,7 +12,7 @@
     <img src="/svg/home/ukm/bookshelf v2.svg" alt="Bookshelf background placeholder" class="w-full" />
   </div>
 
-  <Ukm />
+  <!-- <Ukm /> -->
   <div class="-mt-3">
     <LKSection />
   </div>
