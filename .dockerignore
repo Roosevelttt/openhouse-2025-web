@@ -1,0 +1,38 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Build
+build/
+dist/
+.output/
+.svelte-kit/output
+
+# Environment
+.env
+.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docs
+README.md
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose*.yml
+
+# Logs
+*.log
