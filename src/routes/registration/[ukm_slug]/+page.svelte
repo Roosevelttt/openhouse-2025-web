@@ -1,13 +1,14 @@
 <script lang="ts">
   import { page } from '$app/stores';
-  import { onMount } from 'svelte';
-  import { get, post, getCurrentUserInfo, getUserBiodata } from '$lib/api';
+  import { onMount, onDestroy } from 'svelte';
+  import { get, post, getCurrentUserInfo, getUserBiodata, reserveSlot, registerWithReservation } from '$lib/api';
   import { goto } from '$app/navigation';
+  import Swal from "sweetalert2";
 
   // Get the slug from the URL parameter
   $: slug = $page.params.ukm_slug;
 
-  let ukm: { id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number } | null = null;
+  let ukm: { id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number; qris_url?: string } | null = null;
   let userNrp: string | null = null;
   let userName: string | null = null;
   let loading = true;
@@ -18,6 +19,78 @@
   let paymentFile: FileList;
   let driveUrl: string = '';
   let submitting = false;
+  let reservationId: string | null = null;
+  let reservationExpiry: Date | null = null;
+
+  // Timer related variables
+  let timeRemaining = 0;
+  let timerInterval: any = null;
+  let formattedTime = '00:00';
+
+  // Get reservation data from URL parameters
+  $: reservationParam = $page.url.searchParams.get('reservation');
+  
+  // Parse reservation data if available
+  $: if (reservationParam) {
+    try {
+      const reservationData = JSON.parse(decodeURIComponent(reservationParam));
+      reservationId = reservationData.reservation_id;
+      reservationExpiry = new Date(reservationData.expires_at);
+      startTimer();
+    } catch (e) {
+      console.error('Failed to parse reservation data:', e);
+    }
+  }
+
+  function startTimer() {
+    if (!reservationExpiry) return;
+    
+    // Clear any existing timer
+    if (timerInterval) {
+      clearInterval(timerInterval);
+    }
+    
+    updateTimer();
+    timerInterval = setInterval(updateTimer, 1000);
+  }
+
+  function updateTimer() {
+    if (!reservationExpiry) return;
+    
+    const now = new Date();
+    const diff = reservationExpiry.getTime() - now.getTime();
+    
+    if (diff <= 0) {
+      timeRemaining = 0;
+      formattedTime = '00:00';
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      
+      // Show expiry message and redirect
+      Swal.fire({
+        icon: 'warning',
+        title: 'Reservation Expired',
+        text: 'Your slot reservation has expired. Please try again.',
+        confirmButtonText: 'Go Back'
+      }).then(() => {
+        goto('/registration');
+      });
+      return;
+    }
+    
+    timeRemaining = Math.floor(diff / 1000);
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  onDestroy(() => {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+    }
+  });
 
   onMount(async () => {
     try {
@@ -39,15 +112,51 @@
         
         if (!biodata || !biodata.line_id || !biodata.phone) {
           // User biodata is incomplete, redirect to biodata page with UKM slug
-          alert('Please complete your biodata first before registering for UKM');
-          goto(`/biodata?ukm_slug=${slug}`);
+          await Swal.fire({
+            icon: 'info',
+            title: 'Complete Your Biodata',
+            text: 'Please complete your biodata first before registering for UKM',
+            confirmButtonText: 'Go to Biodata'
+          });
+          
+          Swal.fire({
+            title: 'Redirecting...',
+            text: 'Please wait while we redirect you to the biodata page',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+          
+          setTimeout(() => {
+            Swal.close();
+            goto(`/biodata?ukm_slug=${slug}`);
+          }, 1000);
           return;
         }
       } catch (e) {
         // If there's an error fetching biodata, assume user needs to complete it
         console.error('Error checking biodata:', e);
-        alert('Please complete your biodata first before registering for UKM');
-        goto(`/biodata?ukm_slug=${slug}`);
+        await Swal.fire({
+          icon: 'info',
+          title: 'Complete Your Biodata',
+          text: 'Please complete your biodata first before registering for UKM',
+          confirmButtonText: 'Go to Biodata'
+        });
+        
+        Swal.fire({
+          title: 'Redirecting...',
+          text: 'Please wait while we redirect you to the biodata page',
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+        
+        setTimeout(() => {
+          Swal.close();
+          goto(`/biodata?ukm_slug=${slug}`);
+        }, 1000);
         return;
       }
 
@@ -67,8 +176,40 @@
   });
 
   async function handleSubmit() {
-    if (!ukm || !userNrp || !paymentFile || paymentFile.length === 0 || !driveUrl.trim()) {
-      error = 'Please fill all fields and select a payment proof file.';
+    // Check if reservation is still valid
+    if (!reservationId) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'No Reservation',
+        text: 'You do not have a valid slot reservation. Please go back and reserve a slot first.'
+      });
+      return;
+    }
+
+    if (timeRemaining <= 0) {
+      await Swal.fire({
+        icon: 'error',
+        title: 'Reservation Expired',
+        text: 'Your slot reservation has expired. Please try again.'
+      });
+      goto('/registration');
+      return;
+    }
+
+    // Skip payment file validation for esport
+    const isEsport = slug === 'esport';
+    const needsPayment = !isEsport;
+    
+    if (!ukm || !userNrp || !driveUrl.trim() || (needsPayment && (!paymentFile || paymentFile.length === 0))) {
+      const message = needsPayment 
+        ? 'Please fill all fields and select a payment proof file.'
+        : 'Please fill all required fields.';
+      
+      await Swal.fire({
+        icon: 'error',
+        title: 'Incomplete Form',
+        text: message
+      });
       return;
     }
 
@@ -76,29 +217,69 @@
     error = null;
 
     try {
-      const formData = new FormData();
-      formData.append('ukm_id', ukm.id); // Hidden field
-      formData.append('nrp', userNrp);
-      formData.append('payment', paymentFile[0]);
-      formData.append('drive_url', driveUrl.trim());
-
-      console.log('Submitting registration data:', {
-        ukm_id: ukm.id,
-        nrp: userNrp,
-        drive_url: driveUrl.trim(),
-        payment_file: paymentFile[0].name
+      // Show upload progress
+      Swal.fire({
+        title: 'Uploading Registration...',
+        text: 'Please wait while we process your registration',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
       });
 
-      await post('/api/registrations', formData);
+      // Submit registration with existing reservation
+      const isEsport = slug === 'esport';
+      const registrationData = {
+        ukm_id: ukm.id,
+        payment: isEsport ? null : paymentFile[0].name, // No payment file for esport
+        drive_url: driveUrl.trim()
+      };
+
+      console.log('Submitting registration with existing reservation:', {
+        reservation_id: reservationId,
+        registration_data: registrationData
+      });
+
+      await registerWithReservation(reservationId, registrationData);
+      
+      // Clear the timer since registration is complete
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      
+      // Show success message
+      await Swal.fire({
+        icon: 'success',
+        title: 'Registration Successful!',
+        text: `You have successfully registered for ${ukm.name}`,
+        confirmButtonText: 'OK'
+      });
+      
       success = true;
     } catch (e: any) {
       console.error('Registration error:', e);
-      error = e.message || 'Registration failed. Please try again.';
       
-      // Additional debugging info
-      if (e.message === 'Failed to fetch') {
-        error = 'Cannot connect to server. Please check if the API server is running.';
+      let errorMessage = e.message || 'Registration failed. Please try again.';
+      
+      // Handle specific errors
+      if (e.message === 'No slots available') {
+        errorMessage = 'Sorry, all slots for this UKM are full. Please try registering for another UKM.';
+      } else if (e.message === 'reservation has expired') {
+        errorMessage = 'Your slot reservation has expired. Please try again.';
+      } else if (e.message === 'Failed to fetch') {
+        errorMessage = 'Cannot connect to server. Please check if the API server is running.';
       }
+      
+      await Swal.fire({
+        icon: 'error',
+        title: 'Registration Failed',
+        text: errorMessage
+      });
+      
+      error = errorMessage;
+      reservationId = null;
+      reservationExpiry = null;
     } finally {
       submitting = false;
     }
@@ -106,7 +287,19 @@
    
 
   function goBack() {
-    window.location.href = '/registration';
+    Swal.fire({
+      title: 'Redirecting...',
+      text: 'Taking you back to UKM list',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+    
+    setTimeout(() => {
+      Swal.close();
+      window.location.href = '/registration';
+    }, 1000);
   }
 </script>
 
@@ -138,6 +331,7 @@
         <h2 class="text-xl font-bold mb-2">Registration Successful! ✅</h2>
         <p>Your registration for <strong>{ukm?.name}</strong> has been submitted successfully.</p>
         <p class="text-sm mt-2">You will receive confirmation once your payment is verified.</p>
+        <p>✅Make sure to fill this questionnaire <a class="text-blue-500 underline" href="https://docs.google.com/forms/d/e/1FAIpQLScdreCQ1Uk97NQfMV8K2jRpGerpM2AcJe_qmHWMisCe0xB4tw/viewform">Click Here</a></p>
       </div>
       <button 
         on:click={goBack}
@@ -170,7 +364,7 @@
           <p class="text-sm text-gray-600">Available Slots</p>
           <p class="text-xl font-bold text-green-600">{ukm.max_slot - ukm.current_slot} left</p>
         </div>
-      </div>
+      </div>  
     </div>
 
     <!-- User Info Section -->
@@ -190,6 +384,64 @@
       </div>
     {/if}
 
+    <!-- Reservation Timer Section -->
+    {#if reservationId && timeRemaining > 0}
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6 {timeRemaining <= 60 ? 'timer-warning' : ''}">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-yellow-800">
+                {#if timeRemaining <= 60}
+                  ⚠️ Almost expired - Complete payment quickly!
+                {:else}
+                  Slot Reserved - Complete payment within:
+                {/if}
+              </p>
+              <p class="text-xs text-yellow-600">Reservation ID: {reservationId.slice(0, 8)}...</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-2xl font-bold timer-text {timeRemaining <= 60 ? 'text-red-600' : 'text-yellow-800'}">
+              {formattedTime}
+            </div>
+            <p class="text-xs text-yellow-600">minutes remaining</p>
+          </div>
+        </div>
+        <div class="mt-3">
+          <div class="w-full bg-yellow-200 rounded-full h-2">
+            <div 
+              class="timer-progress h-2 rounded-full transition-all duration-1000 ease-linear {timeRemaining <= 60 ? 'bg-red-500' : 'bg-yellow-500'}" 
+              style="width: {(timeRemaining / 300) * 100}%"
+            ></div>
+          </div>
+        </div>
+        {#if timeRemaining <= 60}
+          <div class="mt-2">
+            <p class="text-xs text-red-600 font-medium">
+              ⏰ Less than 1 minute remaining! Submit your registration now to secure your slot.
+            </p>
+          </div>
+        {/if}
+      </div>
+    {:else if reservationId && timeRemaining <= 0}
+      <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div class="flex items-center">
+          <svg class="w-5 h-5 text-red-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+          </svg>
+          <div>
+            <p class="text-sm font-medium text-red-800">
+              Reservation Expired
+            </p>
+            <p class="text-xs text-red-600">Your slot reservation has expired. Please try again.</p>
+          </div>
+        </div>
+      </div>
+    {/if}
+
     <!-- Registration Form -->
     <div class="bg-white rounded-lg shadow-lg border border-gray-200 p-6">
       <h2 class="text-2xl font-bold text-gray-800 mb-6">Registration Form</h2>
@@ -204,23 +456,57 @@
         <!-- Hidden UKM ID field -->
         <input type="hidden" value={ukm.id} />
        
+        <!-- QRIS Payment Code -->
+        {#if ukm.qris_url && slug !== 'esport'}
+          <div class="text-center mb-6">
+            <h3 class="text-lg font-medium text-gray-800 mb-4">Payment QR Code</h3>
+            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 inline-block">
+              <img 
+                src="/src/lib/images/{ukm.qris_url}" 
+                alt="QRIS Payment Code for {ukm.name}"
+                class="max-w-xs mx-auto rounded-lg shadow-sm"
+              />
+            </div>
+            <p class="mt-2 text-sm text-gray-600">
+              Scan this QR code to make payment for {ukm.name}
+            </p>
+            <p class="text-sm font-medium text-blue-600">
+              Amount: {ukm.regist_fee > 0 ? `Rp ${ukm.regist_fee.toLocaleString('id-ID')}` : 'Free'}
+            </p>
+          </div>
+        {/if}
+
         <!-- Payment Proof Upload -->
-        <div>
-          <label for="payment" class="block text-sm font-medium text-gray-700 mb-2">
-            Payment Proof <span class="text-red-500">*</span>
-          </label>
-          <input 
-            type="file" 
-            id="payment" 
-            bind:files={paymentFile}
-            accept="image/*,.pdf"
-            required
-            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          />
-          <p class="mt-1 text-sm text-gray-500">
-            Upload proof of payment (PNG, JPG, or PDF, max 5MB)
-          </p>
-        </div>
+        {#if slug !== 'esport'}
+          <div>
+            <label for="payment" class="block text-sm font-medium text-gray-700 mb-2">
+              Payment Proof <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="file" 
+              id="payment" 
+              bind:files={paymentFile}
+              accept="image/*,.pdf"
+              required
+              class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            />
+            <p class="mt-1 text-sm text-gray-500">
+              Upload proof of payment (PNG, JPG, or PDF, max 5MB)
+            </p>
+          </div>
+        {:else}
+          <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="flex items-center">
+              <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+              </svg>
+              <div>
+                <p class="text-sm font-medium text-green-800">Free Registration</p>
+                <p class="text-xs text-green-600">No payment required for Esport UKM</p>
+              </div>
+            </div>
+          </div>
+        {/if}
 
         <!-- Google Drive URL -->
         <div>
@@ -242,12 +528,30 @@
 
         <!-- Submit Button -->
         <div class="pt-6">
+          {#if reservationId}
+            <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4">
+              <div class="flex items-center">
+                <svg class="w-5 h-5 text-green-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                </svg>
+                <div>
+                  <p class="font-medium">Slot Reserved!</p>
+                  <p class="text-sm">Your slot expires at: {reservationExpiry?.toLocaleTimeString()}</p>
+                </div>
+              </div>
+            </div>
+          {/if}
+          
           <button 
             type="submit"
             disabled={submitting}
             class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 {submitting ? 'cursor-not-allowed' : ''}"
           >
-            {submitting ? 'Submitting...' : 'Submit Registration'}
+            {#if submitting}
+              {reservationId ? 'Completing Registration...' : 'Reserving Slot...'}
+            {:else}
+              {slug === 'esport' ? 'Reserve Slot & Register (Free)' : 'Reserve Slot & Register'}
+            {/if}
           </button>
         </div>
       </form>
@@ -256,6 +560,34 @@
 </div>
 
 <style>
+  .container {
+    max-width: 1200px;
+  }
+  
+  /* Timer animation */
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+  
+  .timer-warning {
+    animation: pulse 2s infinite;
+  }
+  
+  /* Timer styles */
+  .timer-progress {
+    transition: width 1s linear;
+  }
+  
+  .timer-text {
+    font-family: 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
+  }
+
   .container {
     max-width: 800px;
   }
