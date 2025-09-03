@@ -7,7 +7,7 @@
 </script>
 
 <!-- svelte-ignore a11y_img_redundant_alt -->
-<div data-aos="fade-up" class={`absolute ${className}`} bind:this={frame}>
+<div data-aos="fade-up" data-aos-offset=500 class={`${className}`} bind:this={frame}>
   <div class="relative">
     <img src="/images/ukm/photo-frame.webp" alt=""
       class="absolute top-0 left-0 z-10">
