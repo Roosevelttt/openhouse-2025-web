@@ -172,7 +172,7 @@
       }
 
       // Fetch all UKMs and find the one with matching slug
-      const ukms = await get('/api/ukms');
+      const ukms = await get('/api/ukms') as Array<{ id: string; name: string; slug: string; current_slot: number; max_slot: number; regist_fee: number; qris_url?: string }>;
       ukm = ukms.find((u: any) => u.slug === slug) || null;
       
       if (!ukm) {
@@ -242,7 +242,7 @@
       const isEsport = slug === 'esport';
       const registrationData = {
         ukm_id: ukm.id,
-        payment: isEsport ? null : paymentFile[0].name, // No payment file for esport
+        payment: isEsport ? '' : paymentFile[0].name, // No payment file for esport
         drive_url: driveUrl.trim()
       };
 
