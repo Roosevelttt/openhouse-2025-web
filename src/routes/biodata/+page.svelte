@@ -269,6 +269,8 @@
 				let errorMessage = 'Unable to access payment page. Please try again.';
 				if (error.message && error.message.includes('No slots available')) {
 					errorMessage = 'Sorry, all slots for this UKM have been taken or are currently reserved by other users.';
+				} else if (error.message && error.message.includes('user has already registered for this UKM')) {
+					errorMessage = 'You have already registered for this UKM. Each person can only register once per UKM.';
 				}
 				
 				await Swal.fire({
