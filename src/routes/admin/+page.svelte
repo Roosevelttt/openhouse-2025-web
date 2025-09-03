@@ -528,7 +528,7 @@
   </div>
 </div>
 
-<style>
+<!-- <style>
   .nav-mobile-closed {
     max-height: 0;
     overflow: hidden;
@@ -544,4 +544,4 @@
       max-height 0.3s ease-in-out,
       opacity 0.3s ease-in-out;
   }
-</style>
+</style> -->
