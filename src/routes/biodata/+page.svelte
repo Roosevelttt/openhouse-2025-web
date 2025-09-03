@@ -3,6 +3,7 @@
 	import { getCurrentUserInfo, getUserBiodata, updateUserBiodata } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import Swal from "sweetalert2";
 
 	let loading = true;
 	let error = '';
@@ -102,6 +103,16 @@
 			error = '';
 			success = '';
 
+			// Show loading swal
+			Swal.fire({
+				title: 'Saving Biodata...',
+				text: 'Please wait while we save your information',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
 			// Call API to save biodata
 			const result = await updateUserBiodata(formData.line_id, formData.phone);
 			
@@ -111,13 +122,38 @@
 				
 				if (isEditMode && hasExistingData) {
 					// If we were editing existing data, go back to view mode after saving
-					setTimeout(() => {
-						isEditMode = false;
-						success = '';
-					}, 1500);
+					await Swal.fire({
+						icon: 'success',
+						title: 'Biodata Updated!',
+						text: 'Your information has been updated successfully',
+						timer: 1500,
+						showConfirmButton: false
+					});
+					
+					isEditMode = false;
+					success = '';
 				} else {
 					// If this was initial biodata creation, redirect based on where they came from
+					await Swal.fire({
+						icon: 'success',
+						title: 'Biodata Saved!',
+						text: 'Your information has been saved successfully',
+						timer: 1500,
+						showConfirmButton: false
+					});
+					
+					// Show redirect loading
+					Swal.fire({
+						title: 'Redirecting...',
+						text: 'Taking you to the registration page',
+						allowOutsideClick: false,
+						didOpen: () => {
+							Swal.showLoading();
+						}
+					});
+					
 					setTimeout(() => {
+						Swal.close();
 						if (ukmSlug) {
 							// Redirect back to specific UKM registration page
 							goto(`/registration/${ukmSlug}`);
@@ -128,14 +164,27 @@
 							// Default redirect to general registration page
 							goto('/registration');
 						}
-					}, 1500);
+					}, 1000);
 				}
 			} else {
+				await Swal.fire({
+					icon: 'error',
+					title: 'Save Failed',
+					text: result.message
+				});
 				error = result.message;
 			}
 		} catch (e) {
 			console.error('Error saving biodata:', e);
-			error = 'Failed to save biodata. Please try again.';
+			const errorMessage = 'Failed to save biodata. Please try again.';
+			
+			await Swal.fire({
+				icon: 'error',
+				title: 'Save Failed',
+				text: errorMessage
+			});
+			
+			error = errorMessage;
 		} finally {
 			loading = false;
 		}
@@ -153,6 +202,23 @@
 				phone: ''
 			};
 		}
+	};
+
+	const handleGoToRegistration = () => {
+		Swal.fire({
+			title: 'Redirecting...',
+			text: ukmSlug ? 'Taking you to the payment page' : 'Taking you to registration',
+			allowOutsideClick: false,
+			didOpen: () => {
+				Swal.showLoading();
+			}
+		});
+		
+		setTimeout(() => {
+			Swal.close();
+			const targetUrl = ukmSlug ? `/registration/${ukmSlug}` : redirectUrl || '/registration';
+			goto(targetUrl);
+		}, 1000);
 	};
 
 	const cancelEdit = () => {
@@ -249,9 +315,13 @@
 						>
 							Edit Information
 						</button>
-						<a href={ukmSlug ? `/registration/${ukmSlug}` : redirectUrl || '/registration'} class="btn btn-secondary">
+						<button 
+							type="button"
+							on:click={handleGoToRegistration}
+							class="btn btn-secondary"
+						>
 							{ukmSlug ? 'Go to Payment' : 'Go to Registration'}
-						</a>
+						</button>
 					</div>
 				</div>
 			</div>
