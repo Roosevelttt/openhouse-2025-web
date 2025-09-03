@@ -200,9 +200,9 @@
     const isEsport = slug === 'esport';
     const needsPayment = !isEsport;
     
-    if (!ukm || !userNrp || !driveUrl.trim() || (needsPayment && (!paymentFile || paymentFile.length === 0))) {
+    if (!ukm || !userNrp || (needsPayment && (!paymentFile || paymentFile.length === 0))) {
       const message = needsPayment 
-        ? 'Please fill all fields and select a payment proof file.'
+        ? 'Please fill all required fields and select a payment proof file.'
         : 'Please fill all required fields.';
       
       await Swal.fire({
@@ -267,6 +267,8 @@
         errorMessage = 'Sorry, all slots for this UKM are full. Please try registering for another UKM.';
       } else if (e.message === 'reservation has expired') {
         errorMessage = 'Your slot reservation has expired. Please try again.';
+      } else if (e.message === 'user has already registered for this UKM') {
+        errorMessage = 'You have already registered for this UKM. Each person can only register once per UKM.';
       } else if (e.message === 'Failed to fetch') {
         errorMessage = 'Cannot connect to server. Please check if the API server is running.';
       }
@@ -511,18 +513,17 @@
         <!-- Google Drive URL -->
         <div>
           <label for="drive_url" class="block text-sm font-medium text-gray-700 mb-2">
-            Portfolio Link (Google Drive URL) <span class="text-red-500">*</span>
+            Portfolio Link (Google Drive URL) <span class="text-gray-400">(Optional)</span>
           </label>
           <input 
             type="url" 
             id="drive_url" 
             bind:value={driveUrl}
             placeholder="https://drive.google.com/..."
-            required
             class="block w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
           <p class="mt-1 text-sm text-gray-500">
-            Share a Google Drive link to your portfolio documents
+            Share a Google Drive link to your portfolio documents (optional)
           </p>
         </div>
 
