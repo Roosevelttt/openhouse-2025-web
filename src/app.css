@@ -20,27 +20,7 @@
 =======
 
 
-.logo-fixed {
-  position: fixed;
-  top: 24px;
-  left: 50%;
-  transform: translateX(-50%) scale(0.5);
-  width: auto !important;
-  z-index: 50;
-  transition: transform 0.3s;
-}
-
-.subtitle.hidden {
-  opacity: 0;
-  height: 0;
-  overflow: hidden;
-}
-.subtitle {
-  opacity: 1;
-  height: auto;
-}
-
-/* 3D Push (red-orange) */
+/* 3D Push (red-orange) --- ukm details*/
 .btn.push {
   background: #ff4b2b;
   box-shadow: 0 6px #c1331e;
