@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getCurrentUserInfo, getUserBiodata, updateUserBiodata } from '$lib/api';
+	import { getCurrentUserInfo, getUserBiodata, updateUserBiodata, get, post } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Swal from "sweetalert2";
@@ -204,21 +204,96 @@
 		}
 	};
 
-	const handleGoToRegistration = () => {
-		Swal.fire({
-			title: 'Redirecting...',
-			text: ukmSlug ? 'Taking you to the payment page' : 'Taking you to registration',
-			allowOutsideClick: false,
-			didOpen: () => {
-				Swal.showLoading();
+	const handleGoToRegistration = async () => {
+		if (ukmSlug) {
+			// This is "Go to Payment" - check slot availability first
+			Swal.fire({
+				title: 'Checking availability...',
+				text: 'Please wait while we check if slots are available',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
+			try {
+				// First, get the UKM ID from the slug
+				const ukms = await get('/api/ukms');
+				const targetUkm = ukms.find((u: any) => u.slug === ukmSlug);
+				
+				if (!targetUkm) {
+					Swal.close();
+					await Swal.fire({
+						icon: 'error',
+						title: 'UKM Not Found',
+						text: 'The selected UKM could not be found.'
+					});
+					return;
+				}
+
+				// Call the access payment endpoint to check race condition
+				const response = await post(`/api/registrations/access-payment/${targetUkm.id}`, {});
+				
+				Swal.close();
+				
+				if (response.success) {
+					// Slot available - redirect to payment page with reservation info
+					await Swal.fire({
+						icon: 'success',
+						title: 'Slot Reserved!',
+						text: `Slot successfully reserved for ${targetUkm.name}. You have 5 minutes to complete payment.`,
+						confirmButtonText: 'Continue to Payment'
+					});
+					
+					// Pass reservation info as URL parameters
+					const reservationData = encodeURIComponent(JSON.stringify({
+						reservation_id: response.reservation_id,
+						expires_at: response.expires_at,
+						current_slot: response.current_slot,
+						max_slot: response.max_slot
+					}));
+					
+					goto(`/registration/${ukmSlug}?reservation=${reservationData}`);
+				} else {
+					// Should not reach here if API is working correctly
+					await Swal.fire({
+						icon: 'error',
+						title: 'Access Denied',
+						text: response.message || 'Unable to access payment page'
+					});
+				}
+			} catch (error: any) {
+				Swal.close();
+				
+				// Parse error message
+				let errorMessage = 'Unable to access payment page. Please try again.';
+				if (error.message && error.message.includes('No slots available')) {
+					errorMessage = 'Sorry, all slots for this UKM have been taken or are currently reserved by other users.';
+				}
+				
+				await Swal.fire({
+					icon: 'error',
+					title: 'Registration Full',
+					text: errorMessage
+				});
 			}
-		});
-		
-		setTimeout(() => {
-			Swal.close();
-			const targetUrl = ukmSlug ? `/registration/${ukmSlug}` : redirectUrl || '/registration';
-			goto(targetUrl);
-		}, 1000);
+		} else {
+			// This is "Go to Registration" - normal flow
+			Swal.fire({
+				title: 'Redirecting...',
+				text: 'Taking you to registration',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+			
+			setTimeout(() => {
+				Swal.close();
+				const targetUrl = redirectUrl || '/registration';
+				goto(targetUrl);
+			}, 1000);
+		}
 	};
 
 	const cancelEdit = () => {
