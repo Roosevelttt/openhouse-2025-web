@@ -1,6 +1,6 @@
 <script lang="ts">
   import { PUBLIC_API_BASE } from "$env/static/public";
-  import { get } from "$lib/api";
+  import { get, getSessionValues } from "$lib/api";
   import { onMount } from "svelte";
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
@@ -58,12 +58,18 @@
     ],
   });
 
+  let adminData: Record<string, any> = $state({});
   let ukms: Array<Ukm> = $state([]);
   let participants: Array<Participant> = $state([]);
 
   let error: string | null = $state(null);
   onMount(async () => {
     try {
+      adminData = await getSessionValues([
+        "admin_ukm_id",
+        "admin_ukm_name",
+        "admin_division_slug",
+      ]);
       ukms = await get("/api/ukms");
       participants = await get("/api/admin/participants");
     } catch (e: any) {
@@ -205,7 +211,7 @@
   function showPicture(src: string) {
     // Construct the full URL to the payment file on the API server
     const imageUrl = `${PUBLIC_API_BASE}/uploads/payments/${src}`;
-    
+
     Swal.fire({
       imageUrl: imageUrl,
       imageAlt: `Payment proof: ${src}`,
@@ -217,7 +223,7 @@
   <title>OH Admin | Participants</title>
 </svelte:head>
 
-<div class="flex justify-between items-center mb-6">
+<div class="mb-6 flex items-center justify-between">
   <h1 class="text-2xl font-bold tracking-wide text-gray-800">
     List Pendaftar & Validasi
   </h1>
@@ -225,17 +231,31 @@
 
 <div class="flex flex-col gap-2 rounded-2xl p-6 text-sm shadow-md">
   <div class="flex flex-wrap gap-2 font-semibold text-gray-600">
-    <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
-    <select
-      bind:value={filterUkm}
-      id="ukmFilter"
-      class="h-10 rounded border border-gray-300 p-2"
-    >
-      <option value="all">All</option>
-      {#each ukms as ukm}
-        <option value={ukm.name}>{ukm.name}</option>
-      {/each}
-    </select>
+    {#if adminData.admin_division_slug !== "bph" && adminData.admin_division_slug !== "it"}
+      <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
+      <select
+        id="ukmFilter"
+        class="h-10 rounded border border-gray-300 p-2 text-gray-400"
+        disabled
+      >
+        <option value="all">{adminData.admin_ukm_name}</option>
+        {#each ukms as ukm}
+          <option value={ukm.name}>{ukm.name}</option>
+        {/each}
+      </select>
+    {:else}
+      <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
+      <select
+        bind:value={filterUkm}
+        id="ukmFilter"
+        class="h-10 rounded border border-gray-300 p-2"
+      >
+        <option value="all">All</option>
+        {#each ukms as ukm}
+          <option value={ukm.name}>{ukm.name}</option>
+        {/each}
+      </select>
+    {/if}
     <a
       href={exportUrl}
       class="min-h-10 rounded border border-gray-300 p-2"
