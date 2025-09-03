@@ -240,6 +240,7 @@
         <h2 class="text-xl font-bold mb-2">Registration Successful! ✅</h2>
         <p>Your registration for <strong>{ukm?.name}</strong> has been submitted successfully.</p>
         <p class="text-sm mt-2">You will receive confirmation once your payment is verified.</p>
+        <p>✅Make sure to fill this questionnaire <a class="text-blue-500 underline" href="https://docs.google.com/forms/d/e/1FAIpQLScdreCQ1Uk97NQfMV8K2jRpGerpM2AcJe_qmHWMisCe0xB4tw/viewform">Click Here</a></p>
       </div>
       <button 
         on:click={goBack}
