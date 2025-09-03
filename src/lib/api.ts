@@ -140,7 +140,7 @@ export async function reserveSlot(ukmId: string): Promise<{reservation_id: strin
 
 export async function registerWithReservation(reservationId: string, registrationData: {
   ukm_id: string;
-  payment: string;
+  payment: string | null;
   drive_url: string;
 }): Promise<{message: string; registration: any; reservation_id: string}> {
   return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);

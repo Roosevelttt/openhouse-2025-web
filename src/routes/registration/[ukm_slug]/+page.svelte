@@ -161,7 +161,7 @@
       }
 
       // Fetch all UKMs and find the one with matching slug
-      const ukms = await get('/api/ukms');
+      const ukms = await get('/api/ukms') as any[];
       ukm = ukms.find((u: any) => u.slug === slug) || null;
       
       if (!ukm) {
@@ -196,9 +196,9 @@
       return;
     }
 
-    // Skip payment file validation for esport
-    const isEsport = slug === 'esport';
-    const needsPayment = !isEsport;
+    // Skip payment file validation for esport and menwa
+    const isFreeUkm = slug === 'esport' || slug === 'menwa';
+    const needsPayment = !isFreeUkm;
     
     if (!ukm || !userNrp || (needsPayment && (!paymentFile || paymentFile.length === 0))) {
       const message = needsPayment 
@@ -228,10 +228,10 @@
       });
 
       // Submit registration with existing reservation
-      const isEsport = slug === 'esport';
+      const isFreeUkm = slug === 'esport' || slug === 'menwa';
       const registrationData = {
         ukm_id: ukm.id,
-        payment: isEsport ? null : paymentFile[0].name, // No payment file for esport
+        payment: isFreeUkm ? null : paymentFile[0].name, // No payment file for free UKMs
         drive_url: driveUrl.trim()
       };
 
@@ -459,7 +459,7 @@
         <input type="hidden" value={ukm.id} />
        
         <!-- QRIS Payment Code -->
-        {#if ukm.qris_url && slug !== 'esport'}
+        {#if ukm.qris_url && slug !== 'esport' && slug !== 'menwa'}
           <div class="text-center mb-6">
             <h3 class="text-lg font-medium text-gray-800 mb-4">Payment QR Code</h3>
             <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 inline-block">
@@ -479,7 +479,7 @@
         {/if}
 
         <!-- Payment Proof Upload -->
-        {#if slug !== 'esport'}
+        {#if slug !== 'esport' && slug !== 'menwa'}
           <div>
             <label for="payment" class="block text-sm font-medium text-gray-700 mb-2">
               Payment Proof <span class="text-red-500">*</span>
@@ -504,7 +504,7 @@
               </svg>
               <div>
                 <p class="text-sm font-medium text-green-800">Free Registration</p>
-                <p class="text-xs text-green-600">No payment required for Esport UKM</p>
+                <p class="text-xs text-green-600">No payment required for {slug === 'esport' ? 'Esport' : 'MENWA'} UKM</p>
               </div>
             </div>
           </div>
@@ -551,7 +551,7 @@
             {#if submitting}
               {reservationId ? 'Completing Registration...' : 'Reserving Slot...'}
             {:else}
-              {slug === 'esport' ? 'Reserve Slot & Register (Free)' : 'Reserve Slot & Register'}
+              {(slug === 'esport' || slug === 'menwa') ? 'Reserve Slot & Register (Free)' : 'Reserve Slot & Register'}
             {/if}
           </button>
         </div>
