@@ -3,6 +3,74 @@
 
 @import "tailwindcss";
 
+:root {
+  /* raw colors */
+  /* light */
+	--color-cream: #fef7eb;
+	--color-soft-pink: #f6babc;
+	--color-pale-gold: #fde7ae;
+	--color-light-peach: #ffe8e2;
+	--color-light-gold: #ffe8aa;
+	--color-off-white: #e2e1da;
+	--color-white: #ffffff;
+
+	/* dark */
+	--color-deep-purple: #332c42;
+	--color-burgundy: #a81745;
+	--color-near-black: #0a0007;
+	--color-midnight-blue: #131228;
+	--color-dark-magenta: #612a4f;
+	--color-muted-magenta: #F5B8BB;
+	--color-deep-violet: #20002a;
+	--color-slate-blue: #373d7e;
+
+	/* red */
+	--color-dark-red-1: #4d1526;
+	--color-dark-red-2: #6b112c;
+	--color-dark-red-3: #781332;
+	--color-dark-red-4: #831738;
+	--color-dark-red-5: #8e183c;
+
+  /* orange */
+	--color-orange-center: #c66139;
+	--color-orange-dark: #963032;
+	--color-red-mid: #65112f;
+	--color-red-deep: #4d1526;
+	--color-red-edge: #260e16;
+
+  /* exclusive component colors, check components/home/CollorPallete untuk referensi gradient kalau perlu :)) */
+	/* -- text -- */
+	--text-primary: var(--color-cream);
+  --text-secondary: var(--color-soft-pink);
+	/* --text-primary-gradient: linear-gradient(to top right, var(--color-soft-pink), var(--color-cream), var(--color-white)); */
+	--text-tertiary: var(--color-pale-gold);
+	--text-dark: var(--color-deep-purple);
+	--text-dark-secondary: var(--color-burgundy);
+
+	/* -- bg -- */
+  --bg-dark-primary: var(--color-dark-red-1);
+  --bg-dark-secondary: var(--color-dark-red-3);
+  --bg-dark-tertiary: var(--color-dark-red-5);
+	/* --bg-dark-gradient: linear-gradient(to top left, var(--color-dark-red-1), var(--color-dark-red-2), var(--color-dark-red-3), var(--color-dark-red-4), var(--color-dark-red-5)); */
+	--bg-light-primary: var(--color-muted-magenta);
+  --bg-light-secondary: var(--color-light-peach);
+  /* --bg-light-gradient: linear-gradient(to top, var(--color-muted-magenta), var(--color-light-peach)); */
+
+	/* -- buttons -- */
+	--button-primary: var(--bg-light-primary);
+  /* --button-primary-gradient: var(--bg-light-gradient); */
+  --button-blue-primary: var(--color-near-black);
+  --button-blue-secondary: var(--color-midnight-blue);
+  --button-blue-tertiary:var(--color-dark-magenta);
+	/* --button-secondary-gradient: radial-gradient(ellipse at bottom, var(--color-near-black) 0%, var(--color-midnight-blue) 40%, var(--color-dark-magenta) 100%); */
+  --button-violet-primary:var(--color-deep-violet);
+  --button-violet-secondary: var(--color-slate-blue);
+	/* --button-tertiary-gradient: linear-gradient(to right, var(--color-deep-violet), var(--color-slate-blue), var(--color-deep-violet)); */
+	--button-outline-primary:var(--color-light-gold);
+  --button-outline-secondary:var(--color-off-white);
+  /* --button-outline-gradient: linear-gradient(to top, var(--color-light-gold), var(--color-off-white)); */
+}
+
 @font-face {
     font-display: swap;
     font-family: "Moomello";
@@ -16,8 +84,10 @@
     --font-lexend: "Lexend", sans-serif;
     --font-moomello: "Moomello", sans-serif;
 }
-<<<<<<< HEAD
-=======
+
+::-webkit-scrollbar {
+  display: none;
+}
 
 
 /* 3D Push (red-orange) --- ukm details*/
@@ -29,4 +99,3 @@
   box-shadow: 0 2px #c1331e;
   transform: translateY(4px);
 }
->>>>>>> c154f6e (fix: ukm page responsiveness)
