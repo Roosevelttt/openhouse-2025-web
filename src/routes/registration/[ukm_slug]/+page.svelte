@@ -35,7 +35,18 @@
     try {
       const reservationData = JSON.parse(decodeURIComponent(reservationParam));
       reservationId = reservationData.reservation_id;
-      reservationExpiry = new Date(reservationData.expires_at);
+      
+      // Fix timezone issue: ensure proper timezone handling
+      const expiresAtStr = reservationData.expires_at;
+      
+      if (expiresAtStr.includes('T') && expiresAtStr.includes('Z')) {
+        reservationExpiry = new Date(expiresAtStr);
+      } else if (expiresAtStr.includes('T')) {
+        reservationExpiry = new Date(expiresAtStr + 'Z');
+      } else {
+        reservationExpiry = new Date(expiresAtStr + ' UTC');
+      }
+    
       startTimer();
     } catch (e) {
       console.error('Failed to parse reservation data:', e);

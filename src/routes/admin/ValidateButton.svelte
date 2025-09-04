@@ -51,16 +51,18 @@
           icon: "error",
         });
       }
-    } catch (error: Error | any) {
-      // The catch block now handles ALL errors (network, 4xx, 5xx)
-      const errors: Record<string, string> = {
-        false: `${nrp} has already been validated`,
-        warning: `${nrp} has already been rejected`,
-      };
-      const errorMessage =
-        errors[JSON.parse(error.message).message] ||
-        "An unknown error occurred.";
+    } catch (error: any) {
+      let errorMessage: string = "An unknown error occurred.";
+
+      try {
+        const parsed = JSON.parse(error.message);
+        errorMessage = parsed.message || parsed.error || errorMessage;
+      } catch {
+        errorMessage = error.message || errorMessage;
+      }
+
       console.error("Fetch operation failed:", error);
+
       Swal.fire({
         title: "Request Failed",
         text: errorMessage,
