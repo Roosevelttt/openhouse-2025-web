@@ -4,6 +4,7 @@
 
   // get slug name from url
   const orgName = $page.params.slug.toUpperCase();
+
 </script>
 
 <div class="flex flex-col items-center justify-center min-h-screen bg-[#382e5f] text-white text-center p-4">
