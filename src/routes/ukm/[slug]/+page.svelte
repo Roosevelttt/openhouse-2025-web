@@ -181,7 +181,7 @@
 });
 </script> 
 
-<div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
+<div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
 <Background ref={(el) => (containerRef = el)} className="relative flex max-md:flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
   <div class="absolute inset-0 bg-black opacity-0" bind:this={overlayRef}></div>
     <!-- <img class="w-[400px] rotate-45 absolute -bottom-10 -left-5" src="images/single-card.png" alt=""> -->
