@@ -51,6 +51,88 @@ export async function post<T, U = object>(
   return text ? JSON.parse(text) : undefined;
 }
 
+// Helper function to get session values
+export async function getSessionValues(keys: string[]): Promise<Record<string, any>> {
+  try {
+    const response = await post<{ session_values: Record<string, any> }>('/api/user/session/values', {
+      keys: keys
+    });
+    return response.session_values;
+  } catch (error) {
+    throw new Error('Failed to fetch session values');
+  }
+}
+
+// Helper function to get current user NRP from session
+export async function getCurrentUserNrp(): Promise<string | null> {
+  try {
+    const sessionValues = await getSessionValues(['nrp']);
+    const nrp = sessionValues.nrp;
+    
+    // Check if NRP is valid (not the "UNKNOWN KEY or EMPTY STRING" response)
+    if (nrp && nrp !== "UNKNOWN KEY or EMPTY STRING") {
+      return nrp as string;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching user NRP from session:', error);
+    return null;
+  }
+}
+
+// Helper function to get current user info (NRP and name) from session
+export async function getCurrentUserInfo(): Promise<{nrp: string; name: string} | null> {
+  try {
+    const sessionValues = await getSessionValues(['nrp', 'name']);
+    const nrp = sessionValues.nrp;
+    const name = sessionValues.name;
+    
+    // Check if both values are valid
+    if (nrp && nrp !== "UNKNOWN KEY or EMPTY STRING" && 
+        name && name !== "UNKNOWN KEY or EMPTY STRING") {
+      return {
+        nrp: nrp as string,
+        name: name as string
+      };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching user info from session:', error);
+    return null;
+  }
+}
+
+// Helper function to get user biodata
+export async function getUserBiodata(): Promise<{nrp: string; name: string; line_id: string; phone: string} | null> {
+  try {
+    const response = await get<{ data: {nrp: string; name: string; line_id: string; phone: string} }>('/api/user/biodata');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user biodata:', error);
+    return null;
+  }
+}
+
+// Helper function to update user biodata
+export async function updateUserBiodata(lineId: string, phone: string): Promise<{success: boolean; message: string}> {
+  try {
+    const response = await post<{ message: string; data: any }>('/api/user/biodata', {
+      line_id: lineId,
+      phone: phone
+    });
+    return {
+      success: true,
+      message: response.message
+    };
+  } catch (error) {
+    console.error('Error updating user biodata:', error);
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Failed to update biodata'
+    };
+  }
+}
+
 export async function put<T, U = object>(
   path: string,
   body: U,
@@ -94,4 +176,17 @@ export async function del<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) throw new Error(text);
   // @ts-ignore
   return text ? JSON.parse(text) : undefined;
+}
+
+// Slot reservation functions
+export async function reserveSlot(ukmId: string): Promise<{reservation_id: string; expires_at: string}> {
+  return post('/api/registrations/reserve', { ukm_id: ukmId });
+}
+
+export async function registerWithReservation(reservationId: string, registrationData: {
+  ukm_id: string;
+  payment: string;
+  drive_url: string;
+}): Promise<{message: string; registration: any; reservation_id: string}> {
+  return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);
 }

@@ -1,11 +1,11 @@
 import { redirect } from '@sveltejs/kit';
-import { PUBLIC_API_BASE } from '$env/static/public';
+import { INTERNAL_API_URL } from '$env/static/private';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ cookies, url }) => {
   try {
     // Check session
-    const sessionResponse = await fetch(`${PUBLIC_API_BASE}/api/debug/session`, {
+    const sessionResponse = await fetch(`${INTERNAL_API_URL}/api/debug/session`, {
       headers: {
         'Cookie': cookies.getAll().map(cookie => `${cookie.name}=${cookie.value}`).join('; ')
       }

@@ -1,8 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { getCurrentUserInfo, getUserBiodata, updateUserBiodata } from '$lib/api';
+	import { getCurrentUserInfo, getUserBiodata, updateUserBiodata, get, post } from '$lib/api';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import Swal from "sweetalert2";
 
 	let loading = true;
 	let error = '';
@@ -102,6 +103,16 @@
 			error = '';
 			success = '';
 
+			// Show loading swal
+			Swal.fire({
+				title: 'Saving Biodata...',
+				text: 'Please wait while we save your information',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
 			// Call API to save biodata
 			const result = await updateUserBiodata(formData.line_id, formData.phone);
 			
@@ -111,13 +122,38 @@
 				
 				if (isEditMode && hasExistingData) {
 					// If we were editing existing data, go back to view mode after saving
-					setTimeout(() => {
-						isEditMode = false;
-						success = '';
-					}, 1500);
+					await Swal.fire({
+						icon: 'success',
+						title: 'Biodata Updated!',
+						text: 'Your information has been updated successfully',
+						timer: 1500,
+						showConfirmButton: false
+					});
+					
+					isEditMode = false;
+					success = '';
 				} else {
 					// If this was initial biodata creation, redirect based on where they came from
+					await Swal.fire({
+						icon: 'success',
+						title: 'Biodata Saved!',
+						text: 'Your information has been saved successfully',
+						timer: 1500,
+						showConfirmButton: false
+					});
+					
+					// Show redirect loading
+					Swal.fire({
+						title: 'Redirecting...',
+						text: 'Taking you to the registration page',
+						allowOutsideClick: false,
+						didOpen: () => {
+							Swal.showLoading();
+						}
+					});
+					
 					setTimeout(() => {
+						Swal.close();
 						if (ukmSlug) {
 							// Redirect back to specific UKM registration page
 							goto(`/registration/${ukmSlug}`);
@@ -128,14 +164,27 @@
 							// Default redirect to general registration page
 							goto('/registration');
 						}
-					}, 1500);
+					}, 1000);
 				}
 			} else {
+				await Swal.fire({
+					icon: 'error',
+					title: 'Save Failed',
+					text: result.message
+				});
 				error = result.message;
 			}
 		} catch (e) {
 			console.error('Error saving biodata:', e);
-			error = 'Failed to save biodata. Please try again.';
+			const errorMessage = 'Failed to save biodata. Please try again.';
+			
+			await Swal.fire({
+				icon: 'error',
+				title: 'Save Failed',
+				text: errorMessage
+			});
+			
+			error = errorMessage;
 		} finally {
 			loading = false;
 		}
@@ -152,6 +201,100 @@
 				line_id: '',
 				phone: ''
 			};
+		}
+	};
+
+	const handleGoToRegistration = async () => {
+		if (ukmSlug) {
+			// This is "Go to Payment" - check slot availability first
+			Swal.fire({
+				title: 'Checking availability...',
+				text: 'Please wait while we check if slots are available',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+
+			try {
+				// First, get the UKM ID from the slug
+				const ukms = await get('/api/ukms');
+				const targetUkm = ukms.find((u: any) => u.slug === ukmSlug);
+				
+				if (!targetUkm) {
+					Swal.close();
+					await Swal.fire({
+						icon: 'error',
+						title: 'UKM Not Found',
+						text: 'The selected UKM could not be found.'
+					});
+					return;
+				}
+
+				// Call the access payment endpoint to check race condition
+				const response = await post(`/api/registrations/access-payment/${targetUkm.id}`, {});
+				
+				Swal.close();
+				
+				if (response.success) {
+					// Slot available - redirect to payment page with reservation info
+					await Swal.fire({
+						icon: 'success',
+						title: 'Slot Reserved!',
+						text: `Slot successfully reserved for ${targetUkm.name}. You have 5 minutes to complete payment.`,
+						confirmButtonText: 'Continue to Payment'
+					});
+					
+					// Pass reservation info as URL parameters
+					const reservationData = encodeURIComponent(JSON.stringify({
+						reservation_id: response.reservation_id,
+						expires_at: response.expires_at,
+						current_slot: response.current_slot,
+						max_slot: response.max_slot
+					}));
+					
+					goto(`/registration/${ukmSlug}?reservation=${reservationData}`);
+				} else {
+					// Should not reach here if API is working correctly
+					await Swal.fire({
+						icon: 'error',
+						title: 'Access Denied',
+						text: response.message || 'Unable to access payment page'
+					});
+				}
+			} catch (error: any) {
+				Swal.close();
+				
+				// Parse error message
+				let errorMessage = 'Unable to access payment page. Please try again.';
+				if (error.message && error.message.includes('No slots available')) {
+					errorMessage = 'Sorry, all slots for this UKM have been taken or are currently reserved by other users.';
+				} else if (error.message && error.message.includes('user has already registered for this UKM')) {
+					errorMessage = 'You have already registered for this UKM. Each person can only register once per UKM.';
+				}
+				
+				await Swal.fire({
+					icon: 'error',
+					title: 'Registration Full',
+					text: errorMessage
+				});
+			}
+		} else {
+			// This is "Go to Registration" - normal flow
+			Swal.fire({
+				title: 'Redirecting...',
+				text: 'Taking you to registration',
+				allowOutsideClick: false,
+				didOpen: () => {
+					Swal.showLoading();
+				}
+			});
+			
+			setTimeout(() => {
+				Swal.close();
+				const targetUrl = redirectUrl || '/registration';
+				goto(targetUrl);
+			}, 1000);
 		}
 	};
 
@@ -249,9 +392,13 @@
 						>
 							Edit Information
 						</button>
-						<a href={ukmSlug ? `/registration/${ukmSlug}` : redirectUrl || '/registration'} class="btn btn-secondary">
+						<button 
+							type="button"
+							on:click={handleGoToRegistration}
+							class="btn btn-secondary"
+						>
 							{ukmSlug ? 'Go to Payment' : 'Go to Registration'}
-						</a>
+						</button>
 					</div>
 				</div>
 			</div>
