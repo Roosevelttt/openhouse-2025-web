@@ -1,16 +1,10 @@
 <script lang="ts">
   import { PUBLIC_API_BASE } from "$env/static/public";
-  import { get } from "$lib/api";
+  import { get, getSessionValues } from "$lib/api";
   import { onMount } from "svelte";
-  import { slide } from "svelte/transition";
-  import logoSmall from "$lib/images/logo_oh_small.png";
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
   import RejectButton from "./RejectButton.svelte";
-  import type { PageData } from './$types';
-  
-  // Get admin data from server load
-  let { data }: { data: PageData } = $props();
 
   type Ukm = {
     id: string;
@@ -64,12 +58,18 @@
     ],
   });
 
+  let adminData: Record<string, any> = $state({});
   let ukms: Array<Ukm> = $state([]);
   let participants: Array<Participant> = $state([]);
 
   let error: string | null = $state(null);
   onMount(async () => {
     try {
+      adminData = await getSessionValues([
+        "admin_ukm_id",
+        "admin_ukm_name",
+        "admin_division_slug",
+      ]);
       ukms = await get("/api/ukms");
       participants = await get("/api/admin/participants");
     } catch (e: any) {
@@ -211,57 +211,103 @@
   function showPicture(src: string) {
     // Construct the full URL to the payment file on the API server
     const imageUrl = `${PUBLIC_API_BASE}/uploads/payments/${src}`;
-    
+
     Swal.fire({
       imageUrl: imageUrl,
       imageAlt: `Payment proof: ${src}`,
     });
   }
-
-  async function handleLogout() {
-    try {
-      const response = await fetch(`${PUBLIC_API_BASE}/api/auth/logout`, {
-        method: 'POST',
-        credentials: 'include'
-      });
-      
-      if (response.ok) {
-        window.location.href = '/login';
-      } else {
-        console.error('Logout failed');
-        Swal.fire({
-          icon: 'error',
-          title: 'Logout Failed',
-          text: 'There was an error logging out. Please try again.'
-        });
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Logout Failed',
-        text: 'There was an error logging out. Please try again.'
-      });
-    }
-  }
 </script>
 
 <svelte:head>
   <title>OH Admin | Participants</title>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </svelte:head>
 
-<div
-  class="font-plus-jakarta-sans flex h-screen flex-col gap-4 transition-all md:flex-row"
->
-  <nav
-    class="inset-y-0 min-w-64 flex-col gap-6 bg-white text-sm font-semibold text-nowrap text-gray-800 shadow-lg md:fixed md:flex"
-  >
+<div class="mb-6 flex items-center justify-between">
+  <h1 class="text-2xl font-bold tracking-wide text-gray-800">
+    List Pendaftar & Validasi
+  </h1>
+</div>
+
+<div class="flex flex-col gap-2 rounded-2xl p-6 text-sm shadow-md">
+  <div class="flex flex-wrap gap-2 font-semibold text-gray-600">
+    {#if adminData.admin_division_slug !== "bph" && adminData.admin_division_slug !== "it"}
+      <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
+      <select
+        id="ukmFilter"
+        class="h-10 rounded border border-gray-300 p-2 text-gray-400"
+        disabled
+      >
+        <option value="all">{adminData.admin_ukm_name}</option>
+        {#each ukms as ukm}
+          <option value={ukm.name}>{ukm.name}</option>
+        {/each}
+      </select>
+    {:else}
+      <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
+      <select
+        bind:value={filterUkm}
+        id="ukmFilter"
+        class="h-10 rounded border border-gray-300 p-2"
+      >
+        <option value="all">All</option>
+        {#each ukms as ukm}
+          <option value={ukm.name}>{ukm.name}</option>
+        {/each}
+      </select>
+    {/if}
+    <a
+      href={exportUrl}
+      class="min-h-10 rounded border border-gray-300 p-2"
+      download
+    >
+      Download Excel
+    </a>
     <button
-      class="float-right m-4 md:hidden"
-      onclick={toggleMenu}
-      aria-label="Toggle menu"
-      aria-expanded={isMenuOpen}
+      onclick={() => filterFileValidated("accepted")}
+      class={[
+        "h-10 rounded border",
+        fileValidatedStatusFilters === "accepted"
+          ? "border-indigo-600 p-2 text-indigo-600"
+          : "border-gray-300 p-2",
+      ]}
+    >
+      Accepted
+    </button>
+    <button
+      onclick={() => filterFileValidated("rejected")}
+      class={[
+        "h-10 rounded border",
+        fileValidatedStatusFilters === "rejected"
+          ? "border-indigo-600 p-2 text-indigo-600"
+          : "border-gray-300 p-2",
+      ]}
+    >
+      Rejected
+    </button>
+    <button
+      onclick={() => filterFileValidated("pending")}
+      class={[
+        "h-10 rounded border",
+        fileValidatedStatusFilters === "pending"
+          ? "border-indigo-600 p-2 text-indigo-600"
+          : "border-gray-300 p-2",
+      ]}
+    >
+      Pending
+    </button>
+  </div>
+  <div
+    class="flex h-10 max-w-lg items-center rounded border border-gray-300 font-semibold text-gray-600"
+  >
+    <input
+      class="flex-grow p-2"
+      type="text"
+      bind:value={searchTerm}
+      placeholder="Search table..."
+    />
+    <div
+      class="flex h-full w-12 items-center justify-center bg-indigo-700 text-white"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -271,454 +317,218 @@
         stroke="currentColor"
         class="size-6"
       >
-        {#if isMenuOpen}
-          <!-- X icon for closing -->
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M6 18 18 6M6 6l12 12"
-          />
-        {:else}
-          <!-- Hamburger icon for opening -->
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-          />
-        {/if}
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+        />
       </svg>
-    </button>
+    </div>
+  </div>
 
-    <!--  Mobile view  -->
-    {#if isMenuOpen}
-      <div
-        class="flex h-full w-full flex-col"
-        class:nav-mobile-open={isMenuOpen}
-        class:nav-mobile-closed={!isMenuOpen}
-        transition:slide
-      >
-        <div class="flex">
-          <img src={logoSmall} alt="Logo" class="ms-8 w-32" />
-        </div>
-        <div class="flex h-full flex-col md:justify-between">
-          <ul>
-            <li>
-              <a
-                href="/admin/"
-                class="ms-4 flex items-center gap-2 p-4"
-                aria-label="Users"
-              >
-                <span>
+  <div class="overflow-auto">
+    <table class="min-w-full table-fixed">
+      <thead>
+        <tr class="border-b border-b-gray-300 text-gray-800">
+          {#each tableData.columns as column}
+            <th
+              class="group cursor-pointer p-2 text-left"
+              onclick={() => handleSort(column.accessor)}
+            >
+              <div class="flex">
+                {#if sortKey === column.accessor}
+                  {#if sortDirection === "asc"}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
+                      />
+                    </svg>
+                  {:else}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="size-4"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3"
+                      />
+                    </svg>
+                  {/if}
+                {:else}
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
                     viewBox="0 0 24 24"
-                    fill="currentColor"
-                    class="size-6"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-4 opacity-0 transition-opacity group-hover:opacity-100"
                   >
                     <path
-                      d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
                     />
                   </svg>
-                </span>
-                <span>Participants</span>
-              </a>
-            </li>
-          </ul>
-          <div class="ms-4 flex items-center justify-between p-4">
-            <div class="flex">
-              Admin {data.admin.name} ({data.admin.nrp})
-              <span class="relative flex size-3">
-                <span
-                  class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75"
-                ></span>
-                <span
-                  class="relative inline-flex size-3 rounded-full bg-green-400"
-                ></span>
-              </span>
-            </div>
-
-            <button onclick={handleLogout} aria-label="logout">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </div>
-    {/if}
-
-    <!--Desktop view-->
-    <div class="hidden h-full flex-col md:flex">
-      <div class="flex justify-center">
-        <img src={logoSmall} alt="Logo" class="w-48" />
-      </div>
-      <div class="flex h-full flex-col md:justify-between">
-        <ul>
-          <li>
-            <a
-              href="/admin/"
-              class="ms-4 flex items-center gap-2 p-4"
-              aria-label="Users"
-            >
-              <span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="size-6"
-                >
-                  <path
-                    d="M4.5 6.375a4.125 4.125 0 1 1 8.25 0 4.125 4.125 0 0 1-8.25 0ZM14.25 8.625a3.375 3.375 0 1 1 6.75 0 3.375 3.375 0 0 1-6.75 0ZM1.5 19.125a7.125 7.125 0 0 1 14.25 0v.003l-.001.119a.75.75 0 0 1-.363.63 13.067 13.067 0 0 1-6.761 1.873c-2.472 0-4.786-.684-6.76-1.873a.75.75 0 0 1-.364-.63l-.001-.122ZM17.25 19.128l-.001.144a2.25 2.25 0 0 1-.233.96 10.088 10.088 0 0 0 5.06-1.01.75.75 0 0 0 .42-.643 4.875 4.875 0 0 0-6.957-4.611 8.586 8.586 0 0 1 1.71 5.157v.003Z"
-                  />
-                </svg>
-              </span>
-              <span>Participants</span>
-            </a>
-          </li>
-        </ul>
-        <div class="ms-4 flex justify-between p-4">
-          <div class="flex">
-           {data.admin.name} ({data.admin.nrp})
-            <span class="relative flex size-3">
-              <span
-                class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-300 opacity-75"
-              ></span>
-              <span
-                class="relative inline-flex size-3 rounded-full bg-green-400"
-              ></span>
-            </span>
-          </div>
-
-          <button onclick={handleLogout} aria-label="logout">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-  </nav>
-  <nav class="flex w-full flex-col gap-6 p-6 md:ms-64">
-    <h1 class="text-2xl font-bold tracking-wide text-gray-800">
-      List Pendaftar & Validasi
-    </h1>
-
-    <div class="flex flex-col gap-2 rounded-2xl p-6 text-sm shadow-md">
-      <div class="flex flex-wrap gap-2 font-semibold text-gray-600">
-        <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
-        <select
-          bind:value={filterUkm}
-          id="ukmFilter"
-          class="h-10 rounded border border-gray-300 p-2"
-        >
-          <option value="all">All</option>
-          {#each ukms as ukm}
-            <option value={ukm.name}>{ukm.name}</option>
+                {/if}
+                <span>{column.Header}</span>
+              </div>
+            </th>
           {/each}
-        </select>
-        <a
-          href={exportUrl}
-          class="min-h-10 rounded border border-gray-300 p-2"
-          download
-        >
-          Download Excel
-        </a>
-        <button
-          onclick={() => filterFileValidated("accepted")}
-          class={[
-            "h-10 rounded border",
-            fileValidatedStatusFilters === "accepted"
-              ? "border-indigo-600 p-2 text-indigo-600"
-              : "border-gray-300 p-2",
-          ]}
-        >
-          Accepted
-        </button>
-        <button
-          onclick={() => filterFileValidated("rejected")}
-          class={[
-            "h-10 rounded border",
-            fileValidatedStatusFilters === "rejected"
-              ? "border-indigo-600 p-2 text-indigo-600"
-              : "border-gray-300 p-2",
-          ]}
-        >
-          Rejected
-        </button>
-        <button
-          onclick={() => filterFileValidated("pending")}
-          class={[
-            "h-10 rounded border",
-            fileValidatedStatusFilters === "pending"
-              ? "border-indigo-600 p-2 text-indigo-600"
-              : "border-gray-300 p-2",
-          ]}
-        >
-          Pending
-        </button>
-      </div>
-      <div
-        class="flex h-10 max-w-lg items-center rounded border border-gray-300 font-semibold text-gray-600"
+        </tr>
+      </thead>
+      <tbody>
+        {#each paginatedData() as participant (`${participant.id}-${participant.ukm_name}`)}
+          <tr
+            class="border-b border-b-gray-300 text-gray-600 transition hover:bg-amber-200"
+          >
+            <td class="p-2 ps-6">{participant.nrp}</td>
+            <td class="p-2 ps-6 text-nowrap">{participant.name}</td>
+            <td class="p-2 ps-6">{participant.ukm_name}</td>
+            <td class="flex gap-4 p-2 ps-6">
+              {#if participant.payment}
+                <button
+                  onclick={() => showPicture(participant.payment)}
+                  class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
+                  >Payment</button
+                >
+              {/if}
+              {#if participant.drive_url}
+                <a
+                  href={participant.drive_url}
+                  class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
+                  >Portfolio</a
+                >
+              {/if}
+            </td>
+            <td class="p-2 ps-6">{participant.line_id}</td>
+            <td class="p-2 ps-6">{participant.phone}</td>
+            <td
+              class={[
+                "p-2 px-6 font-bold",
+                participant.payment_validated === 0
+                  ? "text-sky-500"
+                  : participant.payment_validated === 1
+                    ? "text-green-500"
+                    : "text-red-500",
+              ]}>{validationStatus[participant.payment_validated]}</td
+            >
+            <td class="text-nowrap">
+              <ValidateButton nrp={participant.nrp} ukm={participant.ukm_id} />
+              <RejectButton nrp={participant.nrp} ukm={participant.ukm_id} />
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+  </div>
+  <div class="flex flex-wrap items-center justify-center gap-2">
+    <span>Rows per page</span>
+    <select
+      id="pagination"
+      bind:value={itemsPerPage}
+      class="border border-gray-300 p-2"
+    >
+      {#each pageOptions as num}
+        <option value={num}>{num}</option>
+      {/each}
+    </select>
+    <button
+      onclick={() => {
+        goToPage(1);
+      }}
+      aria-label="First Page"
+      class="p-2"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
       >
-        <input
-          class="flex-grow p-2"
-          type="text"
-          bind:value={searchTerm}
-          placeholder="Search table..."
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
         />
-        <div
-          class="flex h-full w-12 items-center justify-center bg-indigo-700 text-white"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </div>
-      </div>
-
-      <div class="overflow-auto">
-        <table class="min-w-full table-fixed">
-          <thead>
-            <tr class="border-b border-b-gray-300 text-gray-800">
-              {#each tableData.columns as column}
-                <th
-                  class="group cursor-pointer p-2 text-left"
-                  onclick={() => handleSort(column.accessor)}
-                >
-                  <div class="flex">
-                    {#if sortKey === column.accessor}
-                      {#if sortDirection === "asc"}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="size-4"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
-                          />
-                        </svg>
-                      {:else}
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="size-4"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3"
-                          />
-                        </svg>
-                      {/if}
-                    {:else}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke-width="1.5"
-                        stroke="currentColor"
-                        class="size-4 opacity-0 transition-opacity group-hover:opacity-100"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
-                        />
-                      </svg>
-                    {/if}
-                    <span>{column.Header}</span>
-                  </div>
-                </th>
-              {/each}
-            </tr>
-          </thead>
-          <tbody>
-            {#each paginatedData() as participant (`${participant.id}-${participant.ukm_name}`)}
-              <tr
-                class="border-b border-b-gray-300 text-gray-600 transition hover:bg-amber-200"
-              >
-                <td class="p-2 ps-6">{participant.nrp}</td>
-                <td class="p-2 ps-6 text-nowrap">{participant.name}</td>
-                <td class="p-2 ps-6">{participant.ukm_name}</td>
-                <td class="flex gap-4 p-2 ps-6">
-                  {#if participant.payment}
-                    <button
-                      onclick={() => showPicture(participant.payment)}
-                      class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
-                      >Payment</button
-                    >
-                  {/if}
-                  {#if participant.drive_url}
-                    <a
-                      href={participant.drive_url}
-                      class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
-                      >Portfolio</a
-                    >
-                  {/if}
-                </td>
-                <td class="p-2 ps-6">{participant.line_id}</td>
-                <td class="p-2 ps-6">{participant.phone}</td>
-                <td
-                  class={[
-                    "p-2 px-6 font-bold",
-                    participant.payment_validated === 0
-                      ? "text-sky-500"
-                      : participant.payment_validated === 1
-                        ? "text-green-500"
-                        : "text-red-500",
-                  ]}>{validationStatus[participant.payment_validated]}</td
-                >
-                <td class="text-nowrap">
-                  <ValidateButton
-                    nrp={participant.nrp}
-                    ukm={participant.ukm_id}
-                  />
-                  <RejectButton
-                    nrp={participant.nrp}
-                    ukm={participant.ukm_id}
-                  />
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-      <div class="flex flex-wrap items-center justify-center gap-2">
-        <span>Rows per page</span>
-        <select
-          id="pagination"
-          bind:value={itemsPerPage}
-          class="border border-gray-300 p-2"
-        >
-          {#each pageOptions as num}
-            <option value={num}>{num}</option>
-          {/each}
-        </select>
-        <button
-          onclick={() => {
-            goToPage(1);
-          }}
-          aria-label="First Page"
-          class="p-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
-            />
-          </svg>
-        </button>
-        <button onclick={previousPage} aria-label="Previous Page" class="p-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M15.75 19.5 8.25 12l7.5-7.5"
-            />
-          </svg>
-        </button>
-        <span class="p-2">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button onclick={nextPage} aria-label="Next Page" class="p-2">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m8.25 4.5 7.5 7.5-7.5 7.5"
-            />
-          </svg>
-        </button>
-        <button
-          onclick={() => {
-            goToPage(totalPages);
-          }}
-          aria-label="Last Page"
-          class="p-2"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke-width="1.5"
-            stroke="currentColor"
-            class="size-6"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-  </nav>
+      </svg>
+    </button>
+    <button onclick={previousPage} aria-label="Previous Page" class="p-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15.75 19.5 8.25 12l7.5-7.5"
+        />
+      </svg>
+    </button>
+    <span class="p-2">
+      Page {currentPage} of {totalPages}
+    </span>
+    <button onclick={nextPage} aria-label="Next Page" class="p-2">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m8.25 4.5 7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </button>
+    <button
+      onclick={() => {
+        goToPage(totalPages);
+      }}
+      aria-label="Last Page"
+      class="p-2"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
+        />
+      </svg>
+    </button>
+  </div>
 </div>
 
-<style>
+<!-- <style>
   .nav-mobile-closed {
     max-height: 0;
     overflow: hidden;
@@ -734,4 +544,4 @@
       max-height 0.3s ease-in-out,
       opacity 0.3s ease-in-out;
   }
-</style>
+</style> -->

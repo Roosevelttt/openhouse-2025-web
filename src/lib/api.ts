@@ -133,6 +133,51 @@ export async function updateUserBiodata(lineId: string, phone: string): Promise<
   }
 }
 
+export async function put<T, U = object>(
+  path: string,
+  body: U,
+  init?: RequestInit,
+): Promise<T> {
+  const isJson = !(body instanceof FormData);
+
+  const headers = new Headers(init?.headers);
+  if (isJson && !headers.has("Content-Type")) {
+    headers.set("Content-Type", "application/json");
+  }
+
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "PUT",
+    credentials: "include",
+    ...init,
+    headers,
+    body: isJson ? JSON.stringify(body) : (body as any),
+  });
+  
+  const text = await res.text();
+  if (!res.ok) {
+    try {
+      const jsonError = JSON.parse(text);
+      throw new Error(jsonError.error || jsonError.message || text);
+    } catch {
+      throw new Error(text);
+    }
+  }
+  // @ts-ignore
+  return text ? JSON.parse(text) : undefined;
+}
+
+export async function del<T>(path: string, init?: RequestInit): Promise<T> {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "DELETE",
+    credentials: "include",
+    ...init,
+  });
+  const text = await res.text();
+  if (!res.ok) throw new Error(text);
+  // @ts-ignore
+  return text ? JSON.parse(text) : undefined;
+}
+
 // Slot reservation functions
 export async function reserveSlot(ukmId: string): Promise<{reservation_id: string; expires_at: string}> {
   return post('/api/registrations/reserve', { ukm_id: ukmId });
