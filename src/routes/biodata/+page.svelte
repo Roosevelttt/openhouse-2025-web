@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Swal from "sweetalert2";
+	import CarnivalTable from '$lib/components/background/CarnivalTable.svelte';
 
 	let loading = true;
 	let error = '';
@@ -363,8 +364,9 @@
 	<title>Biodata Form - Open House 2025</title>
 </svelte:head>
 
-<div class="container mx-auto px-4 py-8">
-	<div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-yellow-400 overflow-hidden">
+<CarnivalTable class="min-h-screen">
+	<div class="container mx-auto px-4 py-8">
+		<div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-yellow-400 overflow-hidden">
 		<!-- Carnival header -->
 		<div class="bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500 p-6 text-center relative">
 			<div class="absolute inset-0 bg-white/10"></div>
@@ -630,6 +632,7 @@
 			</div>
 		</div>
 	</div>
+</CarnivalTable>
 
 <style>
 	.container {

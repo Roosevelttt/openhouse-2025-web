@@ -4,6 +4,7 @@
   import { get, post, getCurrentUserInfo, getUserBiodata, reserveSlot, registerWithReservation } from '$lib/api';
   import { goto } from '$app/navigation';
   import Swal from "sweetalert2";
+  import CarnivalTable from '$lib/components/background/CarnivalTable.svelte';
 
   // Get the slug from the URL parameter
   $: slug = $page.params.ukm_slug;
@@ -361,8 +362,9 @@
   <title>{ukm ? `Register for ${ukm.name}` : 'UKM Registration'}</title>
 </svelte:head>
 
-<div class="container mx-auto p-8 max-w-2xl">
-  {#if loading}
+<CarnivalTable class="min-h-screen">
+  <div class="container mx-auto p-8 max-w-2xl">
+    {#if loading}
     <div class="flex justify-center items-center py-16">
       <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-4 border-yellow-300">
         <div class="flex items-center space-x-4">
@@ -690,6 +692,7 @@
     </div>
   {/if}
 </div>
+</CarnivalTable>
 
 <style>
   .container {
