@@ -177,7 +177,7 @@
          h-[25vh] sm:h-[50vh] md:h-screen max-w-none md:max-h-none"
 >
   <div class="absolute inset-0 w-full h-full">
-    <video playsinline autoplay muted loop poster="poster.jpg" class="w-full h-full object-cover">
+    <video playsinline autoplay muted loop class="w-full h-full object-cover">
       <source src="/videos/Video Chess.mp4" type="video/mp4" />
     </video>
   </div>
@@ -202,7 +202,7 @@
                 w-[80%] sm:w-[75%] md:w-[68%] z-10" />
     
     <img bind:this={behindBanner} src="/svg/home/hero/stage banner - behind.svg" alt="Stage banner background" 
-         class="absolute top-4 sm:top-6 md:top-1 inset-x-0 mx-auto 
+         class="absolute -top-6 md:top-1 inset-x-0 mx-auto 
                 w-[20%] sm:w-[18%] md:w-[16%] z-20" />
 
     <img bind:this={leftCurtainMiddle} src="/svg/home/hero/curtain left - middle (2).svg" alt="Left curtain middle layer" 
