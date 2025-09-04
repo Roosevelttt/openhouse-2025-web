@@ -3,7 +3,11 @@
   import UKMSection from '$lib/components/home/Ukm.svelte';
   import LKSection from '$lib/components/home/Lk.svelte';
   import Ukm from '$lib/components/home/Ukm.svelte';
+  import Swal from '$lib/components/swal/swal.svelte'
+
 </script>
+
+<Swal />
 
 <main>
   <Hero />
