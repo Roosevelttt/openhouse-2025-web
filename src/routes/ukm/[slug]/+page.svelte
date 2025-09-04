@@ -179,6 +179,20 @@
       });
     }
 });
+
+  const mobileImageStyles = [
+    "absolute w-[270px] sm:w-[300px] -rotate-8 top-[5%] left-0 z-10",
+    "absolute w-[270px] sm:w-[300px] rotate-15 top-[40%] right-[2%] z-12",
+    "absolute w-[270px] sm:w-[300px] rotate-8 top-[17%] right-[5%] z-10",
+    "absolute w-[270px] sm:w-[300px] -rotate-12 top-[28%] left-[5%] z-[11]",
+  ];
+
+  const desktopImageStyles = [
+    "-rotate-8 w-[270px]",
+    "rotate-8 translate-y-2 w-[270px]",
+    "-rotate-2 translate-y-10 w-[270px]",
+    "rotate-8 -translate-y-1 w-[270px]",
+  ];
 </script> 
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
@@ -186,7 +200,7 @@
   <div class="absolute inset-0 bg-black opacity-0" bind:this={overlayRef}></div>
     <!-- <img class="w-[400px] rotate-45 absolute -bottom-10 -left-5" src="images/single-card.png" alt=""> -->
 
-  <div class="relative flex flex-col items-center justify-center" bind:this={part1Ref}>
+  <div class="relative flex flex-col items-center justify-center space-x-2" bind:this={part1Ref}>
     <Logo
       src="/images/ukm/{selectedUkm?.logo_url || 'default-logo.png'}"
       alt="LOGO UKM" 
@@ -221,26 +235,30 @@
     <Title text="Our Memories"></Title>
   </div>
 
+  <!-- Mobile -->
   <div class="md:hidden h-full w-full">
-    <ImageFrame src="/images/ukm/dekor/1.jpg" alt="Dekorasi 1" 
-      className="absolute w-[270px] sm:w-[300px] -rotate-8 top-[5%] left-0 z-10" />
-    <ImageFrame src="/images/ukm/dekor/2.jpg" alt="Dekorasi 2" 
-      className="absolute w-[270px] sm:w-[300px] rotate-15 top-[40%] right-[2%] z-12" />
-    <ImageFrame src="/images/ukm/dekor/3.jpg" alt="Dekorasi 3" 
-      className="absolute w-[270px] sm:w-[300px] rotate-8 top-[17%] right-[5%] z-10" />
-    <ImageFrame src="/images/ukm/dekor/4.jpg" alt="Dekorasi 4" 
-      className="absolute w-[270px] sm:w-[300px] -rotate-12 top-[28%] left-[5%] z-[11]" />
+    {#each parseImageUrls(selectedUkm?.image_urls) as url, i}
+      <ImageFrame
+        src={'/images/ukm/' + url}
+        alt={`Dekorasi ${i + 1}`}
+        className={mobileImageStyles[i] ?? mobileImageStyles[0]}
+      />
+    {/each}
   </div>
 
+  <!-- Desktop -->
   <div class="hidden md:grid grid-cols-4 gap-2 justify-center w-full h-full mx-auto">
-    <ImageFrame src="/images/ukm/dekor/1.jpg" alt="Dekorasi 1" className="-rotate-8 w-[270px] " />
-    <ImageFrame src="/images/ukm/dekor/2.jpg" alt="Dekorasi 2" className="rotate-8 translate-y-2 w-[270px] " />
-    <ImageFrame src="/images/ukm/dekor/3.jpg" alt="Dekorasi 3" className="-rotate-2 translate-y-10 w-[270px] " />
-    <ImageFrame src="/images/ukm/dekor/4.jpg" alt="Dekorasi 4" className="rotate-8 -translate-y-1 w-[270px] " />
+    {#each parseImageUrls(selectedUkm?.image_urls) as url, i}
+      <ImageFrame
+        src={'/images/ukm/' + url}
+        alt={`Dekorasi ${i + 1}`}
+        className={desktopImageStyles[i] ?? desktopImageStyles[0]}
+      />
+    {/each}
   </div>
 
-    <img class="w-[375px] absolute top-[50%] left-0 z-[100] rotate-10" src="/images/mask.png" alt="">
-    <img class="max-md:hidden w-[375px] absolute -bottom-[15%] -right-[5%] -rotate-90 z-[1]" src="/images/multi-card.png" alt="">
+    <img class="w-[375px] absolute top-[50%] left-0 z-[100] rotate-10" src="/images/ukm/mask.png" alt="">
+    <img class="max-md:hidden w-[375px] absolute -bottom-[15%] -right-[5%] -rotate-90 z-[1]" src="/images/ukm/multi-card.png" alt="">
 </Background>
 
 

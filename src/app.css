@@ -88,8 +88,6 @@
 ::-webkit-scrollbar {
   display: none;
 }
-<<<<<<< HEAD
-=======
 
 
 /* 3D Push (red-orange) --- ukm details*/
@@ -101,4 +99,3 @@
   box-shadow: 0 2px #c1331e;
   transform: translateY(4px);
 }
->>>>>>> c154f6e (fix: ukm page responsiveness)
