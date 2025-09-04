@@ -2,6 +2,7 @@
   import { PUBLIC_API_BASE } from '$env/static/public';
   import { page } from '$app/stores';
   import { onMount } from 'svelte';
+  import Swal from "sweetalert2";
 
   function login() {
     const base = PUBLIC_API_BASE || '';
@@ -17,15 +18,30 @@
   }
   
   let errorMessage = '';
-  
+
   onMount(() => {
     const error = $page.url.searchParams.get('error');
-    if (error === 'admin_required') {
-      errorMessage = 'Admin access required. Please login with an admin account.';
-    } else if (error === 'session_error') {
-      errorMessage = 'Session error. Please login again.';
+    
+
+    if (error) {
+
+      if (error === 'admin_required') {
+        errorMessage = 'Admin access required. Please login with an admin account.';
+      } else if (error === 'session_error') {
+        errorMessage = 'Session error. Please login again.';
+      } else if (error === 'not_student') {
+        errorMessage = 'Only students can login.';
+      }
+
+      Swal.fire({
+        title: "Login Failed",
+        text: errorMessage,
+        icon: "error"
+      });
     }
   });
+
+  
 </script>
 
 <section class="w-full h-[89vh] flex items-center justify-center flex-col">

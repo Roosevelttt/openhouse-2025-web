@@ -20,3 +20,24 @@
 ::-webkit-scrollbar {
   display: none;
 }
+
+
+/* for SWAL */
+.swal2-title {
+  font-family: var(--font-plus-jakarta-sans);
+}
+
+.swal2-html-container {
+  font-family: var(--font-lexend);
+}
+
+.swal2-modal {
+  background-color: #fbeead;
+}
+
+.swal2-confirm {
+  background-color: #9c8464;
+}
+.swal2-confirm:hover {
+  background-color: #76644c;
+}
