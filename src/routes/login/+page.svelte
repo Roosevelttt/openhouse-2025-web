@@ -57,8 +57,8 @@
   {/if} -->
   
   <button on:click={login} class="drop-shadow-lg font-[family-name:Lexend] hover:bg-[var(--color-orange-center)] bg-[var(--color-orange-dark)] hover:cursor-pointer flex items-center py-3 px-5 rounded-full">
-    <img src="http://pluspng.com/img-png/google-logo-png-open-2000.png" alt="" class="h-[50px] mr-4">
-    <p class="text-2xl text-[var(--text-primary)]">Sign in with Google</p>
+    <img src="http://pluspng.com/img-png/google-logo-png-open-2000.png" alt="" class="h-[30px] sm:h-[50px] mr-4">
+    <p class="text-xl sm:text-2xl text-[var(--text-primary)]">Sign in with Google</p>
     
   </button>
   <p class="mt-2 font-[family-name:Lexend] text-[var(--text-primary)]">* use your JOHN email</p>
