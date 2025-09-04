@@ -31,13 +31,10 @@
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
-<<<<<<< HEAD
-=======
     "aos": "^2.3.4",
     "gsap": "^3.13.0",
     "page-flip": "^2.0.7",
     "pino": "^9.9.0",
->>>>>>> 5fb5b43 (feat: dynamic ukm details)
     "sweetalert2": "^11.22.4",
     "tailwindcss": "^4.1.12"
   },

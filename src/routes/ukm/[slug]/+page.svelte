@@ -48,7 +48,6 @@
     }
   }
 
-  console.log(getImageUrl(selectedUkm?.logo_url));
 
   function formatFee(fee: number | null): string {
     if (fee === null || fee === 0) return "Free";
