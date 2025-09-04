@@ -273,8 +273,7 @@
   </Background>
 {/if}
 
-{#if selectedUkm?.poster_url}
-  <Background className="relative flex flex-col items-center justify-center gap-2 md:gap-5 p-8">
+<Background className="relative flex flex-col items-center justify-center gap-2 md:gap-5 p-8">
     <div
       class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black z-[-1] opacity-15"
       bind:this={posterOverlay}
@@ -282,11 +281,25 @@
     <div class="w-full">
       <Title text="Join Us!" class="text-center text-3xl md:text-5xl font-bold" />
     </div>
-    <div class="w-full flex max-md:flex-col md:gap-5 items-center">
-      <div class="w-full flex justify-center mb-8 md:mb-0">
-        <Poster url=/images/ukm/{selectedUkm.poster_url} />
+    {#if selectedUkm?.poster_url}
+      <div class="w-full flex flex-col md:grid grid-cols-2 md:gap-5 items-center">
+        <div class="w-full flex justify-center mb-8 md:mb-0">
+          <Poster url=/images/ukm/{selectedUkm.poster_url} />
+        </div>
+        <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
+                bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">    
+          <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
+            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
+          <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
+            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+          <button class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
+                  transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl">
+            Register Now!
+          </button>
+        </div>
       </div>
-      <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
+    {:else}
+      <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 lg:w-1/2 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
               bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">    
         <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
           className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
@@ -297,6 +310,6 @@
           Register Now!
         </button>
       </div>
-    </div>
+    {/if}
+
   </Background>
-{/if}
