@@ -583,15 +583,14 @@
     <div class="flex justify-center items-center py-16">
       <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-4 border-orange-300">
         <div class="flex items-center space-x-4">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-600"></div>
-          <p class="text-purple-800 font-bold text-lg">🎪 Loading...</p>
+          <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-orange-600"></div>
+          <p class="text-orange-800 font-bold text-lg">Loading...</p>
         </div>
       </div>
     </div>
   {:else if error && !ukm}
     <div class="text-center py-16">
       <div class="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-4 border-red-400 max-w-md mx-auto">
-        <div class="text-6xl mb-4">🎭</div>
         <div class="bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-4 rounded-r-xl mb-6">
           <span class="font-bold">Oops!</span> {error}
         </div>
@@ -599,7 +598,7 @@
           on:click={goBack}
           class="bg-[var(--color-orange-dark)] hover:bg-[var(--color-orange-center)] text-white px-8 py-3 rounded-full font-plus-jakarta-sans font-bold text-lg shadow-lg transform hover:scale-105 transition-all duration-200"
         >
-          🎪 Back to Previous Page
+          Back to Previous Page
         </button>
       </div>
     </div>
@@ -617,9 +616,6 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
             </svg>
             Successful!
-            <svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
-            </svg>
           </h2>
           <p class="text-lg mb-2">Your registration for <strong class="text-green-800">{ukm?.name}</strong> has been submitted successfully!</p>
           <p class="text-sm mt-3 text-green-600 flex items-center">
@@ -689,13 +685,10 @@
     <!-- UKM Info Header -->
     <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-orange-300 p-8 mb-8 relative overflow-hidden">
       <!-- Carnival Header Decoration -->
-      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400"></div>
-      <div class="absolute -top-1 -left-1 w-6 h-6 bg-yellow-400 rounded-full animate-pulse"></div>
-      <div class="absolute -top-1 -right-1 w-6 h-6 bg-red-400 rounded-full animate-pulse"></div>
       
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center space-x-4">
-          <h1 class="text-4xl font-moomello font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">
+          <h1 class="text-2xl font-plus-jakarta-sans font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">
             {ukm.name}
           </h1>
         </div>
@@ -709,15 +702,13 @@
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-center">
         <div class="bg-gradient-to-br from-orange-100 to-orange-200 p-6 rounded-2xl border-2 border-orange-300 relative">
-          <div class="absolute -top-2 -right-2 text-2xl">💰</div>
-          <p class="text-sm text-orange-700 font-plus-jakarta-sans font-medium mb-2">🎫 Registration Fee</p>
+          <p class="text-sm text-orange-700 font-plus-jakarta-sans font-medium mb-2">Registration Fee</p>
           <p class="text-2xl font-plus-jakarta-sans font-bold text-orange-800">
-            {ukm.regist_fee > 0 ? `Rp ${ukm.regist_fee.toLocaleString('id-ID')}` : '🎁 Free!'}
+            {ukm.regist_fee > 0 ? `Rp ${ukm.regist_fee.toLocaleString('id-ID')}` : 'Free!'}
           </p>
         </div>
         <div class="bg-gradient-to-br from-orange-100 to-orange-200 p-6 rounded-2xl border-2 border-orange-300 relative">
-          <div class="absolute -top-2 -right-2 text-2xl">🎟️</div>
-          <p class="text-sm text-orange-700 font-plus-jakarta-sans font-medium mb-2">🎪 Available Slots</p>
+          <p class="text-sm text-orange-700 font-plus-jakarta-sans font-medium mb-2">Available Slots</p>
           <p class="text-2xl font-plus-jakarta-sans font-bold text-orange-800">{ukm.max_slot - ukm.current_slot} left</p>
         </div>
       </div>  
@@ -744,21 +735,9 @@
 
     <!-- Reservation Timer Section -->
     {#if reservationId && timeRemaining > 0}
-      <div class="bg-gradient-to-r from-yellow-100 to-orange-100 border-3 border-orange-300 rounded-3xl p-6 mb-6 relative overflow-hidden {timeRemaining <= 60 ? 'timer-warning animate-pulse' : ''}">
-        <!-- Carnival Timer Decoration -->
-        <div class="absolute bottom-2 left-2 text-xl animate-bounce">
-          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-          </svg>
-        </div>
-        
+      <div class="bg-gradient-to-r from-yellow-100 to-orange-100 border-3 border-orange-300 rounded-3xl p-6 mb-6 relative overflow-hidden {timeRemaining <= 60 ? 'timer-warning animate-pulse' : ''}"> 
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <div class="w-14 h-14 bg-gradient-to-br from-orange-300 to-orange-500 rounded-full flex items-center justify-center animate-pulse">
-                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-            </div>
             <div>
               <p class="text-lg font-plus-jakarta-sans font-bold text-orange-800">
                   Your seat is reserved! Complete payment within:
@@ -766,7 +745,7 @@
             </div>
           </div>
           <div class="text-right">
-            <div class="text-4xl font-plus-jakarta-sans font-bold timer-text bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent {timeRemaining <= 60 ? 'animate-bounce' : ''}">
+            <div class="text-2xl font-plus-jakarta-sans font-bold timer-text bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent {timeRemaining <= 60 ? 'animate-bounce' : ''}">
               {formattedTime}
             </div>
             <p class="text-sm text-orange-700 font-plus-jakarta-sans font-medium">minutes remaining</p>
@@ -816,13 +795,8 @@
 
     <!-- Registration Form -->
     <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-orange-300 p-8 relative overflow-hidden">
-      <!-- Carnival Form Decoration -->
-      <div class="absolute top-0 left-0 w-full h-3 bg-gradient-to-r from-orange-400 via-orange-400 to-orange-400"></div>
-      <div class="absolute -top-2 left-4 w-8 h-8 bg-yellow-400 rounded-full border-2 border-white"></div>
-      <div class="absolute -top-2 right-4 w-8 h-8 bg-orange-400 rounded-full border-2 border-white"></div>
-      
       <div class="flex items-center space-x-3 mb-8">
-        <h2 class="text-3xl font-moomello font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">Requirements</h2>
+        <h2 class="text-2xl font-plus-jakarta-sans font-bold bg-gradient-to-r from-orange-600 to-orange-800 bg-clip-text text-transparent">Requirements</h2>
       </div>
 
       {#if error}
@@ -843,13 +817,10 @@
               <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
               </svg>
-              <h3 class="text-2xl font-moomello font-bold text-orange-700">Payment QR Code</h3>
+              <h3 class="text-xl font-plus-jakarta-sans font-bold text-orange-700">Payment QR Code</h3>
             </div>
             <div class="bg-gradient-to-br from-orange-100 to-orange-100 border-4 border-orange-300 rounded-3xl p-8 inline-block relative">
-              <div class="absolute -top-2 -left-2 w-6 h-6 bg-yellow-400 rounded-full"></div>
-              <div class="absolute -top-2 -right-2 w-6 h-6 bg-pink-400 rounded-full"></div>
-              <div class="absolute -bottom-2 -left-2 w-6 h-6 bg-blue-400 rounded-full"></div>
-              <div class="absolute -bottom-2 -right-2 w-6 h-6 bg-green-400 rounded-full"></div>
+            
               <img 
                 src="/src/lib/images/{ukm.qris_url}" 
                 alt="QRIS Payment Code for {ukm.name}"
@@ -974,7 +945,7 @@
         <!-- Google Drive URL -->
         <div class="mb-6">
           <div class="flex items-center space-x-2 mb-3">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
             </svg>
             <label for="drive_url" class="block text-lg font-plus-jakarta-sans font-bold text-orange-700">
@@ -989,10 +960,9 @@
               placeholder="https://drive.google.com/..."
               class="block w-full px-4 py-4 border-3 border-orange-300 rounded-2xl text-lg font-plus-jakarta-sans bg-gradient-to-r from-orange-50 to-orange-50 focus:outline-none focus:ring-4 focus:ring-orange-300 focus:border-orange-500"
             />
-            <div class="absolute top-3 right-3 text-2xl">🎨</div>
           </div>
           <p class="mt-3 text-sm text-orange-600 font-plus-jakarta-sans bg-orange-50 p-3 rounded-xl border border-orange-200">
-            🎪 Share a Google Drive link to your portfolio documents (optional)
+            Share a Google Drive link to your portfolio documents
           </p>
         </div>
 

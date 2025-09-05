@@ -371,7 +371,7 @@
 		<!-- Carnival header -->
 		<div class="bg-[var(--color-orange-dark)] p-6 text-center relative">
 			<div class="absolute inset-0 bg-white/10"></div>
-			<h1 class="relative text-4xl font-moomello font-bold text-white drop-shadow-lg mb-2">
+			<h1 class="relative text-6xl font-moomello font-bold text-white drop-shadow-lg mb-2">
 				Biodata Mahasiswa
 			</h1>
 		</div>
@@ -391,7 +391,7 @@
 									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
 								</svg>
 							</div>
-							<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-3">Authentication Required</h3>
+							<h3 class="text-4xl font-moomello font-bold text-orange-700 mb-3">Authentication Required</h3>
 							<p class="text-orange-600 font-[family-name:Lexend] mb-6">{error}</p>
 							<a href="/login" class="inline-flex bg-[var(--color-orange-dark)] hover:bg-[var(--color-orange-center)] text-white px-8 py-3 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200 items-center justify-center">
 								<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -430,7 +430,7 @@
 							<!-- Biodata display card -->
 							<div class="bg-gradient-to-br from-orange-100 to-orange-200 rounded-3xl p-8 border-3 border-orange-400 mb-8">
 								<div class="text-center mb-6">
-									<h3 class="text-3xl font-moomello font-bold text-orange-700 mb-2">Your Profile</h3>
+									<h3 class="text-4xl font-moomello font-bold text-orange-700 mb-2">Your Profile</h3>
 									<p class="text-orange-600 font-[family-name:Lexend] text-lg">This is your detail information</p>
 								</div>
 								
@@ -537,7 +537,7 @@
 								<!-- Account Information Section -->
 								<div class="bg-gradient-to-r from-orange-100 to-orange-100 rounded-3xl p-8 border-3 border-orange-400">
 									<div class="text-center mb-6">
-										<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
+										<h3 class="text-4xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
 											Account Information
 										</h3>
 										<p class="text-orange-600 font-[family-name:Lexend]">This information is from your authenticated session</p>
@@ -586,7 +586,7 @@
 								<!-- Contact Information Section -->
 								<div class="bg-gradient-to-r from-orange-100 to-orange-100 rounded-3xl p-8 border-3 border-orange-400">
 									<div class="text-center mb-6">
-										<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
+										<h3 class="text-4xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
 											Contact Information
 										</h3>
 										<p class="text-orange-600 font-[family-name:Lexend]">Please provide your contact details</p>
