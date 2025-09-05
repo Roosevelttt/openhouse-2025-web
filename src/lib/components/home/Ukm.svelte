@@ -5,16 +5,11 @@
   let currentPage = 0;
 
   const navItems = [
-    { label: 'Fotografi', page: 2 },
-    { label: 'Musik', page: 4 },
-    { label: 'Kontak', page: 6 },
-    { label: 'Cover', page: 8 },
-    { label: 'Fotografi', page: 10 },
-    { label: 'Musik', page: 12 },
-    { label: 'Kontak', page: 14 },
-    { label: 'Musik', page: 16 },
-    { label: 'Kontak', page: 18 },
-    { label: 'Kontak', page: 20 }
+    { label: '1-5', page: 1 },
+    { label: '6-10', page: 6 },
+    { label: '11-15', page: 11 },
+    { label: '16-20', page: 16 },
+    { label: '21-26', page: 21 },
   ];
 
   function handlePageChange(event: CustomEvent) {
@@ -40,7 +35,7 @@
   <div class="absolute top-1/4 md:top-[10%] flex items-center">
     
     <div class="w-[350px] h-[467px] sm:w-[400px] sm:h-[533px] md:w-[450px] md:h-[600px] 
-                lg:w-[600px] lg:h-[800px] xl:w-[750px] xl:h-[1000px] 2xl:w-[900px] 2xl:h-[1200px] z-[5]">
+                lg:w-[600px] lg:h-[800px]    xl:w-[900px] xl:h-[1200px] z-[5]">
       <UKMBook 
         bind:this={bookInstance} 
         on:pagechange={handlePageChange}
@@ -75,15 +70,15 @@
 
 <style>
   .bg-table {
-    background-image: url('/background/table a.png');
+    background-image: url('/background/table.png');
   }
   @media (min-width: 1279px) {
     .bg-table {
-      background-image: url('/background/table b.png');
+      background-image: url('/background/table.png');
     }
   }
   .bookmark-item {
-    padding: 10px 16px 10px 24px;
+    padding: 10px 16px 10px 16px;
     font-family: 'Georgia', serif;
     font-size: 1rem;
     color: #f7f0e3;
@@ -99,14 +94,12 @@
 
   .bookmark-item:hover {
     background-color: #7d5a4d;
-    transform: translateX(5px);
   }
 
   .bookmark-item.active {
     background-color: #c9a77d;
     color: #4a3e36;
     font-weight: bold;
-    transform: translateX(10px);
     box-shadow: -2px 4px 12px rgba(0,0,0,0.4);
   }
 </style>
