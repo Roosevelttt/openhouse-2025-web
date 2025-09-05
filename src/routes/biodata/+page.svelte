@@ -200,7 +200,7 @@
 							goto(redirectUrl);
 						} else {
 							// Default redirect to general registration page
-							goto('/registration');
+							goto('/');
 						}
 					}, 1000);
 				}
@@ -321,7 +321,7 @@
 			// This is "Go to Registration" - normal flow
 			Swal.fire({
 				title: 'Redirecting...',
-				text: 'Taking you to registration',
+				text: 'Taking you to homepage',
 				allowOutsideClick: false,
 				didOpen: () => {
 					Swal.showLoading();
@@ -330,7 +330,7 @@
 			
 			setTimeout(() => {
 				Swal.close();
-				const targetUrl = redirectUrl || '/registration';
+				const targetUrl = redirectUrl || '/';
 				goto(targetUrl);
 			}, 1000);
 		}
@@ -364,18 +364,16 @@
 	<title>Biodata Form - Open House 2025</title>
 </svelte:head>
 
+<div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
 <CarnivalTable class="min-h-screen">
 	<div class="container mx-auto px-4 py-8">
 		<div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-yellow-400 overflow-hidden">
 		<!-- Carnival header -->
 		<div class="bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500 p-6 text-center relative">
 			<div class="absolute inset-0 bg-white/10"></div>
-			<h1 class="relative text-4xl font-bold text-white drop-shadow-lg mb-2">
-				🎪 Biodata Carnival 🎪
+			<h1 class="relative text-4xl font-moomello font-bold text-white drop-shadow-lg mb-2">
+				Biodata Mahasiswa
 			</h1>
-			<p class="relative text-white/90 text-lg font-medium">
-				🎊 Complete your magical profile for the grand adventure! 🌟
-			</p>
 		</div>
 
 		<!-- Main content -->
@@ -383,16 +381,23 @@
 				{#if loading && !formData.name}
 					<div class="text-center py-12">
 						<div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent mb-4"></div>
-						<p class="text-purple-700 text-lg font-medium">🎠 Loading your magical information... ✨</p>
+						<p class="text-orange-700 text-lg font-[family-name:Lexend] font-medium">Loading your magical information...</p>
 					</div>
 				{:else if error && !formData.name}
 					<div class="text-center py-12">
 						<div class="bg-red-100 border-3 border-red-400 rounded-2xl p-8 max-w-md mx-auto">
-							<div class="text-6xl mb-4">🚫</div>
-							<h3 class="text-2xl font-bold text-red-700 mb-3">Authentication Required</h3>
-							<p class="text-red-600 mb-6">{error}</p>
-							<a href="/login" class="inline-block bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-								🔐 Go to Login
+							<div class="flex justify-center mb-4">
+								<svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+								</svg>
+							</div>
+							<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-3">Authentication Required</h3>
+							<p class="text-orange-600 font-[family-name:Lexend] mb-6">{error}</p>
+							<a href="/login" class="inline-flex bg-[var(--color-orange-dark)] hover:bg-[var(--color-orange-center)] text-white px-8 py-3 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-200 items-center justify-center">
+								<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+								</svg>
+								Go to Login
 							</a>
 						</div>
 					</div>
@@ -401,57 +406,74 @@
 						<!-- View Mode - Show existing data -->
 						<div class="carnival-view-mode">
 							{#if error}
-								<div class="bg-red-100 border-3 border-red-400 rounded-2xl p-4 mb-6 text-center">
-									<div class="text-3xl mb-2">❌</div>
-									<p class="text-red-700 font-medium">{error}</p>
+								<div class="bg-orange-100 border-3 border-orange-400 rounded-2xl p-4 mb-6 text-center">
+									<div class="flex justify-center mb-2">
+										<svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.924-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+										</svg>
+									</div>
+									<p class="text-orange-700 font-[family-name:Lexend] font-medium">{error}</p>
 								</div>
 							{/if}
 
 							{#if success}
-								<div class="bg-green-100 border-3 border-green-400 rounded-2xl p-4 mb-6 text-center">
-									<div class="text-3xl mb-2">✅</div>
-									<p class="text-green-700 font-medium">{success}</p>
+								<div class="bg-orange-100 border-3 border-orange-400 rounded-2xl p-4 mb-6 text-center">
+									<div class="flex justify-center mb-2">
+										<svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+										</svg>
+									</div>
+									<p class="text-orange-700 font-[family-name:Lexend] font-medium">{success}</p>
 								</div>
 							{/if}
 
 							<!-- Biodata display card -->
 							<div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-3xl p-8 border-3 border-purple-400 mb-8">
 								<div class="text-center mb-6">
-									<h3 class="text-3xl font-bold text-purple-700 mb-2">🎪 Your Carnival Profile 🎪</h3>
-									<p class="text-purple-600 text-lg">Your magical details are ready for the adventure!</p>
+									<h3 class="text-3xl font-moomello font-bold text-orange-700 mb-2">Your Profile</h3>
+									<p class="text-orange-600 font-[family-name:Lexend] text-lg">This is your detail information</p>
 								</div>
 								
 								<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-									<div class="bg-white/80 rounded-2xl p-6 border-2 border-yellow-300">
+									<div class="bg-white/80 rounded-2xl p-6 border-2 border-orange-300">
 										<div class="flex items-center mb-3">
-											<span class="text-2xl mr-3">👤</span>
-											<div class="text-sm font-bold text-gray-600 uppercase tracking-wide">Full Name</div>
+											<svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+											</svg>
+											<div class="text-sm font-[family-name:Lexend] font-bold text-orange-600 uppercase tracking-wide">Full Name</div>
 										</div>
-										<span class="text-xl font-semibold text-gray-800">{formData.name}</span>
+										<span class="text-xl font-[family-name:Lexend] font-semibold text-orange-800">{formData.name}</span>
 									</div>
 									
-									<div class="bg-white/80 rounded-2xl p-6 border-2 border-blue-300">
+									<div class="bg-white/80 rounded-2xl p-6 border-2 border-orange-300">
 										<div class="flex items-center mb-3">
-											<span class="text-2xl mr-3">🎓</span>
-											<div class="text-sm font-bold text-gray-600 uppercase tracking-wide">NRP (Student ID)</div>
+											<svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+											</svg>
+											<div class="text-sm font-[family-name:Lexend] font-bold text-orange-600 uppercase tracking-wide">NRP (Student ID)</div>
 										</div>
-										<span class="text-xl font-semibold text-gray-800">{formData.nrp}</span>
+										<span class="text-xl font-[family-name:Lexend] font-semibold text-orange-800">{formData.nrp}</span>
 									</div>
 									
-									<div class="bg-white/80 rounded-2xl p-6 border-2 border-green-300">
+									<div class="bg-white/80 rounded-2xl p-6 border-2 border-orange-300">
 										<div class="flex items-center mb-3">
-											<span class="text-2xl mr-3">💬</span>
-											<div class="text-sm font-bold text-gray-600 uppercase tracking-wide">Line ID</div>
+											<svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+											</svg>
+											<div class="text-sm font-[family-name:Lexend] font-bold text-orange-600 uppercase tracking-wide">Line ID</div>
 										</div>
-										<span class="text-xl font-semibold text-gray-800">{formData.line_id}</span>
+										<span class="text-xl font-[family-name:Lexend] font-semibold text-orange-800">{formData.line_id}</span>
 									</div>
 									
-									<div class="bg-white/80 rounded-2xl p-6 border-2 border-pink-300">
+									<div class="bg-white/80 rounded-2xl p-6 border-2 border-orange-300">
 										<div class="flex items-center mb-3">
-											<span class="text-2xl mr-3">📱</span>
-											<div class="text-sm font-bold text-gray-600 uppercase tracking-wide">Phone Number</div>
+											<svg class="w-6 h-6 text-orange-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+											</svg>
+											<div class="text-sm font-[family-name:Lexend] font-bold text-orange-600 uppercase tracking-wide">Phone Number</div>
 										</div>
-										<span class="text-xl font-semibold text-gray-800">{formData.phone}</span>
+										<span class="text-xl font-[family-name:Lexend] font-semibold text-orange-800">{formData.phone}</span>
 									</div>
 								</div>
 							</div>
@@ -461,17 +483,27 @@
 								<button
 									type="button"
 									on:click={toggleEditMode}
-									class="bg-gradient-to-r from-orange-500 to-red-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+									class="bg-[var(--color-orange-dark)] hover:bg-[var(--color-orange-center)] text-white px-8 py-4 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
 								>
-									<span class="mr-2">✏️</span>
+									<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+										<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+									</svg>
 									Edit Information
 								</button>
 								<button 
 									type="button"
 									on:click={handleGoToRegistration}
-									class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+									class="bg-[var(--color-orange-dark)] hover:bg-[var(--color-orange-center)] text-white px-8 py-4 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
 								>
-									<span class="mr-2">{ukmSlug ? '💳' : '🎪'}</span>
+									{#if ukmSlug}
+										<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"/>
+										</svg>
+									{:else}
+										<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+										</svg>
+									{/if}
 									{ukmSlug ? 'Go to Payment' : 'Go to Registration'}
 								</button>
 							</div>
@@ -480,31 +512,49 @@
 						<!-- Edit Mode - Show form -->
 						<div class="carnival-edit-mode">
 							{#if error}
-								<div class="bg-red-100 border-3 border-red-400 rounded-2xl p-4 mb-6 text-center">
-									<div class="text-3xl mb-2">❌</div>
-									<p class="text-red-700 font-medium">{error}</p>
+								<div class="bg-orange-100 border-3 border-orange-400 rounded-2xl p-4 mb-6 text-center">
+									<div class="flex justify-center mb-2">
+										<svg class="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.924-.833-2.464 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+										</svg>
+									</div>
+									<p class="text-orange-700 font-[family-name:Lexend] font-medium">{error}</p>
 								</div>
 							{/if}
 
 							{#if success}
-								<div class="bg-green-100 border-3 border-green-400 rounded-2xl p-4 mb-6 text-center">
-									<div class="text-3xl mb-2">🎉</div>
-									<p class="text-green-700 font-medium">{success}</p>
+								<div class="bg-orange-100 border-3 border-orange-400 rounded-2xl p-4 mb-6 text-center">
+									<div class="flex justify-center mb-2">
+										<svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+											<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+										</svg>
+									</div>
+									<p class="text-orange-700 font-[family-name:Lexend] font-medium">{success}</p>
 								</div>
 							{/if}
 
 							<form on:submit|preventDefault={handleSubmit} class="space-y-8">
 								<!-- Account Information Section -->
-								<div class="bg-gradient-to-r from-blue-100 to-indigo-100 rounded-3xl p-8 border-3 border-blue-400">
+								<div class="bg-gradient-to-r from-orange-100 to-orange-100 rounded-3xl p-8 border-3 border-orange-400">
 									<div class="text-center mb-6">
-										<h3 class="text-2xl font-bold text-blue-700 mb-2">🎫 Account Information 🎫</h3>
-										<p class="text-blue-600">This information is from your authenticated session</p>
+										<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
+											<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+											</svg>
+											Account Information
+											<svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+											</svg>
+										</h3>
+										<p class="text-orange-600 font-[family-name:Lexend]">This information is from your authenticated session</p>
 									</div>
 									
 									<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 										<div class="form-group">
-											<label for="name" class="text-sm font-bold text-blue-700 mb-2 flex items-center">
-												<span class="mr-2">👤</span>
+											<label for="name" class="text-sm font-[family-name:Lexend] font-bold text-orange-700 mb-2 flex items-center">
+												<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+												</svg>
 												Full Name
 											</label>
 											<input
@@ -512,15 +562,18 @@
 												id="name"
 												value={formData.name}
 												readonly
-												class="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 bg-gray-100 text-gray-700 font-medium"
+												class="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 bg-gray-100 text-gray-700 font-[family-name:Lexend] font-medium"
 												title="This field is automatically filled from your session"
 											/>
-											<small class="text-blue-600 text-sm mt-1 block">✨ Automatically filled from your Google account</small>
+											<small class="text-orange-600 font-[family-name:Lexend] text-sm mt-1 block">Automatically filled from your Google account</small>
 										</div>
 
 										<div class="form-group">
-											<label for="nrp" class="text-sm font-bold text-blue-700 mb-2 flex items-center">
-												<span class="mr-2">🎓</span>
+											<label for="nrp" class="text-sm font-[family-name:Lexend] font-bold text-orange-700 mb-2 flex items-center">
+												<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+												</svg>
 												NRP (Student ID)
 											</label>
 											<input
@@ -528,25 +581,35 @@
 												id="nrp"
 												value={formData.nrp}
 												readonly
-												class="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 bg-gray-100 text-gray-700 font-medium"
+												class="w-full px-4 py-3 rounded-2xl border-2 border-gray-300 bg-gray-100 text-gray-700 font-[family-name:Lexend] font-medium"
 												title="This field is automatically filled from your session"
 											/>
-											<small class="text-blue-600 text-sm mt-1 block">✨ Automatically filled from your session</small>
+											<small class="text-orange-600 font-[family-name:Lexend] text-sm mt-1 block">Automatically filled from your session</small>
 										</div>
 									</div>
 								</div>
 
 								<!-- Contact Information Section -->
-								<div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-3xl p-8 border-3 border-purple-400">
+								<div class="bg-gradient-to-r from-orange-100 to-orange-100 rounded-3xl p-8 border-3 border-orange-400">
 									<div class="text-center mb-6">
-										<h3 class="text-2xl font-bold text-purple-700 mb-2">📞 Contact Information 📞</h3>
-										<p class="text-purple-600">Please provide your contact details</p>
+										<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
+											<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+											</svg>
+											Contact Information
+											<svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+											</svg>
+										</h3>
+										<p class="text-orange-600 font-[family-name:Lexend]">Please provide your contact details</p>
 									</div>
 
 									<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 										<div class="form-group">
-											<label for="line_id" class="text-sm font-bold text-purple-700 mb-2 flex items-center">
-												<span class="mr-2">💬</span>
+											<label for="line_id" class="text-sm font-[family-name:Lexend] font-bold text-orange-700 mb-2 flex items-center">
+												<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+												</svg>
 												Line ID
 												<span class="text-red-500 ml-1">*</span>
 											</label>
@@ -555,19 +618,21 @@
 												id="line_id"
 												bind:value={formData.line_id}
 												placeholder="Enter your Line ID"
-												class="w-full px-4 py-3 rounded-2xl border-2 {formErrors.line_id ? 'border-red-400 bg-red-50' : 'border-purple-300 bg-white'} focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200"
+												class="w-full px-4 py-3 rounded-2xl border-2 {formErrors.line_id ? 'border-red-400 bg-red-50' : 'border-orange-300 bg-white'} focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 font-[family-name:Lexend]"
 												required
 											/>
 											{#if formErrors.line_id}
-												<small class="text-red-600 text-sm mt-1 block">{formErrors.line_id}</small>
+												<small class="text-red-600 font-[family-name:Lexend] text-sm mt-1 block">{formErrors.line_id}</small>
 											{:else}
-												<small class="text-purple-600 text-sm mt-1 block">📱 Your Line messaging app username</small>
+												<small class="text-orange-600 font-[family-name:Lexend] text-sm mt-1 block">Your Line messaging app username</small>
 											{/if}
 										</div>
 
 										<div class="form-group">
-											<label for="phone" class="text-sm font-bold text-purple-700 mb-2 flex items-center">
-												<span class="mr-2">📱</span>
+											<label for="phone" class="text-sm font-[family-name:Lexend] font-bold text-orange-700 mb-2 flex items-center">
+												<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+													<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+												</svg>
 												Phone Number
 												<span class="text-red-500 ml-1">*</span>
 											</label>
@@ -576,13 +641,13 @@
 												id="phone"
 												bind:value={formData.phone}
 												placeholder="Enter your phone number"
-												class="w-full px-4 py-3 rounded-2xl border-2 {formErrors.phone ? 'border-red-400 bg-red-50' : 'border-purple-300 bg-white'} focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200"
+												class="w-full px-4 py-3 rounded-2xl border-2 {formErrors.phone ? 'border-red-400 bg-red-50' : 'border-orange-300 bg-white'} focus:border-orange-500 focus:ring-2 focus:ring-orange-200 transition-all duration-200 font-[family-name:Lexend]"
 												required
 											/>
 											{#if formErrors.phone}
-												<small class="text-red-600 text-sm mt-1 block">{formErrors.phone}</small>
+												<small class="text-red-600 font-[family-name:Lexend] text-sm mt-1 block">{formErrors.phone}</small>
 											{:else}
-												<small class="text-purple-600 text-sm mt-1 block">🌍 Include country code if international (e.g., +62)</small>
+												<small class="text-orange-600 font-[family-name:Lexend] text-sm mt-1 block">Include country code if international (e.g., +62)</small>
 											{/if}
 										</div>
 									</div>
@@ -594,34 +659,40 @@
 										<button
 											type="button"
 											on:click={cancelEdit}
-											class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+											class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
 											disabled={loading}
 										>
-											<span class="mr-2">❌</span>
+											<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+											</svg>
 											Cancel
 										</button>
 									{:else}
 										<button
 											type="button"
 											on:click={handleReset}
-											class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+											class="bg-gray-500 hover:bg-gray-600 text-white px-8 py-4 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
 											disabled={loading}
 										>
-											<span class="mr-2">🔄</span>
+											<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+											</svg>
 											Reset Form
 										</button>
 									{/if}
 									<button
 										type="submit"
-										class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-8 py-4 rounded-full font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
+										class="bg-[var(--color-orange-dark)] hover:bg-[var(--color-orange-center)] text-white px-8 py-4 rounded-full font-[family-name:Lexend] font-bold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center justify-center"
 										disabled={loading}
 									>
 										{#if loading}
 											<div class="animate-spin rounded-full h-6 w-6 border-2 border-white border-t-transparent mr-2"></div>
-											Saving...
+											<span class="font-[family-name:Lexend]">Saving...</span>
 										{:else}
-											<span class="mr-2">💾</span>
-											{hasExistingData ? 'Update Biodata' : 'Save Biodata'}
+											<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 0V4a2 2 0 00-2-2H9a2 2 0 00-2 2v3m1 0h4m-4 0V4a2 2 0 00-2-2H9a2 2 0 00-2 2v3m1 0h4"/>
+											</svg>
+											<span class="font-[family-name:Lexend]">{hasExistingData ? 'Update Biodata' : 'Save Biodata'}</span>
 										{/if}
 									</button>
 								</div>
