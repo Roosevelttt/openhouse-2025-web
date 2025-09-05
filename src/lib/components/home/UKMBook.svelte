@@ -1,15 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import { createEventDispatcher } from 'svelte';
+  import { ukmData } from '$lib/data/ukmData';
 
+  const dispatch = createEventDispatcher();
   let bookContainer!: HTMLElement;
+  let isClosed = true;
+  let pageFlip: any = null;
 
   onMount(async () => {
     if (browser) {
       try {
-        const { PageFlip } = await import('page-flip');
-        
-        const pageFlip = new PageFlip(bookContainer, {
+        const pageFlipModule = await import('page-flip');
+        const PageFlip = pageFlipModule.PageFlip;
+
+        pageFlip = new PageFlip(bookContainer, {
           width: 450,
           height: 600,
           showCover: true,
@@ -21,133 +27,63 @@
         });
 
         pageFlip.loadFromHTML(document.querySelectorAll('.book-page'));
-
+        dispatch('init');
+        pageFlip.on('flip', (e: { data: number }) => {
+          isClosed = e.data === 0;
+          dispatch('pagechange', { currentPage: e.data });
+        });
       } catch (error) {
-        console.error("Failed to load or initialize PageFlip:", error);
+        console.error('Failed to load or initialize PageFlip:', error);
       }
     }
   });
+
+  export function turnToPage(page: number) {
+    if (pageFlip && pageFlip.getCurrentPageIndex() !== page) {
+      pageFlip.turnToPage(page);
+      dispatch('pagechange', { currentPage: page });
+    }
+  }
 </script>
 
-<div bind:this={bookContainer}>
+<div class="book-wrapper" class:is-closed={isClosed}>
+  <div bind:this={bookContainer}>
     <div class="book-page front-cover" />
 
-    <div class="book-page front-cover-back" />
+    <!-- <div class="book-page" /> -->
 
-    <div class="book-page title-page">
-    <div class="page-content">
-      <h2>Welcome to UKM Guide</h2>
-      <p>Explore the vibrant world of student organizations and discover where your passions can flourish. This guide will help you find the perfect UKM to join and grow your talents.</p>
-      <div class="welcome-message">
-        <p><em>"Every great journey begins with a single step. Take yours with us."</em></p>
+    {#each ukmData as ukm (ukm.slug)}
+      <div class="book-page">
+        <div class="page-content">
+          <h2>{ukm.name}</h2>
+          <div class="ukm-logo-container">
+            <img src={ukm.logoSrc} alt="{ukm.name} Logo" class="ukm-logo" />
+          </div>
+          <p class="ukm-overview">{ukm.overview}</p>
+          <a href="/ukm/{ukm.slug}" class="learn-more-link">Learn More &rarr;</a>
+        </div>
       </div>
-    </div>
-  </div>
+    {/each}
 
-  <div class="book-page">
-    <div class="page-content">
-      <h2>UKM Fotografi</h2>
-      <p>This is where the description for the Photography UKM will go.</p>
-      <div class="image-placeholder">
-        <p>[Photo Gallery Images]</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="book-page">
-    <div class="page-content">
-      <h3>Photography Activities</h3>
-      <ul>
-        <li>Portrait Photography Workshops</li>
-        <li>Nature Photography Expeditions</li>
-        <li>Digital Editing Masterclasses</li>
-        <li>Annual Photo Exhibitions</li>
-      </ul>
-      <div class="contact-info">
-        <p><strong>Contact:</strong> fotografi@ukm.edu</p>
-        <p><strong>Meeting:</strong> Every Friday 4PM</p>
-      </div>
-      
-    </div>
-  </div>
-
-  <div class="book-page">
-    <div class="page-content">
-      <h2>UKM Musik</h2>
-      <p>This is where the description for the Music UKM will go.</p>
-      <div class="image-placeholder">
-        <p>[Musical Instruments Images]</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="book-page">
-    <div class="page-content">
-      <h3>Musical Programs</h3>
-      <ul>
-        <li>Band Practice Sessions</li>
-        <li>Solo Performance Training</li>
-        <li>Music Theory Workshops</li>
-        <li>Campus Concerts</li>
-      </ul>
-      <div class="contact-info">
-        <p><strong>Contact:</strong> musik@ukm.edu</p>
-        <p><strong>Meeting:</strong> Every Wednesday 3PM</p>
-      </div>
-    </div>
-  </div>
-
-    <div class="book-page back-cover-front">
-    <div class="page-content">
-      <h2>Contact Information</h2>
-      <div class="contact-section">
-        <h3>UKM Office</h3>
-        <p><strong>Address:</strong> Student Activity Center, 2nd Floor</p>
-        <p><strong>Phone:</strong> +62-21-1234-5678</p>
-        <p><strong>Email:</strong> info@ukm.university.edu</p>
-        <p><strong>Office Hours:</strong> Monday - Friday, 9AM - 5PM</p>
-      </div>
-      <div class="social-media">
-        <h3>Follow Us</h3>
-        <p>@UKMUniversity on Instagram</p>
-        <p>UKM University on Facebook</p>
-        <p>@ukm_university on Twitter</p>
-      </div>
-    </div>
-  </div>
-
-    <div class="book-page back-cover">
-    <div class="back-cover-content">
-      <h3>Join Our UKM Community!</h3>
-      <p>Discover your passion and develop your talents with us.</p>
-      <div class="back-cover-footer">
-        <p>University Student Activity Center</p>
-        <p>© 2024 UKM Guide</p>
-      </div>
-    </div>
+    <div class="book-page back-cover" />
   </div>
 </div>
 
 <style>
   .book-page {
-    background-color: #f7f0e3;
     background-image: url('/background/brown paper texture.jpg');
     background-size: cover;
-
-    -webkit-backface-visibility: visible;
-    backface-visibility: visible;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  
   .front-cover {
-    background-image: url('/png/logo/journal 3 cover.jpg');
+    background-image: url('/png/ukm cover.png');
     background-size: cover;
     background-position: center;
     border: none;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   }
 
-  .front-cover-back {
+  /* .front-cover-back {
     background-color: #f9f4e8;
     background-image: url('/background/light paper texture.jpg');
     background-size: cover;
@@ -162,7 +98,7 @@
     background-position: center;
     border: none;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  }
+  } */
 
   .back-cover-front {
     background-color: #f7f0e3;
@@ -207,7 +143,7 @@
     opacity: 0.8;
   }
   
-  .page-content {
+ .page-content {
     padding: 2rem;
     font-family: 'Georgia', serif;
     color: #4a3e36;
@@ -216,13 +152,13 @@
     display: flex;
     flex-direction: column;
   }
-  
   .page-content h2 {
     font-size: 1.8rem;
     margin-bottom: 1rem;
     color: #5a3e36;
     border-bottom: 2px solid #c2b5a3;
     padding-bottom: 0.5rem;
+    text-align: center;
   }
   
   .page-content h3 {
@@ -327,6 +263,49 @@
   :global(.stf__innerShadow) {
     background: linear-gradient(to left, rgba(90, 62, 54, 0.4) 0%, rgba(90, 62, 54, 0) 100%) !important;
   }  */
+
+   .ukm-logo-container {
+    width: 100%;
+    max-height: 200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    border-radius: 100%;
+  }
+  .ukm-logo {
+    max-width: 100%;
+    max-height: 80%;
+    object-fit: contain;
+    border-radius: 100%;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .ukm-overview {
+    flex-grow: 1;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .learn-more-link {
+    display: block;
+    margin-top: auto;
+    padding: 0.75rem;
+    background-color: #5a3e36;
+    color: #f7f0e3;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.2s;
+  }
+  .learn-more-link:hover {
+    background-color: #7d5a4d;
+  }
+  :global(.stf__hardShadow), :global(.stf__hardInnerShadow) {
+    display: none !important;
+  }
+
   :global(.stf__outerShadow),
   :global(.stf__innerShadow),
   :global(.stf__hardShadow),

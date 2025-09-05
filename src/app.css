@@ -1,3 +1,7 @@
+/* swal css */
+@import url("./lib/components/swal/swal.css");
+
+
 /* plus-jakarta-sans & lexend font */
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
@@ -87,15 +91,4 @@
 
 ::-webkit-scrollbar {
   display: none;
-}
-
-
-/* 3D Push (red-orange) --- ukm details*/
-.btn.push {
-  background: #ff4b2b;
-  box-shadow: 0 6px #c1331e;
-}
-.btn.push:active {
-  box-shadow: 0 2px #c1331e;
-  transform: translateY(4px);
 }

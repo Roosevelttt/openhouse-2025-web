@@ -201,8 +201,8 @@
   </div>
 
   <div class="absolute inset-0 w-full h-full">
-    <img src="/svg/home/hero/stage bottom.svg" alt="Stage bottom" 
-         class="absolute -bottom-0.5 left-1/2 -translate-x-1/2 
+    <img src="/svg/home/hero/stage bottom v2.svg" alt="Stage bottom" 
+         class="absolute -bottom-25 left-1/2 -translate-x-1/2 
                 max-w-none w-[300%] sm:w-[130%] md:w-[120%] z-[60]" />
 
     <img bind:this={behindCurtains} src="/svg/home/hero/curtains behind.svg" alt="Behind curtains" 

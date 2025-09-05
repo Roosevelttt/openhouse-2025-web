@@ -3,6 +3,10 @@
   export { className as class };
 </script>
 
+  <!-- <CarnivalTable class="min-h-screen flex items-center justify-center">
+    <Component />
+  </CarnivalTable> -->
+  
 <div class="bg-container relative overflow-hidden {className}">
   <img 
     src="/svg/home/ribbons.svg" 
@@ -48,7 +52,7 @@
     transition: transform 0.3s ease;
   }
 
-  @media (max-width: 1535.98px) {
+  @media (max-width: 1279px) {
     .bg-container::before {
       transform: rotate(-90deg) scaleX(-1);
       scale: 1.7;

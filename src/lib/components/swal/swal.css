@@ -1,0 +1,22 @@
+.swal2-title {
+  font-family: var(--font-plus-jakarta-sans);
+  color: var(--text-primary)
+}
+
+.swal2-html-container {
+  font-family: var(--font-lexend);
+  color: var(--text-primary)
+}
+
+.swal2-modal {
+  background-color: var(--color-dark-magenta);
+}
+
+
+/* swal buttons */
+.swal2-confirm {
+  background-color: var(--color-dark-red-4);
+}
+.swal2-confirm:hover {
+  background-color: var(--color-dark-red-2);
+}
