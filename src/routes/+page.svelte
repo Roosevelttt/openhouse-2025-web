@@ -7,6 +7,7 @@ import ColorPalette from '$lib/components/home/ColorPalette.svelte';
 import CarnivalTable from '$lib/components/background/CarnivalTable.svelte';
 import UkmSection from '$lib/components/home/UKMSection.svelte';
 import Faq from '$lib/components/home/Faq.svelte';
+import Swal from '$lib/components/swal/swal.svelte';
 </script>
 
 <Swal />
