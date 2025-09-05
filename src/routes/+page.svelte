@@ -1,8 +1,11 @@
 <script>
-import Hero from '$lib/components/home/Hero.svelte'; 
-import LKSection from '$lib/components/home/Lk.svelte';
+  import Hero from '$lib/components/home/Hero.svelte'; 
+  import LKSection from '$lib/components/home/Lk.svelte';
   import UKM from '$lib/components/home/UKM.svelte';
+  import Swal from '$lib/components/swal/swal.svelte'
 </script>
+
+<Swal />
 
 <main class="relative overflow-x-hidden">
   <Hero />

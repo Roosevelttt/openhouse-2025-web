@@ -133,6 +133,19 @@ export async function updateUserBiodata(lineId: string, phone: string): Promise<
   }
 }
 
+// Slot reservation functions
+export async function reserveSlot(ukmId: string): Promise<{reservation_id: string; expires_at: string}> {
+  return post('/api/registrations/reserve', { ukm_id: ukmId });
+}
+
+export async function registerWithReservation(reservationId: string, registrationData: {
+  ukm_id: string;
+  payment: string;
+  drive_url: string;
+}): Promise<{message: string; registration: any; reservation_id: string}> {
+  return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);
+}
+
 export async function put<T, U = object>(
   path: string,
   body: U,
@@ -176,17 +189,4 @@ export async function del<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) throw new Error(text);
   // @ts-ignore
   return text ? JSON.parse(text) : undefined;
-}
-
-// Slot reservation functions
-export async function reserveSlot(ukmId: string): Promise<{reservation_id: string; expires_at: string}> {
-  return post('/api/registrations/reserve', { ukm_id: ukmId });
-}
-
-export async function registerWithReservation(reservationId: string, registrationData: {
-  ukm_id: string;
-  payment: string | null;
-  drive_url: string;
-}): Promise<{message: string; registration: any; reservation_id: string}> {
-  return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);
 }

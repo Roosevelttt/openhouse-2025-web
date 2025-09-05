@@ -1,3 +1,7 @@
+/* swal css */
+@import url("./lib/components/swal/swal.css");
+
+
 /* plus-jakarta-sans & lexend font */
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
 
