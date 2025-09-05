@@ -31,7 +31,7 @@
     window.addEventListener('resize', updateScreenWidth);
 
     const initTimer = setTimeout(() => {
-      const ropeHeight = screenWidth < 640 ? '80vh' : screenWidth < 1024 ? '130vh' : '150vh';
+      const ropeHeight = screenWidth < 640 ? '100vh' : screenWidth < 1024 ? '130vh' : '150vh';
       gsap.set(rope, { height: ropeHeight });
 
       const tl = gsap.timeline({
@@ -45,7 +45,7 @@
         }
       });
 
-      const animationDistance = screenWidth < 640 ? '-60vh' : screenWidth < 1024 ? '-160vh' : '-180vh';
+      const animationDistance = screenWidth < 640 ? '-160vh' : screenWidth < 1024 ? '-200vh' : '-230vh';
       tl.to(balloonAssembly, { y: animationDistance }, 0);
       tl.to(backgroundSky, { yPercent: -30 }, 0);
 
@@ -60,19 +60,19 @@
         ScrollTrigger.create({
           trigger: container,
           start: 'top 60%',
-          end: 'top -10%',
-          markers: true,
+          end: 'top 0%',
+          // markers: true,
           onEnter: () => {
             gsap.to(name, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' });
           },
           onLeave: () => {
-            gsap.to(name, { opacity: 0, x: -20, duration: 0.4, ease: 'power3.in' });
+            gsap.to(name, { opacity: 0, x: -20, duration: 0.8, ease: 'power3.in' });
           },
           onEnterBack: () => {
             gsap.to(name, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' });
           },
           onLeaveBack: () => {
-            gsap.to(name, { opacity: 0, x: -20, duration: 0.4, ease: 'power3.in' });
+            gsap.to(name, { opacity: 0, x: -20, duration: 0.8, ease: 'power3.in' });
           }
         });
       });
@@ -93,7 +93,7 @@
     <img bind:this={backgroundSky} 
          src="/background/pink sky.jpg" 
          alt="Purple sky background"
-         class="absolute inset-0 w-full h-[150%] object-cover z-[-1]" />
+         class="absolute inset-0 max-w-none w-[102%] h-[150%] object-cover z-[-1]" />
 
     <div bind:this={balloonAssembly}
          class="absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center z-[1]">
@@ -110,7 +110,7 @@
         {#each iconData as icon, i}
           <div 
             class="icon-container absolute left-1/2 -translate-x-1/2" 
-            style="top: {15 + i * 20}%;"
+            style="top: {15 + i * 16}%;"
           >
             <div class="relative flex justify-center items-center">
               <a 
@@ -139,7 +139,7 @@
     </div>
     
     <img class="absolute -bottom-3 md:-bottom-[5%] w-full z-[0] 
-               min-w-[100vw] object-cover" 
+               min-w-[100vw] object-cover opacity-75" 
          src="/svg/home/cloud.svg" 
          alt="Cloud" />
   </section>

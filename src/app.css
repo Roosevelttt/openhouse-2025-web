@@ -4,6 +4,7 @@
 
 /* plus-jakarta-sans & lexend font */
 @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Spicy+Rice&display=swap');
 
 @import "tailwindcss";
 
@@ -83,15 +84,35 @@
     font-style: normal;
 }
 
+@font-face {
+    font-display: swap;
+    font-family: "Spekk";
+    src: url("/fonts/spekk/Spekk.otf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-display: swap;
+    font-family: "Roxhead";
+    src: url("/fonts/roxhead/Roxhead.otf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
+
 @theme {
     --font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
     --font-lexend: "Lexend", sans-serif;
     --font-moomello: "Moomello", sans-serif;
+	--font-spekk: "Spekk", sans-serif;
+	--font-spicyrice: "Spicy Rice", sans-serif;
 }
 
 ::-webkit-scrollbar {
   display: none;
 }
+
+
 /* 3D Push (red-orange) --- ukm details*/
 .btn.push {
   background: #ff4b2b;
@@ -101,6 +122,7 @@
   box-shadow: 0 2px #c1331e;
   transform: translateY(4px);
 }
+
 .scrollbar-hide::-webkit-scrollbar {
 	display: none;
 }
