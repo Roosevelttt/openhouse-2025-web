@@ -46,7 +46,7 @@
 
 <Swal />
 
-<CarnivalTableBg class="min-h-screen !w-screen flex items-center justify-center z-30">  
+<CarnivalTableBg/>  
 
 <section class="z-[999] min-h-screen flex items-center justify-center flex-col relative">
 
@@ -63,5 +63,3 @@
   </button>
   <p class="mt-2 font-[family-name:Lexend] text-[var(--text-primary)]">* use your JOHN email</p>
 </section>
-
-</CarnivalTableBg>  

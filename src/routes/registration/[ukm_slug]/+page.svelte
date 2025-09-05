@@ -577,11 +577,11 @@
 </svelte:head>
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
-<CarnivalTable class="min-h-screen">
+<CarnivalTable/>
   <div class="container mx-auto p-8 max-w-2xl">
     {#if loading}
     <div class="flex justify-center items-center py-16">
-      <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-4 border-yellow-300">
+      <div class="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border-4 border-orange-300">
         <div class="flex items-center space-x-4">
           <div class="animate-spin rounded-full h-12 w-12 border-b-4 border-purple-600"></div>
           <p class="text-purple-800 font-bold text-lg">🎪 Loading...</p>
@@ -628,7 +628,7 @@
             </svg>
             You will receive confirmation once your payment is verified.
           </p>
-          <p class="mt-4 p-3 bg-yellow-100 rounded-lg border border-yellow-300 flex items-start">
+          <p class="mt-4 p-3 bg-yellow-100 rounded-lg border border-orange-300 flex items-start">
             <svg class="w-4 h-4 mr-2 mt-0.5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
@@ -687,7 +687,7 @@
     </div>
   {:else if ukm}
     <!-- UKM Info Header -->
-    <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-yellow-300 p-8 mb-8 relative overflow-hidden">
+    <div class="bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-orange-300 p-8 mb-8 relative overflow-hidden">
       <!-- Carnival Header Decoration -->
       <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-400 via-yellow-400 to-purple-400"></div>
       <div class="absolute -top-1 -left-1 w-6 h-6 bg-yellow-400 rounded-full animate-pulse"></div>
@@ -744,7 +744,7 @@
 
     <!-- Reservation Timer Section -->
     {#if reservationId && timeRemaining > 0}
-      <div class="bg-gradient-to-r from-yellow-100 to-orange-100 border-3 border-yellow-400 rounded-3xl p-6 mb-6 relative overflow-hidden {timeRemaining <= 60 ? 'timer-warning animate-pulse' : ''}">
+      <div class="bg-gradient-to-r from-yellow-100 to-orange-100 border-3 border-orange-300 rounded-3xl p-6 mb-6 relative overflow-hidden {timeRemaining <= 60 ? 'timer-warning animate-pulse' : ''}">
         <!-- Carnival Timer Decoration -->
         <div class="absolute bottom-2 left-2 text-xl animate-bounce">
           <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -754,7 +754,7 @@
         
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
-            <div class="w-14 h-14 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center animate-pulse">
+            <div class="w-14 h-14 bg-gradient-to-br from-orange-300 to-orange-500 rounded-full flex items-center justify-center animate-pulse">
                 <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
@@ -773,7 +773,7 @@
           </div>
         </div>
         <div class="mt-4">
-          <div class="w-full bg-yellow-200 rounded-full h-4 border-2 border-yellow-400">
+          <div class="w-full bg-yellow-200 rounded-full h-4 border-2 border-orange-300">
             <div 
               class="timer-progress h-full rounded-full transition-all duration-1000 ease-linear {timeRemaining <= 60 ? 'bg-gradient-to-r from-red-500 to-pink-500' : 'bg-gradient-to-r from-yellow-500 to-orange-500'}" 
               style="width: {(timeRemaining / 300) * 100}%"
@@ -1019,7 +1019,6 @@
     </div>
   {/if}
 </div>
-</CarnivalTable>
 
 <style>
   .container {

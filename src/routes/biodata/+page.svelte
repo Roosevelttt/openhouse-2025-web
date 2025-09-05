@@ -365,11 +365,11 @@
 </svelte:head>
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
-<CarnivalTable class="min-h-screen">
+<CarnivalTable/>
 	<div class="container mx-auto px-4 py-8">
-		<div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-yellow-400 overflow-hidden">
+		<div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm rounded-3xl shadow-2xl border-4 border-orange-400 overflow-hidden">
 		<!-- Carnival header -->
-		<div class="bg-gradient-to-r from-red-500 via-yellow-500 to-pink-500 p-6 text-center relative">
+		<div class="bg-[var(--color-orange-dark)] p-6 text-center relative">
 			<div class="absolute inset-0 bg-white/10"></div>
 			<h1 class="relative text-4xl font-moomello font-bold text-white drop-shadow-lg mb-2">
 				Biodata Mahasiswa
@@ -380,7 +380,7 @@
 			<div class="p-8">
 				{#if loading && !formData.name}
 					<div class="text-center py-12">
-						<div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-purple-500 border-t-transparent mb-4"></div>
+						<div class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-orange-500 border-t-transparent mb-4"></div>
 						<p class="text-orange-700 text-lg font-[family-name:Lexend] font-medium">Loading your magical information...</p>
 					</div>
 				{:else if error && !formData.name}
@@ -428,7 +428,7 @@
 							{/if}
 
 							<!-- Biodata display card -->
-							<div class="bg-gradient-to-r from-purple-100 to-pink-100 rounded-3xl p-8 border-3 border-purple-400 mb-8">
+							<div class="bg-gradient-to-br from-orange-100 to-orange-200 rounded-3xl p-8 border-3 border-orange-400 mb-8">
 								<div class="text-center mb-6">
 									<h3 class="text-3xl font-moomello font-bold text-orange-700 mb-2">Your Profile</h3>
 									<p class="text-orange-600 font-[family-name:Lexend] text-lg">This is your detail information</p>
@@ -538,13 +538,7 @@
 								<div class="bg-gradient-to-r from-orange-100 to-orange-100 rounded-3xl p-8 border-3 border-orange-400">
 									<div class="text-center mb-6">
 										<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
-											<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-											</svg>
 											Account Information
-											<svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-											</svg>
 										</h3>
 										<p class="text-orange-600 font-[family-name:Lexend]">This information is from your authenticated session</p>
 									</div>
@@ -593,13 +587,7 @@
 								<div class="bg-gradient-to-r from-orange-100 to-orange-100 rounded-3xl p-8 border-3 border-orange-400">
 									<div class="text-center mb-6">
 										<h3 class="text-2xl font-moomello font-bold text-orange-700 mb-2 flex items-center justify-center">
-											<svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-											</svg>
 											Contact Information
-											<svg class="w-6 h-6 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
-											</svg>
 										</h3>
 										<p class="text-orange-600 font-[family-name:Lexend]">Please provide your contact details</p>
 									</div>
@@ -703,7 +691,6 @@
 			</div>
 		</div>
 	</div>
-</CarnivalTable>
 
 <style>
 	.container {
