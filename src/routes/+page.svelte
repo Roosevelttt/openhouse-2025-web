@@ -7,8 +7,6 @@
 
 <Swal />
 
-<Swal />
-
 <main class="relative overflow-x-hidden">
   <Hero />
   <div class="relative z-10">
