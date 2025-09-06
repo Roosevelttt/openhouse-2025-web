@@ -85,7 +85,7 @@
         class:nav-mobile-closed={!isMenuOpen}
         transition:slide
       >
-        <div class="flex h-full flex-col md:justify-between">
+        <div class="flex h-full flex-col">
           <div class="admin-panel-title mx-6 py-4 border-b border-admin-border">
             <h2 class="text-lg font-semibold text-admin-text-primary">
               Open House 2025
@@ -95,7 +95,7 @@
             </p>
           </div>
           
-          <ul class="mt-4">
+          <ul class="mt-4 flex-grow">
             <li>
               <a
                 href="/admin/"
@@ -105,7 +105,7 @@
                 <span class="admin-nav-icon">
                   <Users class="w-5 h-5" />
                 </span>
-                <span class="admin-nav-text">Participants</span>
+                <span class="admin-nav-text">Participant</span>
               </a>
             </li>
             {#if adminData.admin_division_slug === "bph" || adminData.admin_division_slug === "it"}
@@ -118,7 +118,7 @@
                   <span class="admin-nav-icon">
                     <Grid3X3 class="w-5 h-5" />
                   </span>
-                  <span class="admin-nav-text">Manage UKM</span>
+                  <span class="admin-nav-text">UKM</span>
                 </a>
               </li>
             {/if}
@@ -133,6 +133,20 @@
                     <MessageSquare class="w-5 h-5" />
                   </span>
                   <span class="admin-nav-text">Group Chat</span>
+                </a>
+              </li>
+            {/if}
+            {#if adminData.admin_division_slug === "it"}
+              <li>
+                <a
+                  href="/admin/management"
+                  class="admin-nav-item mx-6 flex items-center gap-3 py-3 px-4 rounded-lg transition-colors hover:bg-admin-hover"
+                  aria-label="Admin Management"
+                >
+                  <span class="admin-nav-icon">
+                    <Users class="w-5 h-5" />
+                  </span>
+                  <span class="admin-nav-text">Admin</span>
                 </a>
               </li>
             {/if}
@@ -165,7 +179,7 @@
 
     <!--Desktop view-->
     <div class="hidden h-full flex-col md:flex py-6">
-      <div class="flex h-full flex-col justify-between">
+      <div class="flex flex-col h-full">
         <div class="admin-panel-title mx-6 mb-6 pb-4 border-b border-admin-border">
           <h2 class="text-lg font-semibold text-admin-text-primary">
             Open House 2025
@@ -175,7 +189,7 @@
           </p>
         </div>
         
-        <ul class="space-y-2">
+        <ul class="space-y-2 flex-grow">
           <li>
             <a
               href="/admin/"
@@ -185,7 +199,7 @@
               <span class="admin-nav-icon">
                 <Users class="w-5 h-5" />
               </span>
-              <span class="admin-nav-text">Participants</span>
+              <span class="admin-nav-text">Participant</span>
             </a>
           </li>
           {#if adminData.admin_division_slug === "bph" || adminData.admin_division_slug === "it"}
@@ -198,7 +212,7 @@
                 <span class="admin-nav-icon">
                   <Grid3X3 class="w-5 h-5" />
                 </span>
-                <span class="admin-nav-text">Manage UKM</span>
+                <span class="admin-nav-text">UKM</span>
               </a>
             </li>
           {/if}
@@ -216,8 +230,22 @@
               </a>
             </li>
           {/if}
+          {#if adminData.admin_division_slug === "it"}
+            <li>
+              <a
+                href="/admin/management"
+                class="admin-nav-item mx-6 flex items-center gap-3 py-3 px-4 rounded-lg transition-colors hover:bg-admin-hover"
+                aria-label="Admin Management"
+              >
+                <span class="admin-nav-icon">
+                  <Users class="w-5 h-5" />
+                </span>
+                <span class="admin-nav-text">Admin</span>
+              </a>
+            </li>
+          {/if}
         </ul>
-        <div class="admin-user-section mx-6 p-4 border-t border-admin-border">
+        <div class="admin-user-section mx-6 p-4 border-t border-admin-border mt-auto">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <div class="flex flex-col">
