@@ -19,7 +19,7 @@ import Swal from '$lib/components/swal/swal.svelte';
   <div class="relative z-10">
     <LKSection />
   </div>
-  <div class="relative z-20 h-screen sticky top-0 -mt-[100vh]">
+  <div class="z-20 h-screen sticky top-0 -mt-[100vh]">
       <Faq />
   </div>
   <!-- <div class="relative z-20 h-screen sticky top-0 -mt-[100vh]">
