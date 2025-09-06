@@ -155,10 +155,28 @@
     "rotate-8 -translate-y-1 w-[300px]",
   ];
 
+  // List of UKM slugs with their own websites
+  const ukmWebsites: Record<string, string> = {
+    "vg": "https://linktr.ee/PCUMusicTalentActivity?utm_source=qr_code",
+    "orkestra": "https://linktr.ee/PCUMusicTalentActivity?utm_source=qr_code",
+    "choir": "https://linktr.ee/PCUMusicTalentActivity?utm_source=qr_code",
+  };
+
   function handleRegisterClick() {
-    if (selectedUkm?.slug) {
+    if (!selectedUkm?.slug) return;
+    if (ukmWebsites[selectedUkm.slug]) {
+      window.open(ukmWebsites[selectedUkm.slug], "_blank");
+    } else {
       goto(`/biodata?ukm_slug=${selectedUkm.slug}`);
     }
+  }
+
+  function isSlotFull(): boolean {
+    return (
+      selectedUkm?.max_slot !== null &&
+      selectedUkm?.current_slot !== null &&
+      selectedUkm.current_slot >= selectedUkm.max_slot
+    );
   }
 </script> 
 
@@ -274,8 +292,10 @@
           <button 
             on:click={handleRegisterClick}
             class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
-                  transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl">
-            Register Now!
+                  transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
+            disabled={isSlotFull()}
+          >
+            {isSlotFull() ? "Slot Full" : "Register Now!"}
           </button>
         </div>
       </div>
@@ -289,8 +309,10 @@
         <button 
           on:click={handleRegisterClick}
           class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
-                transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl">
-          Register Now!
+                transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
+          disabled={isSlotFull()}
+        >
+          {isSlotFull() ? "Slot Full!" : "Register Now!"}
         </button>
       </div>
     {/if}
