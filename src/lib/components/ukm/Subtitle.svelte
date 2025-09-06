@@ -6,4 +6,4 @@
   $: ref && ref(sub);
 </script>
 
-<p bind:this={sub} class={`transition-all ${className} font-lexend text-[#FFF4E9]`}>{text}</p>
+<p bind:this={sub} class={`transition-all ${className} font-lexend text-[#FFF4E9] `}>{@html text}</p>

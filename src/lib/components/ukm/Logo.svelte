@@ -7,4 +7,4 @@
   $: ref && ref(logo);
 </script>
 
-<img src={src} alt={alt} bind:this={logo} class={`rounded-full logo w-3/4 lg:w-[40%] mx-auto mb-4 ${className}`} />
+<img src={src} alt={alt} bind:this={logo} class={`rounded-full logo w-3/4 lg:w-[40%] mx-auto ${className}`} />
