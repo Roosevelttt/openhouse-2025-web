@@ -3,8 +3,8 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
-ENV INTERNAL_API_URL=http://host.docker.internal:8080
-ENV PUBLIC_API_BASE=http://localhost:8080
+ENV INTERNAL_API_URL=http://api:8080
+ENV PUBLIC_API_BASE=
 RUN npm run build
 RUN npm prune --production
 

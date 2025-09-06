@@ -10,7 +10,7 @@
   import 'aos/dist/aos.css'; 
   import { PUBLIC_IMAGE_BASE } from "$env/static/public";
   import { onMount, tick } from "svelte";
-  
+  import { goto } from '$app/navigation';
 
   interface Ukm {
     id: string;
@@ -154,6 +154,12 @@
     "-rotate-2 translate-y-10 w-[300px]",
     "rotate-8 -translate-y-1 w-[300px]",
   ];
+
+  function handleRegisterClick() {
+    if (selectedUkm?.slug) {
+      goto(`/biodata?ukm_slug=${selectedUkm.slug}`);
+    }
+  }
 </script> 
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
@@ -265,7 +271,9 @@
             className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
           <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
             className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
-          <button class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
+          <button 
+            on:click={handleRegisterClick}
+            class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                   transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl">
             Register Now!
           </button>
@@ -278,7 +286,9 @@
           className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
         <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
           className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
-        <button class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
+        <button 
+          on:click={handleRegisterClick}
+          class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                 transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl">
           Register Now!
         </button>
