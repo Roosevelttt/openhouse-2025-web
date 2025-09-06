@@ -178,6 +178,10 @@
       selectedUkm.current_slot >= selectedUkm.max_slot
     );
   }
+
+  function isUkmWebsite(): boolean {
+    return !!selectedUkm?.slug && !!ukmWebsites[selectedUkm.slug];
+  }
 </script> 
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
@@ -284,35 +288,53 @@
           <Poster url=/images/ukm/{selectedUkm.poster_url} />
         </div>
         <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
-                bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">    
-          <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
-            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
-          <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
-            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+                bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">
+          {#if !isUkmWebsite()}
+            <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
+              className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
+            <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
+              className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+          {:else}
+            <Subtitle text="Click the button below to visit our official website for more information and registration." 
+              className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+          {/if}
           <button 
             on:click={handleRegisterClick}
             class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                   transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-            disabled={isSlotFull()}
+            disabled={!isUkmWebsite() && isSlotFull()}
           >
-            {isSlotFull() ? "Slot Full" : "Register Now!"}
+            {#if isUkmWebsite()}
+              Visit Website
+            {:else}
+              {isSlotFull() ? "Slot Full" : "Register Now!"}
+            {/if}
           </button>
         </div>
       </div>
     {:else}
       <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 lg:w-1/2 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
-              bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">    
-        <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
-          className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
-        <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
-          className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+          bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">
+        {#if !isUkmWebsite()}
+          <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
+            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
+          <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
+            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+        {:else}
+          <Subtitle text="Click the button below to visit our official website for more information and registration." 
+            className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
+        {/if}
         <button 
           on:click={handleRegisterClick}
           class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                 transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-          disabled={isSlotFull()}
+          disabled={!isUkmWebsite() && isSlotFull()}
         >
-          {isSlotFull() ? "Slot Full!" : "Register Now!"}
+          {#if isUkmWebsite()}
+            Visit Website
+          {:else}
+            {isSlotFull() ? "Slot Full!" : "Register Now!"}
+          {/if}
         </button>
       </div>
     {/if}
