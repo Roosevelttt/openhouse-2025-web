@@ -70,11 +70,11 @@
 
 <style>
   .bg-table {
-    background-image: url('/background/table.png');
+    background-image: url('/background/table-bg.png');
   }
   @media (min-width: 1279px) {
     .bg-table {
-      background-image: url('/background/table.png');
+      background-image: url('/background/table-bg.png');
     }
   }
   .bookmark-item {
