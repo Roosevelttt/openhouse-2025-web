@@ -104,7 +104,7 @@
       />
       <div class="relative w-full">
         <div bind:this={rope}
-             class="w-[3px] sm:w-[4px] bg-gradient-to-b from-[#260E16] via-[#c48462] to-[#ffe8aa] mx-auto">
+             class="w-[3px] sm:w-[4px] bg-gradient-to-b from-[#260E16] via-[#65112F] to-[#A63049] mx-auto">
         </div>
         <div class="absolute top-0 w-full h-full">
         {#each iconData as icon, i}
