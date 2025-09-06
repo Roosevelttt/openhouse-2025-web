@@ -5,6 +5,7 @@
   import Swal from "sweetalert2";
   import ValidateButton from "./ValidateButton.svelte";
   import RejectButton from "./RejectButton.svelte";
+  import Dropdown from "$lib/components/admin/Dropdown.svelte";
 
   type Ukm = {
     id: string;
@@ -88,7 +89,7 @@
 
   let currentPage = $state(1);
   let itemsPerPage = $state(15);
-  const pageOptions = [5, 10, 15, 20, 25, 50];
+  const pageOptions = [5, 10, 15, 20, 25, 50].map(num => ({ value: num, label: num.toString() }));
   let searchTerm = $state("");
   let filterUkm = $state("all");
   let sortKey = $state<keyof Participant>("nrp");
@@ -96,6 +97,11 @@
   let fileValidatedStatusFilters = $state<
     "all" | "accepted" | "rejected" | "pending"
   >("all");
+
+  const ukmOptions = $derived([
+    { value: "all", label: "Select UKM" },
+    ...ukms.map(ukm => ({ value: ukm.name, label: ukm.name }))
+  ]);
 
   const filteredAndSortedData = $derived(() => {
     // Start with the original data
@@ -223,325 +229,319 @@
   <title>OH Admin | Participants</title>
 </svelte:head>
 
-<div class="mb-6 flex items-center justify-between">
-  <h1 class="text-2xl font-bold tracking-wide text-gray-800">
-    List Pendaftar & Validasi
-  </h1>
-</div>
-
-<div class="flex flex-col gap-2 rounded-2xl p-6 text-sm shadow-md">
-  <div class="flex flex-wrap gap-2 font-semibold text-gray-600">
-    {#if adminData.admin_division_slug !== "bph" && adminData.admin_division_slug !== "it"}
-      <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
-      <select
-        id="ukmFilter"
-        class="h-10 rounded border border-gray-300 p-2 text-gray-400"
-        disabled
+<main class="admin-card">
+  <div class="admin-card-header mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="admin-card-title">
+      <h2 class="text-lg font-semibold text-admin-text-primary mb-1">
+        Participants
+      </h2>
+      <p class="text-sm text-admin-text-secondary">
+        Manage and validate participant registrations
+      </p>
+    </div>
+    <div>
+      <a
+        href={exportUrl}
+        class="admin-btn-primary inline-flex items-center gap-2 w-full sm:w-auto justify-center"
+        download
       >
-        <option value="all">{adminData.admin_ukm_name}</option>
-        {#each ukms as ukm}
-          <option value={ukm.name}>{ukm.name}</option>
-        {/each}
-      </select>
-    {:else}
-      <label for="ukmFilter" class="mt-2.5 text-center">UKM</label>
-      <select
-        bind:value={filterUkm}
-        id="ukmFilter"
-        class="h-10 rounded border border-gray-300 p-2"
-      >
-        <option value="all">All</option>
-        {#each ukms as ukm}
-          <option value={ukm.name}>{ukm.name}</option>
-        {/each}
-      </select>
-    {/if}
-    <a
-      href={exportUrl}
-      class="min-h-10 rounded border border-gray-300 p-2"
-      download
-    >
-      Download Excel
-    </a>
-    <button
-      onclick={() => filterFileValidated("accepted")}
-      class={[
-        "h-10 rounded border",
-        fileValidatedStatusFilters === "accepted"
-          ? "border-indigo-600 p-2 text-indigo-600"
-          : "border-gray-300 p-2",
-      ]}
-    >
-      Accepted
-    </button>
-    <button
-      onclick={() => filterFileValidated("rejected")}
-      class={[
-        "h-10 rounded border",
-        fileValidatedStatusFilters === "rejected"
-          ? "border-indigo-600 p-2 text-indigo-600"
-          : "border-gray-300 p-2",
-      ]}
-    >
-      Rejected
-    </button>
-    <button
-      onclick={() => filterFileValidated("pending")}
-      class={[
-        "h-10 rounded border",
-        fileValidatedStatusFilters === "pending"
-          ? "border-indigo-600 p-2 text-indigo-600"
-          : "border-gray-300 p-2",
-      ]}
-    >
-      Pending
-    </button>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+        Export Data
+      </a>
+    </div>
   </div>
-  <div
-    class="flex h-10 max-w-lg items-center rounded border border-gray-300 font-semibold text-gray-600"
-  >
-    <input
-      class="flex-grow p-2"
-      type="text"
-      bind:value={searchTerm}
-      placeholder="Search table..."
-    />
-    <div
-      class="flex h-full w-12 items-center justify-center bg-indigo-700 text-white"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-        />
-      </svg>
+  <div class="admin-filters-section">
+    <div class="flex flex-wrap gap-4 items-end w-full">
+      <!-- UKM Filter -->
+      {#if adminData.admin_division_slug !== "bph" && adminData.admin_division_slug !== "it"}
+        <div class="admin-filter-group w-full sm:w-auto">
+          <label for="ukmFilter" class="admin-form-label">UKM</label>
+          <Dropdown
+            options={[{ value: "all", label: adminData.admin_ukm_name }]}
+            value={"all"}
+            disabled={true}
+            size="md"
+            class="w-full sm:w-48"
+          />
+        </div>
+      {:else}
+        <div class="admin-filter-group w-full sm:w-auto">
+          <label for="ukmFilter" class="admin-form-label">UKM</label>
+          <Dropdown
+            options={ukmOptions}
+            bind:value={filterUkm}
+            placeholder="Select UKM"
+            searchable={true}
+            size="md"
+            class="w-full sm:w-48"
+          />
+        </div>
+      {/if}
+      
+      <!-- Status Filter Buttons -->
+      <div class="w-full sm:w-auto">
+        <div class="flex flex-col">
+          <span class="admin-form-label">Status Filters</span>
+          <div class="flex flex-wrap gap-2">
+            <button
+              onclick={() => filterFileValidated("pending")}
+              class="admin-filter-btn {fileValidatedStatusFilters === 'pending' ? 'active' : ''}"
+            >
+              Pending
+            </button>
+            <button
+              onclick={() => filterFileValidated("accepted")}
+              class="admin-filter-btn {fileValidatedStatusFilters === 'accepted' ? 'active' : ''}"
+            >
+              Accepted
+            </button>
+            <button
+              onclick={() => filterFileValidated("rejected")}
+              class="admin-filter-btn {fileValidatedStatusFilters === 'rejected' ? 'active' : ''}"
+            >
+              Rejected
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Search -->
+      <div class="admin-search-container flex-shrink-0 w-full sm:w-auto ml-0 sm:ml-auto">
+        <!-- svelte-ignore a11y_label_has_associated_control -->
+        <label class="admin-form-label block">Search</label>
+        <div class="relative">
+          <input
+            class="admin-form-input pl-10 pr-4 w-full sm:w-80"
+            type="text"
+            bind:value={searchTerm}
+            placeholder="Search participants..."
+          />
+          <div class="absolute right-3 top-1/2 transform -translate-y-1/2">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="w-4 h-4 text-admin-text-tertiary"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="overflow-auto">
-    <table class="min-w-full table-fixed">
-      <thead>
-        <tr class="border-b border-b-gray-300 text-gray-800">
-          {#each tableData.columns as column}
-            <th
-              class="group cursor-pointer p-2 text-left"
-              onclick={() => handleSort(column.accessor)}
-            >
-              <div class="flex">
-                {#if sortKey === column.accessor}
-                  {#if sortDirection === "asc"}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-4"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
-                      />
-                    </svg>
-                  {:else}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="size-4"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3"
-                      />
-                    </svg>
-                  {/if}
-                {:else}
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="size-4 opacity-0 transition-opacity group-hover:opacity-100"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
-                    />
-                  </svg>
-                {/if}
-                <span>{column.Header}</span>
-              </div>
+  <div class="border border-admin-border rounded-lg overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="min-w-full">
+        <thead>
+          <tr class="bg-admin-background">
+            {#each tableData.columns as column}
+              <th
+                class="admin-table-header group cursor-pointer text-left"
+                onclick={() => handleSort(column.accessor)}
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-medium uppercase tracking-wide text-admin-text-secondary">{column.Header}</span>
+                  <div class="admin-sort-indicator">
+                    {#if sortKey === column.accessor}
+                      {#if sortDirection === "asc"}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          class="w-3 h-3 text-admin-text-primary"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
+                          />
+                        </svg>
+                      {:else}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="2"
+                          stroke="currentColor"
+                          class="w-3 h-3 text-admin-text-primary"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M15.75 17.25 12 21m0 0-3.75-3.75M12 21V3"
+                          />
+                        </svg>
+                      {/if}
+                    {:else}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        class="w-3 h-3 text-admin-text-tertiary opacity-0 transition-opacity group-hover:opacity-100"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M8.25 6.75 12 3m0 0 3.75 3.75M12 3v18"
+                        />
+                      </svg>
+                    {/if}
+                  </div>
+                </div>
+              </th>
+            {/each}
+            <th class="admin-table-header text-center">
+              <span class="text-xs font-medium uppercase tracking-wide text-admin-text-secondary">Actions</span>
             </th>
-          {/each}
-        </tr>
-      </thead>
-      <tbody>
-        {#each paginatedData() as participant (`${participant.id}-${participant.ukm_name}`)}
-          <tr
-            class="border-b border-b-gray-300 text-gray-600 transition hover:bg-amber-200"
-          >
-            <td class="p-2 ps-6">{participant.nrp}</td>
-            <td class="p-2 ps-6 text-nowrap">{participant.name}</td>
-            <td class="p-2 ps-6">{participant.ukm_name}</td>
-            <td class="flex gap-4 p-2 ps-6">
-              {#if participant.payment}
-                <button
-                  onclick={() => showPicture(participant.payment)}
-                  class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
-                  >Payment</button
-                >
-              {/if}
-              {#if participant.drive_url}
-                <a
-                  href={participant.drive_url}
-                  class="rounded bg-sky-500 p-1 text-white hover:bg-sky-400 active:bg-sky-600"
-                  >Portfolio</a
-                >
-              {/if}
-            </td>
-            <td class="p-2 ps-6">{participant.line_id}</td>
-            <td class="p-2 ps-6">{participant.phone}</td>
-            <td
-              class={[
-                "p-2 px-6 font-bold",
-                participant.payment_validated === 0
-                  ? "text-sky-500"
-                  : participant.payment_validated === 1
-                    ? "text-green-500"
-                    : "text-red-500",
-              ]}>{validationStatus[participant.payment_validated]}</td
-            >
-            <td class="text-nowrap">
-              <ValidateButton nrp={participant.nrp} ukm={participant.ukm_id} />
-              <RejectButton nrp={participant.nrp} ukm={participant.ukm_id} />
-            </td>
           </tr>
-        {/each}
-      </tbody>
-    </table>
+        </thead>
+        <tbody class="bg-admin-card-bg">
+          {#each paginatedData() as participant (`${participant.id}-${participant.ukm_name}`)}
+            <tr class="admin-table-row border-b border-admin-border hover:bg-admin-hover transition-colors">
+              <td class="admin-table-cell font-mono text-sm">{participant.nrp}</td>
+              <td class="admin-table-cell font-medium">{participant.name}</td>
+              <td class="admin-table-cell">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-admin-background text-admin-text-secondary">
+                  {participant.ukm_name}
+                </span>
+              </td>
+              <td class="admin-table-cell">
+                <div class="flex gap-2">
+                  {#if participant.payment}
+                    <button
+                      onclick={() => showPicture(participant.payment)}
+                      class="admin-file-btn"
+                      title="View Payment Proof"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                      </svg>
+                      Payment
+                    </button>
+                  {/if}
+                  {#if participant.drive_url}
+                    <a
+                      href={participant.drive_url}
+                      class="admin-file-btn"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="View Portfolio"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+                      </svg>
+                      Portfolio
+                    </a>
+                  {/if}
+                </div>
+              </td>
+              <td class="admin-table-cell font-mono text-sm">{participant.line_id}</td>
+              <td class="admin-table-cell font-mono text-sm">{participant.phone}</td>
+              <td class="admin-table-cell">
+                <span class="admin-status-badge admin-status-{participant.payment_validated === 0 ? 'pending' : participant.payment_validated === 1 ? 'success' : 'error'}">
+                  {validationStatus[participant.payment_validated]}
+                </span>
+              </td>
+              <td class="admin-table-cell">
+                <div class="flex gap-2 justify-center">
+                  <ValidateButton nrp={participant.nrp} ukm={participant.ukm_id} />
+                  <RejectButton nrp={participant.nrp} ukm={participant.ukm_id} />
+                </div>
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="flex flex-wrap items-center justify-center gap-2">
-    <span>Rows per page</span>
-    <select
-      id="pagination"
-      bind:value={itemsPerPage}
-      class="border border-gray-300 p-2"
-    >
-      {#each pageOptions as num}
-        <option value={num}>{num}</option>
-      {/each}
-    </select>
-    <button
-      onclick={() => {
-        goToPage(1);
-      }}
-      aria-label="First Page"
-      class="p-2"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
-        />
-      </svg>
-    </button>
-    <button onclick={previousPage} aria-label="Previous Page" class="p-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="M15.75 19.5 8.25 12l7.5-7.5"
-        />
-      </svg>
-    </button>
-    <span class="p-2">
-      Page {currentPage} of {totalPages}
-    </span>
-    <button onclick={nextPage} aria-label="Next Page" class="p-2">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m8.25 4.5 7.5 7.5-7.5 7.5"
-        />
-      </svg>
-    </button>
-    <button
-      onclick={() => {
-        goToPage(totalPages);
-      }}
-      aria-label="Last Page"
-      class="p-2"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke-width="1.5"
-        stroke="currentColor"
-        class="size-6"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
-        />
-      </svg>
-    </button>
-  </div>
-</div>
 
-<!-- <style>
-  .nav-mobile-closed {
-    max-height: 0;
-    overflow: hidden;
-    /* We add opacity for a smoother fade effect alongside the slide */
-    opacity: 0;
-  }
-  .nav-mobile-open {
-    opacity: 1;
-  }
-  .nav-content {
-    /* Apply transitions for a smooth animation */
-    transition:
-      max-height 0.3s ease-in-out,
-      opacity 0.3s ease-in-out;
-  }
-</style> -->
+  <div class="admin-pagination-container flex flex-wrap items-center justify-between mt-8 pt-6 border-t border-admin-border bg-admin-card-bg rounded-b-lg">
+    <div class="flex flex-wrap items-center gap-6 mb-4 md:mb-0">
+      <div class="flex items-center gap-3">
+        <span class="admin-form-label text-sm font-medium">Show:</span>
+        <Dropdown
+          options={pageOptions}
+          bind:value={itemsPerPage}
+          size="sm"
+          class="w-20"
+        />
+        <span class="admin-form-label text-sm">entries</span>
+      </div>
+      <div class="text-sm text-admin-text-secondary">
+        Showing <span class="font-medium text-admin-text-primary">{((currentPage - 1) * itemsPerPage) + 1}</span> to <span class="font-medium text-admin-text-primary">{Math.min(currentPage * itemsPerPage, filteredAndSortedData().length)}</span> of <span class="font-medium text-admin-text-primary">{filteredAndSortedData().length}</span> entries
+      </div>
+    </div>
+    
+    <div class="admin-pagination-controls flex items-center gap-2">
+      <button
+        onclick={() => goToPage(1)}
+        disabled={currentPage === 1}
+        aria-label="First Page"
+        class="admin-pagination-btn-extended"
+        title="First Page"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+        </svg>
+        <span class="hidden sm:inline">First</span>
+      </button>
+      
+      <button 
+        onclick={previousPage} 
+        disabled={currentPage === 1}
+        aria-label="Previous Page" 
+        class="admin-pagination-btn"
+        title="Previous Page"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+        </svg>
+      </button>
+      
+      <div class="admin-pagination-info flex items-center px-4 py-2 bg-admin-background rounded border border-admin-border">
+        <span class="text-sm font-medium text-admin-text-primary">
+          Page {currentPage} of {totalPages}
+        </span>
+      </div>
+      
+      <button 
+        onclick={nextPage} 
+        disabled={currentPage === totalPages}
+        aria-label="Next Page" 
+        class="admin-pagination-btn"
+        title="Next Page"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+      
+      <button
+        onclick={() => goToPage(totalPages)}
+        disabled={currentPage === totalPages}
+        aria-label="Last Page"
+        class="admin-pagination-btn-extended"
+        title="Last Page"
+      >
+        <span class="hidden sm:inline">Last</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</main>
