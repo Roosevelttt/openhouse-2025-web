@@ -148,12 +148,9 @@ export async function registerWithReservation(reservationId: string, registratio
 
 // Check if user has a valid reservation for a UKM
 export async function checkUserReservation(ukmId: string): Promise<{
-  has_reservation: boolean;
-  reservation_id?: string;
-  expires_at?: string;
-  is_expired?: boolean;
+  has_registered: boolean;
 }> {
-  return get(`/api/registrations/check-reservation/${ukmId}`);
+  return get(`/api/registrations/check-registration/${ukmId}`);
 }
 
 export async function put<T, U = object>(

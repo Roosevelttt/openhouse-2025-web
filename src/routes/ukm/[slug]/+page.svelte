@@ -11,6 +11,7 @@
   import { PUBLIC_IMAGE_BASE } from "$env/static/public";
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
+  import { checkUserReservation } from "$lib/api";
 
   interface Ukm {
     id: string;
@@ -67,7 +68,21 @@
 
   let posterOverlay: HTMLElement | null = null;
 
+  let hasRegistered = false;
+  let loadingReservation = true;
+
   onMount(async () => {
+    loadingReservation = true;
+    if (selectedUkm?.id) {
+      try {
+        const res = await checkUserReservation(selectedUkm.id);
+        hasRegistered = res.has_registered;
+      } catch (e) {
+        hasRegistered = false;
+      }
+    }
+    loadingReservation = false;
+
     await tick();
     AOS.init();
 
@@ -302,14 +317,24 @@
             on:click={handleRegisterClick}
             class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                   transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-            disabled={!isUkmWebsite() && isSlotFull()}
+            disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
           >
-            {#if isUkmWebsite()}
+            {#if loadingReservation}
+              Checking...
+            {:else if isUkmWebsite()}
               Visit Website
             {:else}
-              {isSlotFull() ? "Slot Full" : "Register Now!"}
+              {hasRegistered
+                ? "Already Registered 🙅‍♂️"
+                : isSlotFull()
+                  ? "Slot Full"
+                  : "Register Now!"}
             {/if}
           </button>
+          {#if hasRegistered}
+            <Subtitle text="You have already registered for this UKM." 
+              className="font-extrabold text-lg md:text-xl text-green-600 drop-shadow-sm mt-4" />
+          {/if}
         </div>
       </div>
     {:else}
@@ -328,14 +353,23 @@
           on:click={handleRegisterClick}
           class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                 transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-          disabled={!isUkmWebsite() && isSlotFull()}
+          disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
         >
           {#if isUkmWebsite()}
             Visit Website
           {:else}
-            {isSlotFull() ? "Slot Full!" : "Register Now!"}
+            {hasRegistered
+              ? "Already Registered 🙅‍♂️"
+              : isSlotFull()
+                ? "Slot Full!"
+                : "Register Now!"}
           {/if}
         </button>
+
+        {#if hasRegistered}
+          <Subtitle text="You have already registered for this UKM." 
+            className="font-extrabold text-lg md:text-xl text-green-600 drop-shadow-sm mt-4" />
+        {/if}
       </div>
     {/if}
 
