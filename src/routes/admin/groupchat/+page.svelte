@@ -22,6 +22,17 @@
         title: "Error!",
         text: "Failed to load group chat link.",
         icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-error',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-error',
+        }
       });
     } finally {
       isLoading = false;
@@ -55,6 +66,17 @@
         title: "Error!",
         text: `Failed to save link: ${JSON.parse(e.message).message}`,
         icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-error',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-error',
+        }
       });
     } finally {
       isLoading = false;
@@ -65,9 +87,23 @@
     if (groupchatLink) {
       navigator.clipboard.writeText(groupchatLink);
       success = "Link copied to clipboard!";
-      setTimeout(() => success = null, 2000);
+      // Remove setTimeout as we're now using Swal toasts
+      // setTimeout(() => success = null, 2000);
     }
   }
+
+  // Add event listener to clear success message after showing toast
+  $effect(() => {
+    const clearSuccessHandler = () => {
+      success = null;
+    };
+    
+    window.addEventListener('clearGroupchatSuccess', clearSuccessHandler);
+    
+    return () => {
+      window.removeEventListener('clearGroupchatSuccess', clearSuccessHandler);
+    };
+  });
 </script>
 
 <svelte:head>
@@ -115,7 +151,7 @@
                 disabled={isLoading}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9 .693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184" />
                 </svg>
                 <span class="sm:hidden">Copy</span>
                 <span class="hidden sm:inline">Copy Link</span>
@@ -155,14 +191,32 @@
         {/if}
 
         {#if success}
-          <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <div class="flex items-start">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-              </svg>
-              <span class="ml-2 text-sm text-green-700">{success}</span>
-            </div>
-          </div>
+          {@html `<script>
+            (function() {
+              const successMessage = ${JSON.stringify(success)};
+              if (successMessage) {
+                Swal.fire({
+                  title: "Success",
+                  text: successMessage,
+                  icon: "success",
+                  toast: true,
+                  position: "top-end",
+                  showConfirmButton: false,
+                  timer: 3000,
+                  customClass: {
+                    container: 'admin-swal',
+                    popup: 'admin-swal-toast admin-swal-success',
+                    title: 'admin-swal-title',
+                    htmlContainer: 'admin-swal-html-container',
+                    icon: 'admin-swal-icon admin-swal-success',
+                  }
+                });
+                // Clear success message after showing toast
+                const event = new CustomEvent('clearGroupchatSuccess');
+                window.dispatchEvent(event);
+              }
+            })();
+          </script>`}
         {/if}
 
         {#if isEditing}

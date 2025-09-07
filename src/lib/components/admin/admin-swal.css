@@ -1,0 +1,167 @@
+.admin-swal-modal {
+  background-color: white;
+  border: 2px solid var(--admin-text-primary);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(26, 26, 26, 0.15), 
+              0 4px 12px rgba(26, 26, 26, 0.1);
+  padding: 2rem;
+  max-width: 28rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-swal-title {
+  font-family: var(--font-plus-jakarta-sans);
+  color: var(--admin-text-primary);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.admin-swal-html-container {
+  font-family: var(--font-lexend);
+  color: var(--admin-text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.admin-swal-input, .admin-swal-textarea, .admin-swal-select {
+  border: 1.5px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 0.75rem;
+  font-family: var(--font-lexend);
+  transition: all 0.2s ease;
+  background-color: var(--admin-background);
+}
+
+.admin-swal-input:focus, .admin-swal-textarea:focus, .admin-swal-select:focus {
+  outline: none;
+  border-color: var(--admin-text-primary);
+  box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  background-color: white;
+}
+
+.admin-swal-actions {
+  gap: 0.75rem;
+  margin-top: 2rem;
+  justify-content: flex-end;
+}
+
+.admin-swal-confirm {
+  background-color: var(--admin-text-primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-lexend);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(26, 26, 26, 0.2);
+}
+
+.admin-swal-confirm:hover {
+  background-color: var(--admin-text-secondary);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(26, 26, 26, 0.25);
+}
+
+.admin-swal-confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(26, 26, 26, 0.2);
+}
+
+.admin-swal-cancel, .admin-swal-deny {
+  background-color: transparent;
+  color: var(--admin-text-secondary);
+  border: 1.5px solid var(--admin-border);
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-lexend);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-swal-cancel:hover, .admin-swal-deny:hover {
+  background-color: var(--admin-hover);
+  border-color: var(--admin-text-secondary);
+  color: var(--admin-text-primary);
+  transform: translateY(-1px);
+}
+
+.admin-swal-icon {
+  border: none !important;
+  margin: 0 auto 1.5rem auto;
+}
+
+.admin-swal-icon.admin-swal-success {
+  color: var(--admin-success);
+}
+
+.admin-swal-icon.admin-swal-warning {
+  color: var(--admin-warning);
+}
+
+.admin-swal-icon.admin-swal-error {
+  color: var(--admin-text-primary);
+}
+
+.admin-swal-icon.admin-swal-info {
+  color: var(--admin-info);
+}
+
+.admin-swal-icon.admin-swal-question {
+  color: var(--admin-info);
+}
+
+.admin-swal-close {
+  color: var(--admin-text-tertiary);
+  font-size: 1.5rem;
+  transition: all 0.2s ease;
+  width: 2rem;
+  height: 2rem;
+  line-height: 1;
+}
+
+.admin-swal-close:hover {
+  color: var(--admin-text-primary);
+  transform: scale(1.1);
+}
+
+.admin-swal-progress-steps .admin-swal-progress-step {
+  background-color: var(--admin-text-primary);
+}
+
+.admin-swal-progress-steps .admin-swal-progress-step.admin-swal-active-progress-step {
+  background-color: var(--admin-text-primary);
+}
+
+.admin-swal-progress-steps .admin-swal-progress-step-line {
+  background-color: var(--admin-border);
+}
+
+.admin-swal-validation-message {
+  background-color: var(--admin-background);
+  color: var(--admin-text-primary);
+  border: 1px solid var(--admin-border);
+  border-radius: 6px;
+  font-family: var(--font-lexend);
+  font-size: 0.875rem;
+}
+
+.admin-swal-toast {
+  background-color: white;
+  border: 1px solid var(--admin-text-primary);
+  border-left: 4px solid var(--admin-text-primary);
+  box-shadow: 0 4px 12px rgba(26, 26, 26, 0.15);
+}
+
+.admin-swal-loading .admin-swal-confirm {
+  background-color: var(--admin-text-tertiary);
+  cursor: not-allowed;
+}

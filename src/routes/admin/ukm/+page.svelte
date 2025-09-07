@@ -3,6 +3,7 @@
   import { get, post, put, del } from "$lib/api";
   import { PUBLIC_API_BASE } from "$env/static/public";
   import Dropdown from "$lib/components/admin/Dropdown.svelte";
+  import Swal from "sweetalert2";
 
   interface Ukm {
     id: string;
@@ -70,33 +71,16 @@
     loading = true;
     error = null;
     
-    console.log("Fetching UKMs...");
-    console.log("API Base URL:", PUBLIC_API_BASE);
-    console.log("Full request URL:", `${PUBLIC_API_BASE}/api/ukms`);
-    
-    // Add timeout protection
-    const timeoutId = setTimeout(() => {
-      if (loading) {
-        console.warn("Fetch operation taking longer than expected...");
-      }
-    }, 5000);
-    
     try {
       const result = await get<Ukm[]>("/api/ukms");
-      clearTimeout(timeoutId);
       ukms = result;
-      console.log("UKMs fetched successfully:", ukms);
-      console.log("Number of UKMs:", ukms.length);
     } catch (err: any) {
-      clearTimeout(timeoutId);
       error = "Failed to fetch UKMs";
       console.error("Error fetching UKMs:", err);
-      console.error("Error details:", err.message, err.status);
       ukms = [];
     }
     
     loading = false;
-    console.log("Loading state set to false");
   }
 
   function openCreateModal() {
@@ -152,9 +136,45 @@
     existingImages = [];
   }
 
+  // New function to handle backdrop clicks properly
+  function handleBackdropClick(event: Event) {
+    // Only close modal if the backdrop itself (not its children) was clicked
+    if (event.target === event.currentTarget) {
+      closeModal();
+    }
+  }
+
   async function handleSubmit(event: Event) {
     event.preventDefault();
     
+    // Add Swal confirmation before submitting
+    const result = await Swal.fire({
+      title: editingUkm ? "Update UKM?" : "Create UKM?",
+      text: editingUkm 
+        ? `Are you sure you want to update "${formData.name}"?` 
+        : `Are you sure you want to create "${formData.name}"?`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: editingUkm ? "Yes, update it" : "Yes, create it",
+      cancelButtonText: "Cancel",
+      customClass: {
+        container: 'admin-swal',
+        popup: 'admin-swal-modal',
+        title: 'admin-swal-title',
+        htmlContainer: 'admin-swal-html-container',
+        input: 'admin-swal-input',
+        actions: 'admin-swal-actions',
+        confirmButton: 'admin-swal-confirm',
+        cancelButton: 'admin-swal-cancel',
+        denyButton: 'admin-swal-deny',
+        icon: 'admin-swal-icon admin-swal-question',
+        closeButton: 'admin-swal-close',
+        validationMessage: 'admin-swal-validation-message'
+      }
+    });
+
+    if (!result.isConfirmed) return;
+
     try {
       error = null;
       success = null;
@@ -178,25 +198,92 @@
 
       if (editingUkm) {
         await put(`/api/admin/ukms/${editingUkm.id}`, formDataToSend);
-        success = "UKM updated successfully!";
+        Swal.fire({
+          title: "Success!",
+          text: "UKM updated successfully!",
+          icon: "success",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          customClass: {
+            container: 'admin-swal',
+            popup: 'admin-swal-toast admin-swal-success',
+            title: 'admin-swal-title',
+            htmlContainer: 'admin-swal-html-container',
+            icon: 'admin-swal-icon admin-swal-success',
+          }
+        });
       } else {
         await post("/api/admin/ukms", formDataToSend);
-        success = "UKM created successfully!";
+        Swal.fire({
+          title: "Success!",
+          text: "UKM created successfully!",
+          icon: "success",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          customClass: {
+            container: 'admin-swal',
+            popup: 'admin-swal-toast admin-swal-success',
+            title: 'admin-swal-title',
+            htmlContainer: 'admin-swal-html-container',
+            icon: 'admin-swal-icon admin-swal-success',
+          }
+        });
       }
 
       closeModal();
       await fetchUkms();
-      setTimeout(() => success = null, 3000);
     } catch (err: any) {
       error = err.message || "Operation failed";
       console.error("Error submitting form:", err);
+      
+      Swal.fire({
+        title: "Error",
+        text: error || "An unknown error occurred",
+        icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-error',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-error',
+        }
+      });
     }
   }
 
   async function deleteUkm(ukm: Ukm) {
-    if (!confirm(`Are you sure you want to delete "${ukm.name}"? This action cannot be undone.`)) {
-      return;
-    }
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: `Are you sure you want to delete "${ukm.name}"? This action cannot be undone.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it",
+      cancelButtonText: "Cancel",
+      customClass: {
+        container: 'admin-swal',
+        popup: 'admin-swal-modal',
+        title: 'admin-swal-title',
+        htmlContainer: 'admin-swal-html-container',
+        input: 'admin-swal-input',
+        actions: 'admin-swal-actions',
+        confirmButton: 'admin-swal-confirm',
+        cancelButton: 'admin-swal-cancel',
+        denyButton: 'admin-swal-deny',
+        icon: 'admin-swal-icon admin-swal-warning',
+        closeButton: 'admin-swal-close',
+        validationMessage: 'admin-swal-validation-message'
+      }
+    });
+
+    if (!result.isConfirmed) return;
 
     try {
       error = null;
@@ -204,12 +291,43 @@
 
       await del(`/api/admin/ukms/${ukm.id}`);
       
-      success = "UKM deleted successfully!";
+      Swal.fire({
+        title: "Success!",
+        text: "UKM deleted successfully!",
+        icon: "success",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-success',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-success',
+        }
+      });
       await fetchUkms();
-      setTimeout(() => success = null, 3000);
     } catch (err: any) {
       error = err.message || "Delete failed";
       console.error("Error deleting UKM:", err);
+      
+      Swal.fire({
+        title: "Error",
+        text: "Failed to delete UKM. Please try again.",
+        icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-error',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-error',
+        }
+      });
     }
   }
 
@@ -572,7 +690,7 @@
   {#if showCreateModal}
     <!-- svelte-ignore a11y_click_events_have_key_events -->
     <!-- svelte-ignore a11y_no_static_element_interactions -->
-    <div class="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50" onclick={(e) => e.target === e.currentTarget && closeModal()}>
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50" onclick={handleBackdropClick}>
       <div class="admin-card rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
         <!-- Modal Header -->
         <div class="bg-admin-background px-6 py-4 border-b border-admin-border sm:px-8 sm:py-6">
@@ -972,7 +1090,7 @@
                       <div class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg sm:mt-6 sm:p-4">
                         <div class="flex items-start gap-2 sm:gap-3">
                           <div class="p-1 bg-red-500 rounded sm:p-1.5">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white sm:w-4 sm:h-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="sm:w-4 sm:h-4">
                               <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/>
                               <line x1="12" y1="9" x2="12" y2="13"/>
                               <line x1="12" y1="17" x2="12.01" y2="17"/>

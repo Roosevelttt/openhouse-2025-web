@@ -41,6 +41,20 @@
           title: `${fileType[type]} Validated Successfully`,
           text: `NRP: ${nrp}`,
           icon: "success",
+          customClass: {
+            container: 'admin-swal',
+            popup: 'admin-swal-modal',
+            title: 'admin-swal-title',
+            htmlContainer: 'admin-swal-html-container',
+            input: 'admin-swal-input',
+            actions: 'admin-swal-actions',
+            confirmButton: 'admin-swal-confirm',
+            cancelButton: 'admin-swal-cancel',
+            denyButton: 'admin-swal-deny',
+            icon: 'admin-swal-icon admin-swal-success',
+            closeButton: 'admin-swal-close',
+            validationMessage: 'admin-swal-validation-message'
+          }
         });
         window.location.reload();
       } else {
@@ -49,6 +63,20 @@
           title: "An unknown error occurred",
           text: data.message || "An unknown error occurred.",
           icon: "error",
+          customClass: {
+            container: 'admin-swal',
+            popup: 'admin-swal-modal',
+            title: 'admin-swal-title',
+            htmlContainer: 'admin-swal-html-container',
+            input: 'admin-swal-input',
+            actions: 'admin-swal-actions',
+            confirmButton: 'admin-swal-confirm',
+            cancelButton: 'admin-swal-cancel',
+            denyButton: 'admin-swal-deny',
+            icon: 'admin-swal-icon admin-swal-error',
+            closeButton: 'admin-swal-close',
+            validationMessage: 'admin-swal-validation-message'
+          }
         });
       }
     } catch (error: any) {
@@ -67,6 +95,20 @@
         title: "Request Failed",
         text: errorMessage,
         icon: "error",
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-modal',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          input: 'admin-swal-input',
+          actions: 'admin-swal-actions',
+          confirmButton: 'admin-swal-confirm',
+          cancelButton: 'admin-swal-cancel',
+          denyButton: 'admin-swal-deny',
+          icon: 'admin-swal-icon admin-swal-error',
+          closeButton: 'admin-swal-close',
+          validationMessage: 'admin-swal-validation-message'
+        }
       });
     } finally {
       isLoading = false;
@@ -80,10 +122,22 @@
       icon: "question",
       showCancelButton: false,
       showDenyButton: true,
-      confirmButtonColor: "#4ed630",
-      denyButtonColor: "#cf142b",
       confirmButtonText: "YES",
       denyButtonText: "CANCEL",
+      customClass: {
+        container: 'admin-swal',
+        popup: 'admin-swal-modal',
+        title: 'admin-swal-title',
+        htmlContainer: 'admin-swal-html-container',
+        input: 'admin-swal-input',
+        actions: 'admin-swal-actions',
+        confirmButton: 'admin-swal-confirm',
+        cancelButton: 'admin-swal-cancel',
+        denyButton: 'admin-swal-deny',
+        icon: 'admin-swal-icon admin-swal-question',
+        closeButton: 'admin-swal-close',
+        validationMessage: 'admin-swal-validation-message'
+      }
     }).then((result) => {
       if (result.isConfirmed) {
         validate("payment");
