@@ -49,6 +49,7 @@
   let galleryImages: string[] = [];
   let logoUrl: string | null = null;
   let posterUrl: string | null = null;
+  let posterOverlay: HTMLElement | null = null;
  
   onMount(() => {
     AOS.init();
@@ -60,6 +61,20 @@
       if (selectedLk.poster_url) {
         posterUrl = getImageUrl(selectedLk.poster_url);
       }
+    }
+    
+    if (posterOverlay) {
+      gsap.to(posterOverlay, {
+        opacity: 0.5,
+        pointerEvents: "auto",
+        duration: 0.4,
+        ease: "power2.out",
+        scrollTrigger: {
+          trigger: posterOverlay,   
+          start: "95% bottom",       
+          toggleActions: "play none none reverse", 
+        },
+      });
     }
   });
 </script>
@@ -153,17 +168,22 @@
   </Background>
 {/if}
 
-<!-- Poster + Vision/Mission -->
+<!-- Poster -->
 {#if selectedLk?.poster_url}
-  <section
-    class="relative my-20 px-6 py-12 bg-gradient-to-r from-[#382e5f] to-[#2e2157] text-white rounded-2xl max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10"
+  <Background
+    class="p-8 sm:p-16 lg:p-20 flex flex-col items-center justify-center "
   >
+    <div
+      class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black z-[-1] opacity-15"
+      bind:this={posterOverlay}
+    ></div>
+    <Title text="Join Us!"></Title>
     <img
       src={selectedLk.poster_url}
       alt="poster"
       class="w-full md:w-1/2 rounded-xl shadow-lg"
     />
-  </section>
+  </Background>
 {/if}
 
 <style>
