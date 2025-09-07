@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { transitionUrl } from '$lib/stores/transitionStore.js';
   import Title from "$lib/components/ukm/Title.svelte";
   import Background from "$lib/components/ukm/Background.svelte";
   import Logo from "$lib/components/ukm/Logo.svelte";
   import { onMount } from "svelte";
-  import { PUBLIC_IMAGE_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import Subtitle from "$lib/components/ukm/Subtitle.svelte";
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
@@ -34,7 +33,7 @@
     if (!relativeUrl) return null;
     if (relativeUrl.startsWith("http")) return relativeUrl;
 
-    return `${PUBLIC_IMAGE_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    return `${PUBLIC_API_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
   }
 
   function parseImageUrls(imageUrls: string | null): string[] {

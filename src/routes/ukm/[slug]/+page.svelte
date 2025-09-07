@@ -8,7 +8,7 @@
   import Poster from "$lib/components/ukm/Poster.svelte";  
   import AOS from 'aos';
   import 'aos/dist/aos.css'; 
-  import { PUBLIC_IMAGE_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
   import { checkUserReservation } from "$lib/api";
@@ -36,7 +36,7 @@
   function getImageUrl(relativeUrl: string | null): string | null {
     if (!relativeUrl) return null;
     if (relativeUrl.startsWith("http")) return relativeUrl;
-    return `${PUBLIC_IMAGE_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    return `${PUBLIC_API_BASE}${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
   }
 
 
@@ -58,24 +58,30 @@
   }
 
   let logoRef: HTMLImageElement | null = null;
-  let titleRef: HTMLElement | null = null;
-  let introRef: HTMLElement | null = null;
-  let overlayRef: HTMLElement | null = null;
-  let containerRef: HTMLElement | null = null;
+  let titleRef: HTMLHeadingElement | null = null;
+  let introRef: HTMLDivElement | null = null;
+  let overlayRef: HTMLDivElement | null = null;
+  let containerRef: HTMLDivElement | null = null;
 
-  let part1Ref: HTMLElement | null = null;
-  let part2Ref: HTMLElement | null = null;
+  let part1Ref: HTMLDivElement | null = null;
+  let part2Ref: HTMLDivElement | null = null;
 
-  let posterOverlay: HTMLElement | null = null;
+  let posterOverlay: HTMLDivElement | null = null;
+  
+  // Component references
+  let backgroundRef: any = null;
+  let logoComponentRef: any = null;
+  let titleComponentRef: any = null;
 
   let hasRegistered = false;
   let loadingReservation = true;
 
   onMount(async () => {
     loadingReservation = true;
-    if (selectedUkm?.id) {
+    const ukmId = selectedUkm?.id;
+    if (ukmId) {
       try {
-        const res = await checkUserReservation(selectedUkm.id);
+        const res = await checkUserReservation(ukmId);
         hasRegistered = res.has_registered;
       } catch (e) {
         hasRegistered = false;
@@ -90,20 +96,20 @@
     const { ScrollTrigger } = await import("gsap/ScrollTrigger");
     gsap.registerPlugin(ScrollTrigger);
 
-    if (overlayRef && logoRef && titleRef && introRef && containerRef) {
+    if (overlayRef && logoComponentRef && titleComponentRef && introRef && backgroundRef) {
       // Intro overlay fade
       gsap.to(overlayRef, { opacity: 0.7, duration: 0 });
       gsap.to(overlayRef, { opacity: 0, duration: 1.2, delay: 0.5 });
       
       // Entrance animation
-      gsap.from(logoRef, {x: -200, opacity: 0, duration: 1, delay: 1.2, ease: "power2.out"});
-      gsap.from(titleRef, {opacity: 0, y: 30, duration: 1, delay: 1.5, ease: "power2.out"});
+      gsap.from(logoComponentRef, {x: -200, opacity: 0, duration: 1, delay: 1.2, ease: "power2.out"});
+      gsap.from(titleComponentRef, {opacity: 0, y: 30, duration: 1, delay: 1.5, ease: "power2.out"});
       
       const deltaY = window.innerHeight * 0.25 - (window.innerHeight / 2);
 
       let tl = gsap.timeline({
         scrollTrigger: {
-          trigger: containerRef,
+          trigger: backgroundRef,
           start: "top top",
           end: "+=100",
           scrub: true,
@@ -187,31 +193,33 @@
   }
 
   function isSlotFull(): boolean {
+    if (!selectedUkm) return false;
     return (
-      selectedUkm?.max_slot !== null &&
-      selectedUkm?.current_slot !== null &&
+      selectedUkm.max_slot !== null &&
+      selectedUkm.current_slot !== null &&
       selectedUkm.current_slot >= selectedUkm.max_slot
     );
   }
 
   function isUkmWebsite(): boolean {
-    return !!selectedUkm?.slug && !!ukmWebsites[selectedUkm.slug];
+    if (!selectedUkm?.slug) return false;
+    return !!ukmWebsites[selectedUkm.slug];
   }
 </script> 
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>
-<Background ref={(el) => (containerRef = el)} className="relative flex flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
+<Background bind:this={backgroundRef} className="relative flex flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
   <div class="absolute inset-0 bg-black opacity-0" bind:this={overlayRef}></div>
     <!-- <img class="w-[400px] rotate-45 absolute -bottom-10 -left-5" src="images/single-card.png" alt=""> -->
 
   <div class="relative flex flex-col items-center justify-center space-x-2" bind:this={part1Ref}>
     <Logo
-      src="/images/ukm/{selectedUkm?.logo_url || 'default-logo.png'}"
+      src="{PUBLIC_API_BASE}{selectedUkm?.logo_url || 'default-logo.png'}"
       alt="LOGO UKM" 
       className="mb-4"
-      ref={(el) => (logoRef = el)}
+      bind:this={logoComponentRef}
     />
-    <Title text="{selectedUkm?.name || 'UKM DEFAULT'}" ref={(el) => (titleRef = el)} />
+    <Title text="{selectedUkm?.name || 'UKM DEFAULT'}" bind:this={titleComponentRef} />
 
   </div>
 
@@ -241,19 +249,21 @@
 
   <!-- Mobile -->
   <div class="md:hidden relative h-full w-full">
-    {#each parseImageUrls(selectedUkm?.image_urls) as url, i}
-      <ImageFrame
-        src={getImageUrl(url)}
-        alt={`Dekorasi ${i + 1}`}
-        className={mobileImageStyles[i] ?? mobileImageStyles[0]}
-      />
-    {/each}
+    {#if selectedUkm?.image_urls}
+      {#each parseImageUrls(selectedUkm.image_urls) as url, i}
+        <ImageFrame
+          src={getImageUrl(url)}
+          alt={`Dekorasi ${i + 1}`}
+          className={mobileImageStyles[i] ?? mobileImageStyles[0]}
+        />
+      {/each}
+    {/if}
   </div>
 
   <!-- Desktop -->
-  {#if parseImageUrls(selectedUkm?.image_urls).length === 3}
+  {#if selectedUkm?.image_urls && parseImageUrls(selectedUkm.image_urls).length === 3}
     <div class="hidden lg:grid lg:grid-cols-3 gap-2 justify-center mx-auto lg:w-[80%] h-full">
-      {#each parseImageUrls(selectedUkm?.image_urls) as url, i}
+      {#each parseImageUrls(selectedUkm.image_urls) as url, i}
         <ImageFrame
           src={getImageUrl(url)}
           alt={`Dekorasi ${i + 1}`}
@@ -261,9 +271,9 @@
         />
       {/each}
     </div>
-  {:else}
+  {:else if selectedUkm?.image_urls}
     <div class="hidden relative md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 justify-center w-[90%] h-full mx-auto">
-      {#each parseImageUrls(selectedUkm?.image_urls) as url, i}
+      {#each parseImageUrls(selectedUkm.image_urls) as url, i}
         <ImageFrame
           src={getImageUrl(url)}
           alt={`Dekorasi ${i + 1}`}
@@ -300,16 +310,16 @@
     {#if selectedUkm?.poster_url}
       <div class="w-full flex flex-col md:grid grid-cols-2 md:gap-5 items-center">
         <div class="w-full flex justify-center mb-8 md:mb-0">
-          <Poster url=/images/ukm/{selectedUkm.poster_url} />
+          <Poster url={PUBLIC_API_BASE}{selectedUkm.poster_url} />
         </div>
         <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
                 bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">
-          {#if !isUkmWebsite()}
+          {#if selectedUkm && !isUkmWebsite()}
             <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
               className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
             <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
               className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
-          {:else}
+          {:else if selectedUkm && isUkmWebsite()}
             <Subtitle text="Click the button below to visit our official website for more information and registration." 
               className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
           {/if}
@@ -317,13 +327,13 @@
             on:click={handleRegisterClick}
             class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                   transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-            disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
+            disabled={selectedUkm && !isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
           >
             {#if loadingReservation}
               Checking...
-            {:else if isUkmWebsite()}
+            {:else if selectedUkm && isUkmWebsite()}
               Visit Website
-            {:else}
+            {:else if selectedUkm}
               {hasRegistered
                 ? "Already Registered 🙅‍♂️"
                 : isSlotFull()
@@ -340,12 +350,12 @@
     {:else}
       <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 lg:w-1/2 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
           bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">
-        {#if !isUkmWebsite()}
+        {#if selectedUkm && !isUkmWebsite()}
           <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
             className="font-extrabold text-xl md:text-2xl lg:text-3xl text-red-600 drop-shadow-sm" />
           <Subtitle text="Registration Fee: {selectedUkm.regist_fee ? formatFee(selectedUkm.regist_fee) : 'Free'}" 
             className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
-        {:else}
+        {:else if selectedUkm && isUkmWebsite()}
           <Subtitle text="Click the button below to visit our official website for more information and registration." 
             className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
         {/if}
@@ -353,11 +363,11 @@
           on:click={handleRegisterClick}
           class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                 transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-          disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
+          disabled={selectedUkm && !isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
         >
-          {#if isUkmWebsite()}
+          {#if selectedUkm && isUkmWebsite()}
             Visit Website
-          {:else}
+          {:else if selectedUkm}
             {hasRegistered
               ? "Already Registered 🙅‍♂️"
               : isSlotFull()
