@@ -5,6 +5,7 @@
   import { get, getSessionValues } from "$lib/api";
   import { onMount, type Snippet } from "svelte";
   import { slide } from "svelte/transition";
+  import AdminSwal from "$lib/components/admin/AdminSwal.svelte";
   import Swal from "sweetalert2";
   import type { PageData } from "./$types";
   import { Users, Grid3X3, MessageSquare, Menu, X, LogOut } from "lucide-svelte";
@@ -45,6 +46,20 @@
           icon: "error",
           title: "Logout Failed",
           text: "There was an error logging out. Please try again.",
+          customClass: {
+            container: 'admin-swal',
+            popup: 'admin-swal-modal',
+            title: 'admin-swal-title',
+            htmlContainer: 'admin-swal-html-container',
+            input: 'admin-swal-input',
+            actions: 'admin-swal-actions',
+            confirmButton: 'admin-swal-confirm',
+            cancelButton: 'admin-swal-cancel',
+            denyButton: 'admin-swal-deny',
+            icon: 'admin-swal-icon admin-swal-error',
+            closeButton: 'admin-swal-close',
+            validationMessage: 'admin-swal-validation-message'
+          }
         });
       }
     } catch (error) {
@@ -53,6 +68,20 @@
         icon: "error",
         title: "Logout Failed",
         text: "There was an error logging out. Please try again.",
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-modal',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          input: 'admin-swal-input',
+          actions: 'admin-swal-actions',
+          confirmButton: 'admin-swal-confirm',
+          cancelButton: 'admin-swal-cancel',
+          denyButton: 'admin-swal-deny',
+          icon: 'admin-swal-icon admin-swal-error',
+          closeButton: 'admin-swal-close',
+          validationMessage: 'admin-swal-validation-message'
+        }
       });
     }
   }
@@ -61,6 +90,7 @@
 <div
   class="admin-layout font-lexend flex h-screen flex-col md:flex-row"
 >
+  <AdminSwal />
   <nav
     class="admin-sidebar inset-y-0 min-w-64 flex-col bg-white border-r border-admin-border md:fixed md:flex md:max-w-64"
   >

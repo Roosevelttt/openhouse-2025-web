@@ -151,10 +151,26 @@
 
       closeModal();
       await fetchAdmins();
-      setTimeout(() => success = null, 3000);
     } catch (err: any) {
       error = err.message || "Operation failed";
       console.error("Error submitting form:", err);
+      
+      Swal.fire({
+        title: "Error",
+        text: error,
+        icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-error',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-error',
+        }
+      });
     }
   }
 
@@ -165,7 +181,21 @@
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Yes, delete it",
-      cancelButtonText: "Cancel"
+      cancelButtonText: "Cancel",
+      customClass: {
+        container: 'admin-swal',
+        popup: 'admin-swal-modal',
+        title: 'admin-swal-title',
+        htmlContainer: 'admin-swal-html-container',
+        input: 'admin-swal-input',
+        actions: 'admin-swal-actions',
+        confirmButton: 'admin-swal-confirm',
+        cancelButton: 'admin-swal-cancel',
+        denyButton: 'admin-swal-deny',
+        icon: 'admin-swal-icon admin-swal-warning',
+        closeButton: 'admin-swal-close',
+        validationMessage: 'admin-swal-validation-message'
+      }
     });
 
     if (!result.isConfirmed) return;
@@ -178,7 +208,6 @@
       
       success = "Admin deleted successfully!";
       await fetchAdmins();
-      setTimeout(() => success = null, 3000);
     } catch (err: any) {
       error = err.message || "Delete failed";
       console.error("Error deleting admin:", err);
@@ -186,7 +215,18 @@
       Swal.fire({
         title: "Error",
         text: "Failed to delete admin. Please try again.",
-        icon: "error"
+        icon: "error",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        customClass: {
+          container: 'admin-swal',
+          popup: 'admin-swal-toast admin-swal-error',
+          title: 'admin-swal-title',
+          htmlContainer: 'admin-swal-html-container',
+          icon: 'admin-swal-icon admin-swal-error',
+        }
       });
     }
   }
@@ -259,6 +299,18 @@ $effect(() => {
 	} else if (formData.division_id || (formData.ukm_id && formData.division_id)) {
 		formData.field = "Panitia";
 	}
+});
+
+$effect(() => {
+  const clearSuccessHandler = () => {
+    success = null;
+  };
+  
+  window.addEventListener('clearSuccess', clearSuccessHandler);
+  
+  return () => {
+    window.removeEventListener('clearSuccess', clearSuccessHandler);
+  };
 });
 </script>
 
@@ -664,14 +716,32 @@ $effect(() => {
 
     <!-- Success Toast -->
     {#if success}
-      <div class="fixed bottom-4 right-4 z-50">
-        <div class="bg-admin-success text-white px-4 py-3 rounded-lg shadow-lg flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-          </svg>
-          <span class="text-sm font-medium">{success}</span>
-        </div>
-      </div>
+      {@html `<script>
+        (function() {
+          const successMessage = ${JSON.stringify(success)};
+          if (successMessage) {
+            Swal.fire({
+              title: "Success",
+              text: successMessage,
+              icon: "success",
+              toast: true,
+              position: "top-end",
+              showConfirmButton: false,
+              timer: 3000,
+              customClass: {
+                container: 'admin-swal',
+                popup: 'admin-swal-toast admin-swal-success',
+                title: 'admin-swal-title',
+                htmlContainer: 'admin-swal-html-container',
+                icon: 'admin-swal-icon admin-swal-success',
+              }
+            });
+            // Clear success message after showing toast
+            const event = new CustomEvent('clearSuccess');
+            window.dispatchEvent(event);
+          }
+        })();
+      </script>`}
     {/if}
   </main>
 {/if}
