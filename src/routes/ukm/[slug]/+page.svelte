@@ -298,7 +298,7 @@
       <div data-aos="fade-down">
         <Title text="Watch Our Story🎥" />
       </div>
-      <div data-aos="fade-up" data-aos-offset="300" data-aos-duration="500">
+      <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">
         <Video src={getImageUrl(selectedUkm.video_url)} className="w-full lg:w-auto h-full" controls={true} />
       </div>
     </Background>
@@ -317,7 +317,7 @@
           <div class="w-full flex justify-center mb-8 md:mb-0">
             <Poster url={getImageUrl(selectedUkm.poster_url)} />
           </div>
-          <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
+          <div data-aos="zoom-in" data-aos-delay="300" class="w-[80%] md:w-3/4 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
                   bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">
             {#if !isUkmWebsite()}
               <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 
@@ -353,7 +353,7 @@
           </div>
         </div>
       {:else}
-        <div data-aos="zoom-in" data-aos-offset="200" class="w-[80%] md:w-3/4 lg:w-1/2 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
+        <div data-aos="zoom-in" data-aos-delay="300" class="w-[80%] md:w-3/4 lg:w-1/2 md:mx-auto flex flex-col items-center text-center space-y-1 md:space-y-3 lg:space-y-5 
             bg-[#fff8e1]/90 backdrop-blur-md p-6 rounded-2xl shadow-2xl border-4 border-red-500">
           {#if !isUkmWebsite()}
             <Subtitle text="🎟 Current Slot: {selectedUkm.current_slot}/{selectedUkm.max_slot}" 

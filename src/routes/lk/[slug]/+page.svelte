@@ -161,7 +161,7 @@
     <div data-aos="fade-down">
       <Title text="Watch Our Story 🎥" />
     </div>
-    <div data-aos="fade-up" data-aos-offset="300" data-aos-duration="500">
+    <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">
       <Video src={getImageUrl(selectedLk.video_url)} className="w-full lg:w-auto h-full" controls={true} />
     </div>
   </Background>
@@ -170,7 +170,7 @@
 <!-- Poster -->
 {#if selectedLk?.poster_url}
   <Background
-    class="p-8 sm:p-16 lg:p-20 flex flex-col items-center justify-center "
+    className="p-8 sm:p-16 lg:p-20 flex flex-col items-center justify-center gap-5"
   >
     <div
       class="absolute inset-0 bg-gradient-to-b from-transparent via-black/50 to-black z-[-1] opacity-15"
