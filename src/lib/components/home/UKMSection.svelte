@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	const allBooks = [
 		{ name: 'ASFS', src: '/svg/home/ukm/books/book asfs.svg' },
 		{ name: 'Badminton', src: '/svg/home/ukm/books/book badminton.svg' },
@@ -30,62 +32,151 @@
 	const topRowBooks = allBooks.slice(0, 13);
 	const bottomRowBooks = allBooks.slice(13);
 	const createSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
+	
+	// let activeTopBookName: string | null = topRowBooks[0]?.name || null;
+	// let activeBottomBookName: string | null = bottomRowBooks[0]?.name || null;
+	let activeTopBookName: string | null = null;
+	let activeBottomBookName: string | null = null;
+
+	let topRowContainer: HTMLDivElement;
+	let bottomRowContainer: HTMLDivElement;
+	let isMobile = false;
+	let ticking = false;
+
+	// store last scroll position, detect direction.
+	let lastScrollTop = 0;
+	let lastScrollBottom = 0;
+
+	const updateActiveBookByPosition = (
+		container: HTMLDivElement,
+		setActiveBook: (name: string) => void,
+		positionRatio: number
+	) => {
+		if (!container || !isMobile) return;
+		const containerRect = container.getBoundingClientRect();
+		const targetPoint = containerRect.left + containerRect.width * positionRatio;
+		let closest = { name: '', distance: Infinity };
+		const bookElements = container.querySelectorAll('a');
+		bookElements.forEach((bookEl) => {
+			const bookRect = bookEl.getBoundingClientRect();
+			const bookCenter = bookRect.left + bookRect.width / 2;
+			const distance = Math.abs(targetPoint - bookCenter);
+			if (distance < closest.distance) {
+				closest.distance = distance;
+				closest.name = bookEl.title;
+			}
+		});
+		setActiveBook(closest.name);
+	};
+
+	// update handlers
+	const handleScrollTop = () => {
+		if (!ticking) {
+			window.requestAnimationFrame(() => {
+				const currentScroll = topRowContainer.scrollLeft;
+				let positionRatio = 0.15;
+
+				if (currentScroll > lastScrollTop) {
+					positionRatio = 0.85;
+				}
+				
+				updateActiveBookByPosition(
+					topRowContainer,
+					(name) => { activeTopBookName = name; },
+					positionRatio
+				);
+				
+				lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+				ticking = false;
+			});
+			ticking = true;
+		}
+	};
+
+	const handleScrollBottom = () => {
+		if (!ticking) {
+			window.requestAnimationFrame(() => {
+				const currentScroll = bottomRowContainer.scrollLeft;
+				let positionRatio = 0.15;
+
+				if (currentScroll > lastScrollBottom) {
+					positionRatio = 0.85;
+				}
+
+				updateActiveBookByPosition(
+					bottomRowContainer,
+					(name) => { activeBottomBookName = name; },
+					positionRatio
+				);
+				
+				lastScrollBottom = currentScroll <= 0 ? 0 : currentScroll;
+				ticking = false;
+			});
+			ticking = true;
+		}
+	};
+
+	const checkIsMobile = () => {
+		isMobile = window.innerWidth < 1024;
+	};
+	onMount(() => {
+		checkIsMobile();
+		window.addEventListener('resize', checkIsMobile);
+		if (topRowContainer) {
+			topRowContainer.addEventListener('scroll', handleScrollTop, { passive: true });
+		}
+		if (bottomRowContainer) {
+			bottomRowContainer.addEventListener('scroll', handleScrollBottom, { passive: true });
+		}
+		return () => {
+			window.removeEventListener('resize', checkIsMobile);
+			if (topRowContainer) {
+				topRowContainer.removeEventListener('scroll', handleScrollTop);
+			}
+			if (bottomRowContainer) {
+				bottomRowContainer.removeEventListener('scroll', handleScrollBottom);
+			}
+		};
+	});
 </script>
 
 <section
-  class="relative w-full h-[80vh] lg:h-[150vh] max-h-[1200px] mt-[-10vw] bg-cover bg-center bg-[#260E16]"
+	class="relative w-full h-[80vh] lg:h-[150vh] mt-[-10vw] bg-cover bg-center"
+	style="background-image: url('/svg/home/ukm/wall behind.svg');"
 >
 	<div class="absolute inset-0 w-full h-full">
-		<!-- <img
-			src="/svg/home/ukm/wall behind.svg"
-			alt="Bookshelf wall"
-			class="absolute inset-0 w-full h-full object-cover z-0"
-		/> -->
 		<img
 			src="/svg/home/ukm/book floor.svg"
 			alt=""
-			class="absolute bottom-[0%] left-1/2 -translate-x-1/2 max-w-none w-[110%] lg:w-full z-10"
+			class="absolute bottom-[0%] lg:left-1/2 -translate-x-1/2 max-w-none w-[200%] lg:w-full z-10"
 		/>
 		<img
 			src="/svg/home/ukm/book floor.svg"
 			alt=""
-			class="absolute top-[52%] lg:top-[50%] left-1/2 -translate-x-1/2 max-w-none w-[110%] lg:w-full z-30"
+			class="absolute top-[50%] lg:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] lg:w-full z-30"
 		/>
-		<!-- <img
-			src="/svg/home/ukm/shelf wall L.svg"
-			alt=""
-			class="hidden lg:block absolute left-0 bottom-0 h-full z-50"
-		/>
-		<img
-			src="/svg/home/ukm/shelf wall R.svg"
-			alt=""
-			class="hidden lg:block absolute right-0 bottom-0 h-full z-50"
-		/> -->
 		<img
 			src="/svg/home/ukm/planks.svg"
 			alt="Bookshelf top"
-			class="absolute top-10 lg:top-44 left-1/2 -translate-x-1/2 max-w-none w-[250%] lg:w-[100%] z-50"
-		/>
-				<img
-			src="/svg/home/ukm/planks.svg"
-			alt="Bookshelf top"
-			class="absolute top-10 lg:top-[52%] left-1/2 -translate-x-1/2 max-w-none w-[250%] lg:w-[100%] z-20"
+			class="absolute top-[6%] lg:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] lg:w-[100%] z-50"
 		/>
 	</div>
 
 	<div class="relative w-full h-full">
 		<div
-			class="absolute top-[15%] lg:top-[31%] h-[40%] lg:h-[30%] w-full z-40
+			bind:this={topRowContainer}
+			class="absolute top-[22%] lg:top-[40%] h-[40%] lg:h-[30%] w-full z-40
                    overflow-x-auto lg:overflow-visible scrollbar-hide"
 		>
 			<div
-				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4
-                       lg:mx-auto lg:justify-center"
+				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4 pb-8 md:pb-0 lg:mx-auto lg:justify-center"
 			>
 				{#each topRowBooks as book (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
-						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-400 ease-in-out hover:translate-y-8"
+						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-300 ease-in-out
+                               lg:hover:translate-y-8"
+						class:translate-y-8={isMobile && activeTopBookName === book.name}
 						title={book.name}
 					>
 						<img src={book.src} alt={book.name} class="h-full w-auto" />
@@ -95,17 +186,19 @@
 		</div>
 
 		<div
-			class="absolute bottom-[4%] h-[40%] lg:h-[30%] w-full z-15
+			bind:this={bottomRowContainer}
+			class="absolute bottom-[4%] h-[40%] lg:h-[30%] w-full z-20
                    overflow-x-auto lg:overflow-visible scrollbar-hide"
 		>
 			<div
-				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4
-                       lg:mx-auto lg:justify-center"
+				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4 pb-8 md:pb-0 lg:mx-auto lg:justify-center"
 			>
 				{#each bottomRowBooks as book (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
-						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-400 ease-in-out hover:translate-y-8"
+						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-300 ease-in-out
+                               lg:hover:translate-y-8"
+						class:translate-y-8={isMobile && activeBottomBookName === book.name}
 						title={book.name}
 					>
 						<img src={book.src} alt={book.name} class="h-full w-auto" />
