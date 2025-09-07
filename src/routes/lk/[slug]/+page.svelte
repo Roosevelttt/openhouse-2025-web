@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { transitionUrl } from '$lib/stores/transitionStore.js';
   import Title from "$lib/components/ukm/Title.svelte";
   import Background from "$lib/components/ukm/Background.svelte";
   import Logo from "$lib/components/ukm/Logo.svelte";
   import { onMount } from "svelte";
-  import { PUBLIC_IMAGE_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import Subtitle from "$lib/components/ukm/Subtitle.svelte";
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
@@ -34,7 +33,7 @@
     if (!relativeUrl) return null;
     if (relativeUrl.startsWith("http")) return relativeUrl;
 
-    return `${PUBLIC_IMAGE_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    return `${PUBLIC_API_BASE}${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
   }
 
   function parseImageUrls(imageUrls: string | null): string[] {
@@ -86,12 +85,12 @@
 <Background className="flex flex-col items-center justify-center text-center p-8 !overflow-visible">
   <!-- floating balloon (decorative) -->
   <img
-    src="{getImageUrl('/balloon.png')}"
+    src="/images/balloon.png"
     alt="balloon"
     class="absolute -bottom-[10%] md:bottom-0 -left-[15%] md:left-5 w-20 w-[200px] md:w-[250px] animate-bounce-slow opacity-70"
   />
   <img
-    src="{getImageUrl('/fireworks-1.png')}"
+    src="/images/fireworks-1.png"
     alt="fireworks"
     class="absolute mix-blend-color-dodge -top-[5%] md:top-0 -right-[15%] md:right-0 w-[250px] md:w-[300px] animate-bounce-slow opacity-70"
   />
@@ -112,7 +111,7 @@
 
 <!-- Description -->
 <Background className="relative flex flex-col items-center justify-center p-8 !overflow-visible">
-  <img class="hidden md:block absolute md:-top-[10%] lg:top-0 left-0 z-[-9] opacity-70" src="{getImageUrl('/clouds.png')}" alt="">
+  <img class="hidden md:block absolute md:-top-[10%] lg:top-0 left-0 z-[-9] opacity-70" src="images/clouds.png" alt="">
 
   <div data-aos="fade-down">
     <Title text={'About Us'} className={'text-[var(--color-light-gold)]'} />
@@ -130,13 +129,13 @@
 {#if galleryImages.length > 0}
   <Background className="flex flex-col items-center justify-center p-8 gap-20 !overflow-visible">
     <img
-      src="{getImageUrl('/fireworks-2.png')}"
+      src="images/fireworks-2.png"
       alt="fireworks" data-aos="zoom-in"
       class="absolute mix-blend-color-dodge lg:hidden -top-[5%] md:top-0 -left-[15%] md:left-0 w-[300px] opacity-70"
     />
 
     <img
-      src="{getImageUrl('/fireworks-3.png')}"
+      src="images/fireworks-3.png"
       alt="fireworks" data-aos="zoom-in"
       class="absolute mix-blend-color-dodge lg:hidden -bottom-[10%] md:bottom-0 -right-[15%] md:right-5 w-20 w-[300px] opacity-50"
     />
@@ -179,7 +178,7 @@
     ></div>
     <Title text="Join Us!"></Title>
     <img
-      src={selectedLk.poster_url}
+      src={PUBLIC_API_BASE}{selectedLk.poster_url}
       alt="poster"
       class="w-full md:w-1/2 rounded-xl shadow-lg"
     />

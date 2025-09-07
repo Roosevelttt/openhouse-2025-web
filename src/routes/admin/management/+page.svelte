@@ -105,17 +105,17 @@
   }
 
   function openEditModal(admin: Admin) {
-    resetForm();
-    editingAdmin = admin;
-    formData = {
-      name: admin.name,
-      nrp: admin.nrp,
-      field: admin.field,
-      division_id: admin.division_id || "",
-      ukm_id: admin.ukm_id || ""
-    };
-    
-    showCreateModal = true;
+	resetForm();
+	editingAdmin = admin;
+	formData = {
+		name: admin.name,
+		nrp: admin.nrp,
+		field: admin.field,
+		division_id: admin.division_id || "",
+		ukm_id: admin.ukm_id || ""
+	};
+	
+	showCreateModal = true;
   }
 
   function closeModal() {
@@ -246,12 +246,20 @@
   let filterField = $state("all"); 
   
   let formData = $state({
-    name: "",
-    nrp: "",
-    field: "",
-    division_id: "",
-    ukm_id: ""
-  });
+	name: "",
+	nrp: "",
+	field: "",
+	division_id: "",
+	ukm_id: ""
+});
+
+$effect(() => {
+	if (formData.ukm_id && !formData.division_id) {
+		formData.field = "Ketua UKM";
+	} else if (formData.division_id || (formData.ukm_id && formData.division_id)) {
+		formData.field = "Panitia";
+	}
+});
 </script>
 
 <svelte:head>
@@ -590,10 +598,12 @@
                       type="text" 
                       id="field"
                       bind:value={formData.field}
-                      required
-                      class="w-full px-3 py-2 border border-admin-border rounded-lg focus:ring-2 focus:ring-admin-text-primary/20 focus:border-admin-text-primary transition-all bg-white text-admin-text-primary placeholder-admin-text-tertiary"
-                      placeholder="Enter field value"
+                      readonly
+                      class="w-full px-3 py-2 border border-admin-border rounded-lg focus:ring-2 focus:ring-admin-text-primary/20 focus:border-admin-text-primary transition-all bg-admin-background text-admin-text-primary placeholder-admin-text-tertiary"
                     />
+                    <p class="text-xs text-admin-text-tertiary mt-1">
+                      Field is automatically set to "Ketua UKM" when UKM is selected without division, otherwise "Panitia"
+                    </p>
                   </div>
 
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">

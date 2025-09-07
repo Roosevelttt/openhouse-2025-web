@@ -8,7 +8,7 @@
   import Poster from "$lib/components/ukm/Poster.svelte";  
   import AOS from 'aos';
   import 'aos/dist/aos.css'; 
-  import { PUBLIC_IMAGE_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
   import { checkUserReservation } from "$lib/api";
@@ -36,7 +36,7 @@
   function getImageUrl(relativeUrl: string | null): string | null {
     if (!relativeUrl) return null;
     if (relativeUrl.startsWith("http")) return relativeUrl;
-    return `${PUBLIC_IMAGE_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    return `${PUBLIC_API_BASE}${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
   }
 
   function parseImageUrls(imageUrls: string | null): string[] {
@@ -57,14 +57,19 @@
   }
 
   let logoRef: HTMLImageElement | null = null;
-  let titleRef: HTMLElement | null = null;
-  let introRef: HTMLElement | null = null;
-  let overlayRef: HTMLElement | null = null;
-  let containerRef: HTMLElement | null = null;
+  let titleRef: HTMLHeadingElement | null = null;
+  let introRef: HTMLDivElement | null = null;
+  let overlayRef: HTMLDivElement | null = null;
+  let containerRef: HTMLDivElement | null = null;
 
   let part1Ref: HTMLElement | null = null;
 
-  let posterOverlay: HTMLElement | null = null;
+  let posterOverlay: HTMLDivElement | null = null;
+  
+  // Component references
+  let backgroundRef: any = null;
+  let logoComponentRef: any = null;
+  let titleComponentRef: any = null;
 
   let hasRegistered = false;
   let loadingReservation = true;
@@ -73,9 +78,10 @@
 
   onMount(async () => {
     loadingReservation = true;
-    if (selectedUkm?.id) {
+    const ukmId = selectedUkm?.id;
+    if (ukmId) {
       try {
-        const res = await checkUserReservation(selectedUkm.id);
+        const res = await checkUserReservation(ukmId);
         hasRegistered = res.has_registered;
       } catch (e) {
         hasRegistered = false;
@@ -90,20 +96,20 @@
     const { ScrollTrigger } = await import("gsap/ScrollTrigger");
     gsap.registerPlugin(ScrollTrigger);
 
-    if (overlayRef && logoRef && titleRef && introRef && containerRef) {
+    if (overlayRef && logoComponentRef && titleComponentRef && introRef && backgroundRef) {
       // Intro overlay fade
       gsap.to(overlayRef, { opacity: 0.7, duration: 0 });
       gsap.to(overlayRef, { opacity: 0, duration: 1.2, delay: 0.5 });
       
       // Entrance animation
-      gsap.from(logoRef, {x: -200, opacity: 0, duration: 1, delay: 1.2, ease: "power2.out"});
-      gsap.from(titleRef, {opacity: 0, y: 30, duration: 1, delay: 1.5, ease: "power2.out"});
+      gsap.from(logoComponentRef, {x: -200, opacity: 0, duration: 1, delay: 1.2, ease: "power2.out"});
+      gsap.from(titleComponentRef, {opacity: 0, y: 30, duration: 1, delay: 1.5, ease: "power2.out"});
       
       const deltaY = window.innerHeight * 0.25 - (window.innerHeight / 2);
 
       let tl = gsap.timeline({
         scrollTrigger: {
-          trigger: containerRef,
+          trigger: backgroundRef,
           start: "top top",
           end: "+=100",
           scrub: true,
@@ -188,7 +194,10 @@
 
   function isSlotFull(): boolean {
     if (!selectedUkm) return false;
+    if (!selectedUkm) return false;
     return (
+      selectedUkm.max_slot !== null &&
+      selectedUkm.current_slot !== null &&
       selectedUkm.max_slot !== null &&
       selectedUkm.current_slot !== null &&
       selectedUkm.current_slot >= selectedUkm.max_slot
@@ -196,7 +205,8 @@
   }
 
   function isUkmWebsite(): boolean {
-    return !!selectedUkm?.slug && !!ukmWebsites[selectedUkm.slug];
+    if (!selectedUkm?.slug) return false;
+    return !!ukmWebsites[selectedUkm.slug];
   }
 </script> 
 
