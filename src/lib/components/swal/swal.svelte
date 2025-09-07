@@ -2,6 +2,7 @@
     import Swal from "sweetalert2";
     import { page } from '$app/stores';
     import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
     // import "./swal.css" //sdh ada di app.css
 
     onMount( async () => {
@@ -41,9 +42,10 @@
           title: title,
           text: message,
           icon: icon
+        }).then(() => {
+          goto($page.url.pathname, { replaceState: true, noscroll: true });
         });
 
-        
       }
   });
 </script>
