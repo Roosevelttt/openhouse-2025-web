@@ -26,7 +26,7 @@ export async function post<T, U = object>(
   const fullUrl = `${API_BASE}${path}`;
   console.log('POST URL:', fullUrl);
   console.log('Body type:', body instanceof FormData ? 'FormData' : 'JSON');
-
+  
   const res = await fetch(fullUrl, {
     method: "POST",
     credentials: "include",
@@ -156,7 +156,7 @@ export async function registerWithReservation(reservationId: string, registratio
     formData.append('payment', registrationData.payment);
   }
   
-  return post(`/api/registrations/with-reservation/${reservationId}`, formData);
+  return post<{message: string; registration: any; reservation_id: string}>(`/api/registrations/with-reservation/${reservationId}`, formData);
 }
 
 export async function put<T, U = object>(

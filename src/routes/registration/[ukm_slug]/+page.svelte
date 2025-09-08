@@ -480,7 +480,7 @@
       const isFreeUkm = slug === 'esport' || slug === 'menwa';
       const registrationData = {
         ukm_id: ukm.id,
-        payment: isFreeUkm ? null : paymentFile[0].name, // No payment file for free UKMs
+        payment: isFreeUkm ? null : paymentFile[0], // Pass the actual file
         drive_url: driveUrl.trim()
       };
 
