@@ -26,6 +26,6 @@
 
 <style>
   .bg-table {
-    background-image: url('/background/table.png');
+    background-image: url('/background/table-bg.png');
   }
 </style>
