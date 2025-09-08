@@ -139,7 +139,7 @@ export async function reserveSlot(ukmId: string): Promise<{reservation_id: strin
 }
 
 export async function checkUserReservation(ukmId: string): Promise<{has_reservation: boolean; is_expired: boolean; reservation_id?: string; expires_at?: string}> {
-  return get(`/api/registrations/check-reservation?ukm_id=${ukmId}`);
+  return get(`/api/registrations/check-reservation/${ukmId}`);
 }
 
 export async function registerWithReservation(reservationId: string, registrationData: {
