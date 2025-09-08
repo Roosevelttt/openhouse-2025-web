@@ -140,20 +140,19 @@ export async function reserveSlot(ukmId: string): Promise<{reservation_id: strin
 
 export async function registerWithReservation(reservationId: string, registrationData: {
   ukm_id: string;
-  payment: string;
+  payment: File | string | null;
   drive_url: string;
 }): Promise<{message: string; registration: any; reservation_id: string}> {
-  return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);
-}
-
-// Check if user has a valid reservation for a UKM
-export async function checkUserReservation(ukmId: string): Promise<{
-  has_reservation: boolean;
-  reservation_id?: string;
-  expires_at?: string;
-  is_expired?: boolean;
-}> {
-  return get(`/api/registrations/check-reservation/${ukmId}`);
+  const formData = new FormData();
+  formData.append('ukm_id', registrationData.ukm_id);
+  formData.append('drive_url', registrationData.drive_url);
+  
+  // Handle payment file
+  if (registrationData.payment && registrationData.payment instanceof File) {
+    formData.append('payment', registrationData.payment);
+  }
+  
+  return post(`/api/registrations/with-reservation/${reservationId}`, formData);
 }
 
 export async function put<T, U = object>(
