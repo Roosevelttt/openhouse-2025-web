@@ -8,6 +8,7 @@
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
   import 'aos/dist/aos.css';''
+    import { get } from "svelte/store";
 
   interface Lk {
     id: string;
@@ -57,6 +58,7 @@
         .map(getImageUrl)
         .filter((img): img is string => !!img);
       logoUrl = getImageUrl(selectedLk.logo_url);
+      console.log(logoUrl);
       if (selectedLk.poster_url) {
         posterUrl = getImageUrl(selectedLk.poster_url);
       }
@@ -97,9 +99,9 @@
 
   <div data-aos="zoom-in" data-aos-delay="100">
     <Logo
-      src={logoUrl}
+      src={getImageUrl(selectedLk?.logo_url) || "/images/default-logo.png"}
       alt="LOGO UKM"
-      className="mb-2 lg:!w-1/4"
+      className="mb-2 lg:!w-1/2 "
       aos="zoom-out"
     />
   </div>
