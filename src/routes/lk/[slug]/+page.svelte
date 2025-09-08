@@ -7,7 +7,7 @@
   import Subtitle from "$lib/components/ukm/Subtitle.svelte";
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
-  import 'aos/dist/aos.css';
+  import 'aos/dist/aos.css';''
 
   interface Lk {
     id: string;
