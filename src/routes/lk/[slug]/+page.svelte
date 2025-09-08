@@ -3,11 +3,12 @@
   import Background from "$lib/components/ukm/Background.svelte";
   import Logo from "$lib/components/ukm/Logo.svelte";
   import { onMount } from "svelte";
-  import { PUBLIC_API_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE, PUBLIC_IMAGE_BASE } from "$env/static/public";
   import Subtitle from "$lib/components/ukm/Subtitle.svelte";
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
   import 'aos/dist/aos.css';''
+    import { get } from "svelte/store";
 
   interface Lk {
     id: string;
@@ -33,7 +34,7 @@
     if (!relativeUrl) return null;
     if (relativeUrl.startsWith("http")) return relativeUrl;
 
-    return `${PUBLIC_API_BASE}${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    return `${PUBLIC_IMAGE_BASE}${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
   }
 
   function parseImageUrls(imageUrls: string | null): string[] {
@@ -57,6 +58,7 @@
         .map(getImageUrl)
         .filter((img): img is string => !!img);
       logoUrl = getImageUrl(selectedLk.logo_url);
+      console.log(logoUrl);
       if (selectedLk.poster_url) {
         posterUrl = getImageUrl(selectedLk.poster_url);
       }
@@ -97,9 +99,9 @@
 
   <div data-aos="zoom-in" data-aos-delay="100">
     <Logo
-      src={logoUrl}
+      src={getImageUrl(selectedLk?.logo_url) || "/images/default-logo.png"}
       alt="LOGO UKM"
-      className="mb-2 lg:!w-1/4"
+      className="mb-2 lg:!w-1/2 "
       aos="zoom-out"
     />
   </div>
