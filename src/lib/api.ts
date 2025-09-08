@@ -140,10 +140,20 @@ export async function reserveSlot(ukmId: string): Promise<{reservation_id: strin
 
 export async function registerWithReservation(reservationId: string, registrationData: {
   ukm_id: string;
-  payment: string;
+  payment: File | null;
   drive_url: string;
 }): Promise<{message: string; registration: any; reservation_id: string}> {
-  return post(`/api/registrations/with-reservation/${reservationId}`, registrationData);
+  // Create FormData to handle file upload
+  const formData = new FormData();
+  formData.append('ukm_id', registrationData.ukm_id);
+  formData.append('drive_url', registrationData.drive_url);
+  
+  // Only append payment file if it exists (for paid UKMs)
+  if (registrationData.payment) {
+    formData.append('payment', registrationData.payment);
+  }
+  
+  return post(`/api/registrations/with-reservation/${reservationId}`, formData);
 }
 
 // Check if user has a valid reservation for a UKM

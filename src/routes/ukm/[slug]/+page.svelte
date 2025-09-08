@@ -8,7 +8,7 @@
   import Poster from "$lib/components/ukm/Poster.svelte";  
   import AOS from 'aos';
   import 'aos/dist/aos.css'; 
-  import { PUBLIC_IMAGE_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE } from "$env/static/public";
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
 
@@ -35,7 +35,7 @@
   function getImageUrl(relativeUrl: string | null): string | null {
     if (!relativeUrl) return null;
     if (relativeUrl.startsWith("http")) return relativeUrl;
-    return `${PUBLIC_IMAGE_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
+    return `${PUBLIC_API_BASE}/${relativeUrl}`.replace(/([^:]\/)\/+/g, "$1");
   }
 
 

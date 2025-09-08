@@ -478,9 +478,11 @@
 
       // Submit registration with existing reservation
       const isFreeUkm = slug === 'esport' || slug === 'menwa';
+      
+      // Send the actual file to backend for proper processing with SaveUploadedFile function
       const registrationData = {
         ukm_id: ukm.id,
-        payment: isFreeUkm ? null : paymentFile[0].name, // No payment file for free UKMs
+        payment: isFreeUkm ? null : paymentFile[0], // Send the actual File object, not just the name
         drive_url: driveUrl.trim()
       };
 
