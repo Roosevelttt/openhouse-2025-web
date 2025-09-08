@@ -74,7 +74,7 @@
   let hasRegistered = false;
   let loadingReservation = true;
 
-  const bg = getImageUrl("ukm/bg-wood.png");
+  const bg = '/background/table-bg.png';
 
   onMount(async () => {
     loadingReservation = true;
