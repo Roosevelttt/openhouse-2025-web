@@ -111,7 +111,7 @@
 
 <!-- Description -->
 <Background className="relative flex flex-col items-center justify-center p-8 !overflow-visible">
-  <img class="hidden md:block absolute md:-top-[10%] lg:top-0 left-0 z-[-9] opacity-70" src="images/clouds.png" alt="">
+  <img class="hidden md:block absolute md:-top-[10%] lg:top-0 left-0 z-[-9] opacity-70" src="/images/clouds.png" alt="">
 
   <div data-aos="fade-down">
     <Title text={'About Us'} className={'text-[var(--color-light-gold)]'} />
@@ -129,13 +129,13 @@
 {#if galleryImages.length > 0}
   <Background className="flex flex-col items-center justify-center p-8 gap-20 !overflow-visible">
     <img
-      src="images/fireworks-2.png"
+      src="/images/fireworks-2.png"
       alt="fireworks" data-aos="zoom-in"
       class="absolute mix-blend-color-dodge lg:hidden -top-[5%] md:top-0 -left-[15%] md:left-0 w-[300px] opacity-70"
     />
 
     <img
-      src="images/fireworks-3.png"
+      src="/images/fireworks-3.png"
       alt="fireworks" data-aos="zoom-in"
       class="absolute mix-blend-color-dodge lg:hidden -bottom-[10%] md:bottom-0 -right-[15%] md:right-5 w-20 w-[300px] opacity-50"
     />
