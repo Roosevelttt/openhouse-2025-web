@@ -1,3 +1,25 @@
+<svelte:head>
+	<meta name="description" content="Open House 2025">
+	
+	<!-- Open Graph -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://openhouse.petra.ac.id/">
+	<meta property="og:title" content="Open House 2025">
+	<meta property="og:image" content="/og-image.jpg">
+	
+	<!-- Apple Touch Icons -->
+	<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png">
+	
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+	<link rel="shortcut icon" href="/favicon.ico">
+	
+	<meta name="theme-color" content="#831738">
+</svelte:head>
+
 <script>
   import "../app.css"; 
   
