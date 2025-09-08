@@ -138,6 +138,10 @@ export async function reserveSlot(ukmId: string): Promise<{reservation_id: strin
   return post('/api/registrations/reserve', { ukm_id: ukmId });
 }
 
+export async function checkUserReservation(ukmId: string): Promise<{has_reservation: boolean; is_expired: boolean; reservation_id?: string; expires_at?: string}> {
+  return get(`/api/registrations/check-reservation?ukm_id=${ukmId}`);
+}
+
 export async function registerWithReservation(reservationId: string, registrationData: {
   ukm_id: string;
   payment: File | string | null;
