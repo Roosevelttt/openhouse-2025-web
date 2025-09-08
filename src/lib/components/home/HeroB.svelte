@@ -140,14 +140,14 @@
       delay: 0.1,
     });
 
-    const rightFrontMove = isMobile ? 20 : 55;
-    const rightMiddleMove = isMobile ? 20 : 55;
-    const leftFrontMove = isMobile ? -20 : -55;
-    const leftMiddleMove = isMobile ? -20 : -55;
+    const rightFrontMove = isMobile ? 40 : 55;
+    const rightMiddleMove = isMobile ? 42 : 55;
+    const leftFrontMove = isMobile ? -40 : -55;
+    const leftMiddleMove = isMobile ? -42 : -55;
     const topBannerMove = isMobile ? -42 : -40;
-    const topCurtainMove = isMobile ? -45 : -30;
+    const topCurtainMove = isMobile ? -46 : -30;
     const behindBannerMove = isMobile ? -160 : -110;
-    const behindCurtainsMove = isMobile ? -200 : -120;
+    const behindCurtainsMove = isMobile ? -400 : -120;
 
     openingTl.to(rightCurtainFront, { xPercent: rightFrontMove, duration: 2, ease: 'power3.inOut' }, 0);
     openingTl.to(rightCurtainMiddle, { xPercent: rightMiddleMove, duration: 2.2, ease: 'power3.inOut' }, 0);
@@ -218,7 +218,7 @@
                 -left-120 sm:left-20 md:left-22 z-40" />
     
     <img bind:this={leftCurtainFront} src="/svg/home/hero/curtain left - front (2).svg" alt="Left curtain front layer" 
-         class="absolute max-w-none w-[180%] sm:w-[45%] md:w-[42%] top-0 
+         class="absolute max-w-none w-[180%] sm:w-[45%] md:w-[42%] -top-1 
                 -left-120 sm:left-0 md:-left-5 z-50" />
 
     <img bind:this={rightCurtainMiddle} src="/svg/home/hero/curtain right - middle (2).svg" alt="Right curtain middle layer" 
@@ -226,7 +226,7 @@
                 -right-120 sm:right-20 md:right-22 z-40" />
     
     <img bind:this={rightCurtainFront} src="/svg/home/hero/curtain right - front (2).svg" alt="Right curtain front layer" 
-         class="absolute max-w-none w-[180%] sm:w-[45%] md:w-[42%] top-0 
+         class="absolute max-w-none w-[180%] sm:w-[45%] md:w-[42%] -top-1 
                 -right-120 sm:right-0 md:-right-5 z-50" />
 
     <img bind:this={topCurtain} src="/svg/home/hero/curtain top.svg" alt="Top curtain" 

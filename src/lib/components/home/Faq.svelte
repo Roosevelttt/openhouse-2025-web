@@ -1,243 +1,670 @@
 <script lang="ts">
-	import { fly } from 'svelte/transition';
-	import { quintOut, sineInOut } from 'svelte/easing';
+    import { fly } from 'svelte/transition';
+    import { quintOut, sineInOut } from 'svelte/easing';
+    import { onMount, onDestroy } from 'svelte';
 
-	const faqs = [
-		{
-			id: 1,
-			question: 'Apa saja kegiatan Open House 2025?',
-			answer:
-				'Open House 2025 merupakan acara yang mewadahi seluruh UKM, LK, dan KBM di Petra Christian University untuk memperkenalkan program dan kegiatan kepada mahasiswa baru. Melalui pembukaan booth, penampilan karya, dan pertunjukan dari masing-masing UKM/LK/KBM, acara ini bertujuan mengundang mahasiswa untuk mengenal, memilih, serta bergabung sesuai dengan minat dan bakat mereka.'
-		},
-		{
-			id: 2,
-			question: 'Kapan & Dimana kegiatan Open House 2025 berlangsung?',
-			answer:
-				'Open House 2025 akan dilaksanakan selama 4 hari, di tanggal 16-19 Sept 2025. Selasa - Kamis, 16-18 September 2025 di Gedung W, P, Q. Jumat, 19 September 2025 di Gedung Q.'
-		},
-		{
-			id: 3,
-			question: 'Apakah Mahasiswa Baru 2025 wajib mendaftar UKM?',
-			answer:
-				'Mahasiswa Baru tidak wajib mengikuti UKM, tetapi disarankan untuk mendaftar karena UKM merupakan tempat bagi Mahasiswa Baru untuk mengembangkan bakat dan minat.'
-		},
-		{
-			id: 4,
-			question: 'Apakah Mahasiswa Baru 2025 diperbolehkan mendaftar lebih dari 1 UKM?',
-			answer:
-				'Mahasiswa Baru 2025 diperbolehkan mendaftar lebih dari 1 UKM dengan syarat jadwal pelaksanaan UKM tidak saling bertabrakan.'
-		},
-		{
-			id: 5,
-			question: 'Apakah pendaftaran UKM oleh Mahasiswa Baru 2025 pasti akan menerima?',
-			answer:
-				'Pendaftaran mahasiswa baru ke UKM pada Open House 2025 tidak selalu berarti langsung diterima sebagai anggota. Bagi UKM yang menerapkan proses seleksi, mahasiswa baru wajib mengikuti tahapan seleksi terlebih dahulu sebelum resmi menjadi anggota. Namun, apabila mendaftar pada UKM yang tidak memiliki prosedur seleksi, maka mahasiswa baru akan langsung diterima sebagai anggota.'
-		},
-		{
-			id: 6,
-			question: 'Apakah Mahasiswa Baru 2025 bisa mendaftar menjadi anggota LK-KBM?',
-			answer:
-				'Mahasiswa Baru 2025 belum bisa mendaftar LK-KBM dikarenakan PCU menerapkan program Pola Pengembangan Mahasiswa (POLBANGMAWA) yang bertujuan untuk mempersiapkan Mahasiswa Baru untuk mempersiapkan diri untuk menjadi Fungsionaris LK dengan mengikuti Servant Leadership Training (SLT) sebagai persyaratan sebelum Mahasiswa Baru bergabung ke dalam LK.'
-		},
-		{
-			id: 7,
-			question: 'Bagaimana prosedur pendaftaran UKM?',
-			answer:
-				'Pendaftaran UKM hanya dapat dilakukan melalui website resmi Open House 2025. Pembayaran juga dilakukan dengan satu jalur, langsung melalui rekening Petra. Apabila membayar diluar ini, maka bukan tanggung jawab dari pihak panitia. Notes : terdapat kode unik pembayaran untuk UKM. Mahasiswa diharapkan untuk mengikuti kode sesuai dengan UKM yang dipilih.'
-		},
-		{
-			id: 8,
-			question: 'Apakah boleh membayar uang pendaftaran bersama dengan teman?',
-			answer:
-				'Mahasiswa Baru tidak diperbolehkan untuk melakukan penggabungan pembayaran bersama dengan teman untuk menjaga transparansi pembayaran.'
-		},
-		{
-			id: 9,
-			question: 'Apakah boleh membatalkan registrasi setelah melakukan pembayaran?',
-			answer:
-				'Pembatalan registrasi setelah melakukan pembayaran uang pendaftaran tidak disarankan, karena mahasiswa baru yang telah membayar dianggap telah menyelesaikan proses keanggotaan. Oleh sebab itu, mahasiswa baru diharapkan memastikan kembali pilihan UKM yang hendak diikuti sebelum melakukan pembayaran.'
-		},
-		{
-			id: 10,
-			question: 'Kapan pendaftaran UKM akan ditutup?',
-			answer: 'Pendaftaran UKM akan ditutup pada hari Jumat, 20 September 2025.'
-		}
-	];
+    // --- Component State ---
+    const faqs = [
+        {
+            id: 1,
+            question: 'Apa saja kegiatan Open House 2025?',
+            answer:
+                '(Open House 2025) merupakan acara yang mewadahi (seluruh UKM, LK, dan KBM) di Petra Christian University untuk memperkenalkan program dan kegiatan kepada mahasiswa baru. Melalui (pembukaan booth), (penampilan karya), dan (pertunjukan) dari masing-masing (UKM/LK/KBM), acara ini bertujuan mengundang mahasiswa untuk (mengenal), (memilih), serta (bergabung) sesuai dengan (minat dan bakat) mereka.'
+        },
+        {
+            id: 2,
+            question: 'Kapan & Dimana kegiatan Open House 2025 berlangsung?',
+            answer:
+                '(Open House 2025) akan dilaksanakan selama (4 hari), di tanggal (16-19 Sept 2025). (Selasa - Kamis), (16-18 September 2025) di (Gedung W, P, Q). (Jumat), (19 September 2025) di (Gedung Q).'
+        },
+        {
+            id: 3,
+            question: 'Apakah Mahasiswa Baru 2025 wajib mendaftar UKM?',
+            answer:
+                'Mahasiswa Baru tidak wajib mengikuti UKM, tetapi (disarankan untuk mendaftar) karena UKM merupakan tempat bagi Mahasiswa Baru untuk (mengembangkan bakat dan minat).'
+        },
+        {
+            id: 4,
+            question: 'Apakah Mahasiswa Baru 2025 diperbolehkan mendaftar lebih dari 1 UKM?',
+            answer:
+                'Mahasiswa Baru 2025 (diperbolehkan) mendaftar (lebih dari 1 UKM) dengan syarat jadwal pelaksanaan UKM (tidak saling bertabrakan).'
+        },
+        {
+            id: 5,
+            question: 'Apakah pendaftaran UKM oleh Mahasiswa Baru 2025 pasti akan menerima?',
+            answer:
+                'Pendaftaran mahasiswa baru ke (UKM) pada Open House 2025 (tidak selalu) berarti (langsung diterima) sebagai anggota. Bagi (UKM) yang menerapkan (proses seleksi), mahasiswa baru (wajib) mengikuti (tahapan seleksi) terlebih dahulu sebelum resmi menjadi anggota. Namun, apabila mendaftar pada (UKM) yang (tidak) memiliki prosedur seleksi, maka mahasiswa baru akan (langsung diterima) sebagai anggota.'
+        },
+        {
+            id: 6,
+            question: 'Apakah Mahasiswa Baru 2025 bisa mendaftar menjadi anggota LK-KBM?',
+            answer:
+                'Mahasiswa Baru 2025 (belum bisa) mendaftar (LK-KBM) dikarenakan PCU menerapkan program (Pola Pengembangan Mahasiswa) (POLBANGMAWA). (POLBANGMAWA) bertujuan untuk mempersiapkan Mahasiswa Baru untuk mempersiapkan diri untuk menjadi (Fungsionaris LK) dengan mengikuti (Servant Leadership Training) (SLT) sebagai persyaratan sebelum Mahasiswa Baru bergabung ke dalam LK.'
+        },
+        {
+            id: 7,
+            question: 'Bagaimana prosedur pendaftaran UKM?',
+            answer:
+                'Pendaftaran UKM hanya dapat dilakukan melalui (website resmi Open House 2025). Pembayaran juga dilakukan dengan satu jalur, langsung melalui (rekening Petra). Apabila membayar di luar ini, maka bukan tanggung jawab dari pihak panitia. Notes : terdapat (kode unik pembayaran) untuk (UKM). Mahasiswa diharapkan untuk mengikuti kode (sesuai) dengan (UKM yang dipilih).'
+        },
+        {
+            id: 8,
+            question: 'Apakah boleh membayar uang pendaftaran bersama dengan teman?',
+            answer:
+                'Mahasiswa Baru (tidak diperbolehkan) untuk melakukan penggabungan pembayaran bersama dengan teman untuk menjaga transparansi pembayaran.'
+        },
+        {
+            id: 9,
+            question: 'Apakah boleh membatalkan registrasi setelah melakukan pembayaran?',
+            answer:
+                'Pembatalan registrasi setelah melakukan pembayaran uang pendaftaran (tidak disarankan), karena mahasiswa baru yang telah membayar dianggap telah menyelesaikan (proses keanggotaan). Oleh sebab itu, mahasiswa baru diharapkan (memastikan kembali pilihan UKM) yang hendak diikuti sebelum melakukan pembayaran.'
+        },
+        {
+            id: 10,
+            question: 'Kapan pendaftaran UKM akan ditutup?',
+            answer: 'Pendaftaran UKM akan ditutup pada hari (Jumat, 20 September 2025).'
+        }
+    ];
 
-	// --- State for Pagination and Selection ---
-	let selectedQuestion: number | null = null;
-	let currentPage = 0;
-	const questionsPerPage = 2;
-	const totalPages = Math.ceil(faqs.length / questionsPerPage);
+    // --- State for Pagination and Selection ---
+    let selectedQuestion: number | null = null;
+    let currentPage = 0;
+    const questionsPerPage = 2;
+    const totalPages = Math.ceil(faqs.length / questionsPerPage);
+    let animationDirection = 1; // 1 for forward (left to right), -1 for backward (right to left)
 
-	$: visibleFaqs = faqs.slice(currentPage * questionsPerPage, (currentPage + 1) * questionsPerPage);
+    // --- Typewriter Effect State ---
+    let displayedText = '';
+    let currentSentenceIndex = 0;
+    let typewriterInterval: number | null = null;
+    let isTyping = false;
+    let sentences: string[] = [];
+    let processedSentences: string[] = [];
+    let hasMoreSentences = false;
+    let hasPreviousSentences = false;
+    let isCompleted = false;
+    let hasManuallyNavigated = false;
 
-	function selectQuestion(index: number) {
-		selectedQuestion = selectedQuestion === index ? null : index;
-	}
+    // --- State for Intersection Observer ---
+    let faqSection: HTMLElement;
+    let observer: IntersectionObserver;
 
-	function nextPage() {
-		if (currentPage < totalPages - 1) {
-			currentPage++;
-		}
-	}
+    $: visibleFaqs = faqs.slice(currentPage * questionsPerPage, (currentPage + 1) * questionsPerPage);
 
-	function prevPage() {
-		if (currentPage > 0) {
-			currentPage--;
-		}
-	}
+    function processHighlights(text: string): string {
+        let processedText = text;
+        processedText = processedText.replace(/\(\(([^)]+)\)\)/g, '<span class="keyword-highlight">$1</span>');
+        processedText = processedText.replace(/\(([^)]+)\)/g, '<span class="keyword-highlight">$1</span>');
+        return processedText;
+    }
+
+    function splitIntoSentences(text: string): string[] {
+        return text.split(/(?<=[.!?])\s+/)
+            .filter(sentence => sentence.trim().length > 0)
+            .map(sentence => sentence.trim());
+    }
+
+    function startTypewriter(text: string) {
+        clearTypewriter();
+        sentences = splitIntoSentences(text);
+        processedSentences = sentences.map(sentence => processHighlights(sentence));
+        currentSentenceIndex = 0;
+        updateSentenceState();
+        typeCurrentSentence();
+    }
+
+    function updateSentenceState() {
+        hasMoreSentences = currentSentenceIndex < sentences.length - 1;
+        hasPreviousSentences = currentSentenceIndex > 0;
+        isCompleted = !isTyping && currentSentenceIndex === sentences.length - 1;
+    }
+
+    function typeCurrentSentence() {
+        if (currentSentenceIndex >= processedSentences.length) return;
+        const currentSentence = processedSentences[currentSentenceIndex];
+        displayedText = '';
+        isTyping = true;
+        updateSentenceState();
+        let charIndex = 0;
+        const plainText = currentSentence.replace(/<[^>]*>/g, '');
+        typewriterInterval = setInterval(() => {
+            let tempText = '';
+            let plainCharCount = 0;
+            let i = 0;
+            while (i < currentSentence.length && plainCharCount <= charIndex) {
+                if (currentSentence[i] === '<') {
+                    let tagEnd = currentSentence.indexOf('>', i);
+                    if (tagEnd !== -1) {
+                        tempText += currentSentence.substring(i, tagEnd + 1);
+                        i = tagEnd + 1;
+                    } else {
+                        tempText += currentSentence[i++];
+                    }
+                } else {
+                    tempText += currentSentence[i++];
+                    plainCharCount++;
+                }
+            }
+            displayedText = tempText;
+            if (charIndex < plainText.length) {
+                charIndex++;
+            } else {
+                isTyping = false;
+                updateSentenceState();
+                if (typewriterInterval) {
+                    clearInterval(typewriterInterval);
+                    typewriterInterval = null;
+                }
+                if (hasMoreSentences) {
+                    setTimeout(() => {
+                        if (selectedQuestion !== null) nextSentence();
+                    }, 1500);
+                }
+            }
+        }, 30);
+    }
+
+    function nextSentence() {
+        if (currentSentenceIndex < sentences.length - 1) {
+            hasManuallyNavigated = false;
+            currentSentenceIndex++;
+            typeCurrentSentence();
+        }
+    }
+
+    function previousSentence() {
+        if (currentSentenceIndex > 0) {
+            hasManuallyNavigated = true;
+            currentSentenceIndex--;
+            displayedText = processedSentences[currentSentenceIndex];
+            isTyping = false;
+            updateSentenceState();
+        }
+    }
+
+    function skipCurrentTyping() {
+        if (isTyping && typewriterInterval) {
+            clearInterval(typewriterInterval);
+            typewriterInterval = null;
+            displayedText = processedSentences[currentSentenceIndex];
+            isTyping = false;
+            updateSentenceState();
+            if (hasMoreSentences) {
+                setTimeout(() => {
+                    if (selectedQuestion !== null) nextSentence();
+                }, 500);
+            }
+        }
+    }
+
+    function clearTypewriter() {
+        if (typewriterInterval) {
+            clearInterval(typewriterInterval);
+            typewriterInterval = null;
+        }
+        isTyping = false;
+        displayedText = '';
+        currentSentenceIndex = 0;
+        sentences = [];
+        processedSentences = [];
+        hasMoreSentences = false;
+        hasPreviousSentences = false;
+        isCompleted = false;
+        hasManuallyNavigated = false;
+    }
+
+    function selectQuestion(index: number) {
+        if (selectedQuestion === index) {
+            selectedQuestion = null;
+            clearTypewriter();
+        } else {
+            selectedQuestion = index;
+            startTypewriter(faqs[index].answer);
+        }
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages - 1) {
+            selectedQuestion = null;
+            clearTypewriter();
+            animationDirection = 1;
+            currentPage++;
+        }
+    }
+
+    function prevPage() {
+        if (currentPage > 0) {
+            selectedQuestion = null;
+            clearTypewriter();
+            animationDirection = -1;
+            currentPage--;
+        }
+    }
+
+    onMount(() => {
+        const options = {
+            root: null,
+            threshold: 0.1 
+        };
+
+        observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting && selectedQuestion !== null) {
+                    selectedQuestion = null;
+                    clearTypewriter();
+                }
+            });
+        }, options);
+
+        if (faqSection) {
+            observer.observe(faqSection);
+        }
+    });
+
+    onDestroy(() => {
+        clearTypewriter();
+        if (observer) {
+            observer.disconnect();
+        }
+    });
 </script>
 
-<section class="relative h-full w-full overflow-hidden bg-transparent">
-	<img
-		src="/svg/home/mascot stage v3.svg"
-		alt="Event Mascot on Stage"
-		class="absolute bottom-[35%] md:bottom-[20%] left-1/2 z-30 w-[220%] md:w-[100%] max-w-none -translate-x-1/2"
-	/>
+<section bind:this={faqSection} class="relative h-full w-full overflow-hidden bg-transparent">
+    <img
+        src="/svg/home/mascot front sep.svg"
+        alt="Event Mascot on Stage"
+        class="absolute bottom-[42%] lg:bottom-[30%] xl:bottom-[34%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] lg:w-[24%] xl:w-[24%] max-w-none -translate-x-1/2"
+    />
+    <img
+        src="/svg/home/mascot stage sep.svg"
+        alt="Event Mascot on Stage"
+        class="absolute bottom-[35%] md:bottom-[32%] lg:bottom-[20%] xl:bottom-[20%] left-1/2 z-10 w-[220%] md:w-[160%] lg:w-[100%] xl:w-[100%] max-w-none -translate-x-1/2"
+    />
 
-	{#if selectedQuestion !== null}
-		{#key selectedQuestion}
-			<div
-				class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2xl p-6 shadow-2xl backdrop-blur-sm
+    {#if selectedQuestion === null}
+        <div
+            class="absolute z-20 text-center
+                   top-[5%] left-1/2 -translate-x-1/2
+                   lg:top-[15%] lg:left-[16%] lg:translate-x-0 lg:text-left"
+            transition:fly={{ y: -20, duration: 400, easing: quintOut }}
+        >
+            <h2 class="font-moomello text-[10rem] lg:text-[14rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] lg:z-[0]">
+                FAQ
+            </h2>
+        </div>
+    {/if}
+
+    {#if selectedQuestion !== null}
+        {#key selectedQuestion}
+            <div
+                class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2xl p-4 shadow-2xl backdrop-blur-sm
+                       flex flex-col
                        top-[5%] left-1/2 -translate-x-1/2
-                       md:top-[15%] md:left-auto md:right-[5%] md:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
-				transition:fly={{ y: -20, duration: 400, easing: quintOut }}
-			>
-				<!-- <h3 class="mb-2 text-2xl font-bold text-[var(--text-dark)] font-lexend flex items-center gap-4">
-					Question
-					<span class="font-spicyrice text-5xl text-[var(--color-burgundy)]"
-						>{String(faqs[selectedQuestion].id).padStart(2, '0')}</span
-					>
-				</h3> -->
-				<p class="text-base text-[var(--text-dark)] font-lexend">
-					{faqs[selectedQuestion].answer}
-				</p>
-			</div>
-		{/key}
-	{/if}
+                       lg:top-[15%] lg:left-auto lg:right-[5%] lg:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
+                transition:fly={{ y: -20, duration: 400, easing: quintOut }}
+            >
+                <p class="text-base text-[var(--text-dark)] font-lexend leading-relaxed">
+                    {@html displayedText}
+                    {#if isTyping}
+                        <span class="typewriter-cursor">|</span>
+                    {/if}
+                </p>
+                
+                <div class="bottom-right-controls">
+                    {#if isTyping}
+                        <button 
+                            class="control-button skip-button"
+                            on:click={skipCurrentTyping}
+                            title="Skip animation"
+                        >
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    {:else if hasMoreSentences && !isCompleted && !hasManuallyNavigated}
+                        <div class="next-indicator">
+                            <div class="next-dot"></div>
+                            <div class="next-dot"></div>
+                            <div class="next-dot"></div>
+                        </div>
+                    {:else if (isCompleted || hasManuallyNavigated) && sentences.length > 1}
+                        <div class="navigation-controls">
+                            <button 
+                                class="control-button nav-button"
+                                class:disabled={!hasPreviousSentences}
+                                on:click={previousSentence}
+                                disabled={!hasPreviousSentences}
+                                title="Previous sentence"
+                            >
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="m15 18-6-6 6-6"/>
+                                </svg>
+                            </button>
+                            
+                            <div class="sentence-counter">
+                                {currentSentenceIndex + 1}/{sentences.length}
+                            </div>
+                            
+                            <button 
+                                class="control-button nav-button"
+                                class:disabled={!hasMoreSentences}
+                                on:click={nextSentence}
+                                disabled={!hasMoreSentences}
+                                title="Next sentence"
+                            >
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                    <path d="m9 18 6-6-6-6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        {/key}
+    {/if}
 
-	<div class="absolute bottom-0 left-0 right-0 top-[55%] bg-[#2a121a] z-0" />
+    <div class="absolute bottom-0 left-0 right-0 top-[55%] lg:top-[75%] bg-[#2a121a] z-0" />
 
-	<div
-		class="absolute bottom-0 left-0 right-0 top-[650] md:top-[75%] z-20 flex flex-col items-center justify-center gap-6 px-6 pt-4 pb-12 md:pb-0 text-white"
-	>
-		<div class="w-full max-w-6xl flex items-center justify-center gap-4 md:gap-8">
-			<button
-				on:click={prevPage}
-				disabled={currentPage === 0}
-				class="pagination-btn hidden md:block"
-			>
-				&larr;
-			</button>
+    <div
+        class="absolute bottom-0 left-0 right-0 top-[650] lg:top-[75%] z-20 flex flex-col items-center justify-center gap-6 px-6 pt-4 pb-12 lg:pb-0 text-white"
+    >
+        <div class="w-full max-w-6xl flex items-center justify-center gap-4 lg:gap-8">
+            <button
+                on:click={prevPage}
+                disabled={currentPage === 0}
+                class="pagination-btn hidden lg:block"
+                class:disabled={currentPage === 0}
+            >
+                <div class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] transition-transform hover:scale-105">
+                    <span class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="arrow-icon">
+                            <path d="m15 18-6-6 6-6"/>
+                        </svg>
+                    </span>
+                </div>
+            </button>
 
-			<div class="flex-grow w-full rounded-sm bg-gradient-[">
-				<div class="hidden md:block min-h-[150px] relative">
-					{#key currentPage}
-						<div
-							class="absolute inset-0 flex items-center justify-center"
-							in:fly={{ x: 200, duration: 500, easing: sineInOut, delay: 50 }}
-							out:fly={{ x: -200, duration: 500, easing: sineInOut }}
-						>
-							<div class="grid w-full grid-cols-2 gap-8">
-								{#each visibleFaqs as faq (faq.id)}
-									<button
-										on:click={() => selectQuestion(faq.id - 1)}
-										class="flex items-start gap-4 p-4 text-left transition-opacity duration-200 hover:opacity-100"
-										class:active={selectedQuestion === faq.id - 1}
-										class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
-									>
-										<span
-											class="font-spicyrice text-7xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
-											>{String(faq.id).padStart(2, '0')}</span
-										>
-										<p class="my-1 text-white/90 font-lexend">{faq.question}</p>
-									</button>
-								{/each}
-							</div>
-						</div>
-					{/key}
-				</div>
-				<div class="block h-[25vh] space-y-4 overflow-y-auto md:hidden">
-					{#each faqs as faq (faq.id)}
-						<button
-							on:click={() => selectQuestion(faq.id - 1)}
-							class="flex w-full items-start gap-4 p-4 text-left"
-							class:active={selectedQuestion === faq.id - 1}
-						>
-							<span
-								class="font-spicyrice text-6xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
-								>{String(faq.id).padStart(2, '0')}</span
-							>
-							<p class="mt-1 text-white/90 font-lexend">{faq.question}</p>
-						</button>
-					{/each}
-				</div>
-			</div>
+            <div class="flex-grow w-full rounded-sm bg-gradient-[">
+                <div class="hidden lg:block min-h-[150px] relative overflow-hidden">
+                    {#key currentPage}
+                        <div
+                            class="absolute inset-0 flex items-center justify-center"
+                            in:fly={{ 
+                                x: animationDirection * 200, 
+                                duration: 500, 
+                                easing: sineInOut, 
+                                delay: 50 
+                            }}
+                            out:fly={{ 
+                                x: animationDirection * -200, 
+                                duration: 500, 
+                                easing: sineInOut 
+                            }}
+                        >
+                            <div class="grid w-full grid-cols-2 gap-8">
+                                {#each visibleFaqs as faq (faq.id)}
+                                    <button
+                                        on:click={() => selectQuestion(faq.id - 1)}
+                                        class="flex items-start gap-4 p-4 text-left transition-opacity duration-200 hover:opacity-100"
+                                        class:active={selectedQuestion === faq.id - 1}
+                                        class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
+                                    >
+                                        <span
+                                            class="font-spicyrice text-7xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
+                                            >{String(faq.id).padStart(2, '0')}</span
+                                        >
+                                        <p class="my-1 text-white/90 font-lexend">{faq.question}</p>
+                                    </button>
+                                {/each}
+                            </div>
+                        </div>
+                    {/key}
+                </div>
+                <div class="block h-[25vh] space-y-4 overflow-y-auto lg:hidden">
+                    {#each faqs as faq (faq.id)}
+                        <button
+                            on:click={() => selectQuestion(faq.id - 1)}
+                            class="flex w-full items-start gap-4 p-4 text-left"
+                            class:active={selectedQuestion === faq.id - 1}
+                        >
+                            <span
+                                class="font-spicyrice text-6xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
+                                >{String(faq.id).padStart(2, '0')}</span
+                            >
+                            <p class="mt-1 text-white/90 font-lexend">{faq.question}</p>
+                        </button>
+                    {/each}
+                </div>
+            </div>
 
-			<button
-				on:click={nextPage}
-				disabled={currentPage === totalPages - 1}
-				class="pagination-btn hidden md:block"
-			>
-				&rarr;
-			</button>
-		</div>
-	</div>
+            <button
+                on:click={nextPage}
+                disabled={currentPage === totalPages - 1}
+                class="pagination-btn hidden lg:block"
+                class:disabled={currentPage === totalPages - 1}
+            >
+                <div class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] transition-transform hover:scale-105">
+                    <span class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="arrow-icon">
+                            <path d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </span>
+                </div>
+            </button>
+        </div>
+    </div>
 </section>
 
 <style>
+    .answer-bubble::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        width: 24px;
+        height: 24px;
+        background: linear-gradient(135deg, #F6BABC, #FFF1E5);
+        transform: translateY(50%) rotate(45deg);
+        border-radius: 4px;
+        z-index: -1;
+    }
+    
+    /* Mobile bubble tail (center) */
+    .answer-bubble::after {
+        left: 50%;
+        transform: translateY(50%) translateX(-50%) rotate(45deg);
+    }
+    
+    /* Desktop bubble tail (left side, pointing to mascot) */
+    @media (min-width: 1024px) {
+        .answer-bubble::after {
+            left: 20%;
+            transform: translateY(50%) translateX(-50%) rotate(45deg);
+        }
+    }
 
-	.answer-bubble::after {
-		content: '';
-		position: absolute;
-		bottom: 0;
-		width: 24px;
-		height: 24px;
-		background: var(--color-soft-pink);
-		transform: translateY(50%) rotate(45deg);
-		border-radius: 4px;
-		z-index: -1;
-	}
-	/* Mobile bubble tail (center) */
-	.answer-bubble::after {
-		left: 50%;
-		transform: translateY(50%) translateX(-50%) rotate(45deg);
-	}
-	/* Desktop bubble tail (left side, pointing to mascot) */
-	@media (min-width: 768px) {
-		.answer-bubble::after {
-			left: 20%;
-			transform: translateY(50%) translateX(-50%) rotate(45deg);
-		}
-	}
+    button {
+        background-color: transparent;
+        border: none;
+    }
+    
+    button.inactive {
+        opacity: 0.3;
+    }
+    
+    button.active {
+        opacity: 1;
+    }
 
-	button {
-		background-color: transparent;
-		border: none;
-	}
-	button.inactive {
-		opacity: 0.3;
-	}
-	button.active {
-		opacity: 1;
-	}
+    /* Updated Pagination Button Styles */
+    .pagination-btn {
+        flex-shrink: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .pagination-btn:hover:not(.disabled) {
+        transform: scale(1.05);
+    }
+    
+    .pagination-btn.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
 
-	.pagination-btn {
-		flex-shrink: 0;
-		width: 50px;
-		height: 50px;
-		border-radius: 9999px;
-		font-size: 1.5rem;
-		background-color: rgba(255, 255, 255, 0.1);
-		transition: all 0.2s;
-	}
-	.pagination-btn:hover:not(:disabled) {
-		background-color: rgba(255, 255, 255, 0.2);
-		transform: scale(1.1);
-	}
-	.pagination-btn:disabled {
-		opacity: 0.3;
-		cursor: not-allowed;
-	}
+    .pagination-btn.disabled:hover {
+        transform: none;
+    }
+
+    /* Arrow Icon Styling */
+    .arrow-icon {
+        stroke: var(--color-light-gold);
+        transition: stroke 0.2s ease;
+    }
+
+    .pagination-btn:hover:not(.disabled) .arrow-icon {
+        stroke: var(--color-off-white);
+    }
+
+    /* Typewriter Effect Styles */
+    .typewriter-cursor {
+        animation: blink 1s infinite;
+        font-weight: bold;
+        color: #2a121a;
+    }
+
+    @keyframes blink {
+        0%, 50% { opacity: 1; }
+        51%, 100% { opacity: 0; }
+    }
+
+    /* Keyword Highlighting */
+    :global(.keyword-highlight) {
+        color: #8e183c;
+        font-weight: 600;
+    }
+
+    /* Bottom Right Controls */
+    .bottom-right-controls {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        align-self: flex-end;
+        margin-top: 2px;
+    }
+
+    /* Control Button Base Styles */
+    .control-button {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        color: #2a121a;
+        backdrop-filter: blur(4px);
+        border: 1px solid rgba(142, 24, 60, 0.2);
+    }
+
+    .control-button:hover:not(.disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .control-button.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    /* Skip Button */
+    .skip-button {
+        background: rgba(142, 24, 60, 0.1);
+        border-color: rgba(142, 24, 60, 0.3);
+        color: #8e183c;
+    }
+
+    .skip-button:hover {
+        background: rgba(142, 24, 60, 0.2);
+        border-color: rgba(142, 24, 60, 0.5);
+    }
+
+    .control-text {
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    /* Navigation Controls */
+    .navigation-controls {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px;
+        border-radius: 18px;
+        backdrop-filter: blur(6px);
+        border: 1px solid rgba(142, 24, 60, 0.2);
+    }
+
+    .nav-button {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(142, 24, 60, 0.1);
+    }
+
+    .nav-button:hover:not(.disabled) {
+        border-color: rgba(142, 24, 60, 0.3);
+        transform: scale(1.1);
+    }
+
+    .sentence-counter {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #2a121a;
+        min-width: 32px;
+        text-align: center;
+        padding: 0 4px;
+    }
+
+    /* Next Sentence Indicator */
+    .next-indicator {
+        display: flex;
+        gap: 3px;
+        padding: 8px;
+    }
+
+    .next-dot {
+        width: 6px;
+        height: 6px;
+        background-color: rgba(142, 24, 60, 0.6);
+        border-radius: 50%;
+        animation: pulse-next 1.5s infinite;
+    }
+
+    .next-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+
+    .next-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+
+    @keyframes pulse-next {
+        0%, 80%, 100% {
+            opacity: 0.3;
+            transform: scale(1);
+        }
+        40% {
+            opacity: 1;
+            transform: scale(1.3);
+        }
+    }
 </style>
