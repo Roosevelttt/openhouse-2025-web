@@ -6,9 +6,8 @@
 
   let scrollContainer;
   let balloonAssembly;
-  let rope;
-  let screenWidth = 1920;
   let backgroundSky;
+  let screenWidth = 1920;
 
   const iconData = [
     { src: '/svg/logo/bem.svg', path: '/lk/bem', name: 'BEM' },
@@ -21,7 +20,7 @@
 
   onMount(() => {
     gsap.registerPlugin(ScrollTrigger);
-    
+
     function updateScreenWidth() {
       if (typeof window !== 'undefined') {
         screenWidth = window.innerWidth;
@@ -30,137 +29,171 @@
     updateScreenWidth();
     window.addEventListener('resize', updateScreenWidth);
 
+    const random = (min, max) => Math.random() * (max - min) + min;
     const initTimer = setTimeout(() => {
-      const ropeHeight = screenWidth < 640 ? '100vh' : screenWidth < 1024 ? '130vh' : '150vh';
-      gsap.set(rope, { height: ropeHeight });
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: scrollContainer,
           start: 'top top',
-          end: '+=3000',
+          end: '+=3500',
           scrub: 1.5,
           pin: true,
           anticipatePin: 1
         }
       });
 
-      const animationDistance = screenWidth < 640 ? '-160vh' : screenWidth < 1024 ? '-200vh' : '-230vh';
+      const animationDistance = screenWidth < 768 ? '-150vh' : '-180vh';
       tl.to(balloonAssembly, { y: animationDistance }, 0);
       tl.to(backgroundSky, { yPercent: -30 }, 0);
 
-      const iconContainers = gsap.utils.toArray('.icon-container');
+      const orgBalloons = gsap.utils.toArray('.org-balloon');
+      const numBalloons = orgBalloons.length > 1 ? orgBalloons.length : 2;
       
-      iconContainers.forEach((container) => {
-        const wrapper = container.querySelector('.icon-wrapper');
-        const name = container.querySelector('.org-name');
-        
-        gsap.set(name, { x: -30 });
+      const maxStartTime = 0.5;
 
-        ScrollTrigger.create({
-          trigger: container,
-          start: 'top 60%',
-          end: 'top 0%',
-          // markers: true,
-          onEnter: () => {
-            gsap.to(name, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' });
+      orgBalloons.forEach((balloon, i) => {
+        const flightDurationOnTimeline = random(0.4, 0.6);
+        const startTime = (i / (numBalloons - 1)) * maxStartTime;
+        const horizontalDrift = random(-10, 10);
+
+        tl.fromTo(
+          balloon,
+          { 
+            y: '100vh',
+            visibility: 'hidden' 
           },
-          onLeave: () => {
-            gsap.to(name, { opacity: 0, x: -20, duration: 0.8, ease: 'power3.in' });
+          {
+            y: '-100vh',
+            x: `${horizontalDrift}vw`,
+            visibility: 'visible',
+            ease: 'none',
+            duration: flightDurationOnTimeline
           },
-          onEnterBack: () => {
-            gsap.to(name, { opacity: 1, x: 0, duration: 0.4, ease: 'power3.out' });
-          },
-          onLeaveBack: () => {
-            gsap.to(name, { opacity: 0, x: -20, duration: 0.8, ease: 'power3.in' });
-          }
-        });
+          startTime
+        );
       });
-
     }, 100);
-
 
     return () => {
       clearTimeout(initTimer);
       window.removeEventListener('resize', updateScreenWidth);
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   });
 </script>
 
 <div bind:this={scrollContainer} class="relative">
-  <section class="relative min-h-screen flex items-center justify-center overflow-hidden px-4">
-    <img bind:this={backgroundSky} 
-         src="/background/pink sky.jpg" 
-         alt="Purple sky background"
-         class="absolute inset-0 max-w-none w-[102%] h-[150%] object-cover z-[-1]" />
+  <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <img
+      bind:this={backgroundSky}
+      src="/background/pink sky v3.webp"
+      alt="Purple sky background"
+      class="absolute inset-0 max-w-none w-[102%] h-[150%] object-cover z-[-1]"
+    />
 
-    <div bind:this={balloonAssembly}
-         class="absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center z-[1]">
+    <div
+      bind:this={balloonAssembly}
+      class="absolute top-1/4 left-1/2 -translate-x-1/2 flex flex-col items-center z-[1]"
+    >
+      <h2 class="absolute -top-5 left-1/2 -translate-x-1/2 mb-4 md:mb-1 w-[100%] pointer-events-none
+                 font-moomello text-[10rem] sm:text-[8rem] md:text-[6rem] lg:text-8xl tracking-tight">
+        <svg viewBox="0 0 500 100" class="w-full h-auto overflow-visible">
+          <defs>
+            <linearGradient id="text-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:var(--text-secondary)" />
+              <stop offset="50%" style="stop-color:var(--text-primary)" />
+              <stop offset="100%" style="stop-color:var(--color-white)" />
+            </linearGradient>
+            <path id="curve" d="M 50 100 A 200 100 0 0 1 450 100" fill="transparent" />
+          </defs>
+          <text width="500" style="fill: url(#text-gradient);">
+            <textPath xlink:href="#curve" startOffset="50%" text-anchor="middle">
+              LK - KBM
+            </textPath>
+          </text>
+        </svg>
+      </h2>
+
       <img
-        class="w-[160px] sm:w-[150px] md:w-[180px] lg:w-[200px] xl:w-[220px]"
+        class="max-w-none w-60 sm:w-90 md:w-80 lg:w-70 xl:w-80"
         src="/svg/home/balloon.svg"
         alt="Hot air balloon"
       />
-      <div class="relative w-full">
-        <div bind:this={rope}
-             class="w-[3px] sm:w-[4px] bg-gradient-to-b from-[#260E16] via-[#65112F] to-[#A63049] mx-auto">
-        </div>
-        <div class="absolute top-0 w-full h-full">
-        {#each iconData as icon, i}
-          <div 
-            class="icon-container absolute left-1/2 -translate-x-1/2" 
-            style="top: {15 + i * 16}%;"
-          >
-            <div class="relative flex justify-center items-center">
-              <a 
-                href={icon.path} 
-                on:click|preventDefault={() => transitionUrl.set(icon.path)}
-                class="icon-wrapper flex items-center justify-center 
-                       bg-white/40 backdrop-blur-sm rounded-full shadow-lg 
-                       transition-transform hover:scale-110 cursor-pointer
-                       w-20 sm:w-24 md:w-28 lg:w-32
-                       aspect-square"
-              >
-                <img
-                  src={icon.src}
-                  alt="{icon.name} Logo"
-                  class="object-contain w-12 sm:w-14 md:w-16 lg:w-18"
-                />
-              </a>
-              <span class="font-moomello tracking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent org-name absolute left-full ml-4 md:ml-6 text-2xl md:text-3xl lg:text-4xl whitespace-nowrap opacity-0 pointer-events-none drop-shadow-md">
-                {icon.name}
-              </span>
-            </div>
-          </div>
-        {/each}
-        </div>
-      </div>
     </div>
-    
-    <img class="absolute -bottom-3 md:-bottom-[5%] w-full z-[0] 
-               min-w-[100vw] object-cover opacity-75" 
-         src="/svg/home/cloud.svg" 
-         alt="Cloud" />
+
+    <div class="absolute inset-0 w-full h-full z-[2] overflow-hidden">
+      {#each iconData as icon, i}
+        <div
+          class="org-balloon absolute w-60 sm:w-90 md:w-80 lg:w-70 xl:w-80"
+          class:left-balloon={i % 3 === 0}
+          class:right-balloon={i % 3 === 1}
+          class:center-balloon={i % 3 === 2}
+        >
+          <a
+            href={icon.path}
+            on:click|preventDefault={() => transitionUrl.set(icon.path)}
+            class="relative block transition-transform hover:scale-110 cursor-pointer group"
+          >
+            <img 
+              src={`/svg/home/balloon ${icon.name.toLowerCase()}.svg`} 
+              alt={`${icon.name} Balloon`} 
+              class="w-full h-auto"
+            />
+            
+            <span
+              class="font-spicyrice tracking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent
+                     absolute -bottom-12 md:-bottom-15 left-1/2 -translate-x-1/2 text-3xl md:text-5xl whitespace-nowrap drop-shadow-md"
+            >
+              {icon.name}
+            </span>
+          </a>
+        </div>
+      {/each}
+    </div>
   </section>
 </div>
 
 <style>
-  @media (max-width: 639px) {
-    .relative {
-      font-size: 0.8rem;
+  .org-balloon {
+    position: absolute;
+    top: 0;
+    visibility: hidden;
+  }
+
+  .left-balloon {
+    left: 15vw;
+  }
+
+  .right-balloon {
+    right: 15vw;
+  }
+
+  .center-balloon {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @media (max-width: 1024px) {
+    .left-balloon {
+      left: 8vw;
+    }
+    .right-balloon {
+      right: 8vw;
     }
   }
 
-  @media (min-width: 640px) and (max-width: 767px) {
-    .relative {
-      font-size: 0.9rem;
+  @media (max-width: 640px) {
+    .left-balloon {
+      left: 0;
+      transform: translateX(-25%);
     }
-  }
-
-  @media (min-width: 768px) {
-    .relative {
-      font-size: 1rem;
+    .right-balloon {
+      right: 0;
+      transform: translateX(25%);
+    }
+    .center-balloon {
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 </style>
