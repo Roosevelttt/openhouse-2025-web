@@ -252,7 +252,7 @@
                 <p class="text-sm text-white mt-3">Only users with confirmed reservations can access the payment page.</p>
               </div>
             `,
-            confirmButtonText: '🏠 Go to Homepage',
+            confirmButtonText: 'Go to Homepage',
             confirmButtonColor: '#dc2626',
             allowOutsideClick: false,
             customClass: {
