@@ -226,7 +226,7 @@
 </script>
 
 <svelte:head>
-  <title>OH Admin | Participants</title>
+  <title>OH Admin - Participants</title>
 </svelte:head>
 
 <main class="admin-card">

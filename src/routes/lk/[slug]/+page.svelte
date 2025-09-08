@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Open House 2025 - {selectedLk?.name || "LK"}</title>
+</svelte:head>
+
 <script lang="ts">
   import Title from "$lib/components/ukm/Title.svelte";
   import Background from "$lib/components/ukm/Background.svelte";

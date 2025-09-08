@@ -1,3 +1,7 @@
+<svelte:head>
+	<title>Open House 2025 - Login</title>
+</svelte:head>
+
 <script lang="ts">
   import { PUBLIC_API_BASE } from '$env/static/public';
   import { page } from '$app/stores';

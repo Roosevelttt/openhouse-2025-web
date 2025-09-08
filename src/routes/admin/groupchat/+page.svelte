@@ -107,7 +107,7 @@
 </script>
 
 <svelte:head>
-  <title>OH Admin | Groupchat</title>
+  <title>OH Admin - Groupchat</title>
 </svelte:head>
 
 <!-- Admin Main Content Card -->

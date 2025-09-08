@@ -315,7 +315,7 @@ $effect(() => {
 </script>
 
 <svelte:head>
-  <title>OH Admin | Admin Management</title>
+  <title>OH Admin - Admin Management</title>
 </svelte:head>
 
 {#if !accessChecked}

@@ -573,7 +573,7 @@
 </script>
 
 <svelte:head>
-  <title>{ukm ? `Register for ${ukm.name}` : 'UKM Registration'}</title>
+	<title>Open House 2025 - Registration</title>
 </svelte:head>
 
 <div class="fixed top-0 left-0 w-full h-[100lvh] bg-[url('/images/ukm/bg-wood.png')] bg-cover bg-center bg-no-repeat -z-10"></div>

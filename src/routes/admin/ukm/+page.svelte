@@ -459,7 +459,7 @@
 </script>
 
 <svelte:head>
-  <title>OH Admin | UKM Management</title>
+  <title>OH Admin - UKM Management</title>
 </svelte:head>
 
 <main class="admin-card">

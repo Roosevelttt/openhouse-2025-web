@@ -8,6 +8,10 @@ import ColorPalette from '$lib/components/home/ColorPalette.svelte';
 import Navbar from '$lib/components/layout/Navbar.svelte';
 </script>
 
+<svelte:head>
+	<title>Open House 2025 - Home</title>
+</svelte:head>
+
 <Swal />
 <Navbar />
 
