@@ -117,7 +117,7 @@
 	};
 
 	const checkIsMobile = () => {
-		isMobile = window.innerWidth < 1024;
+		isMobile = window.innerWidth < 1280;
 	};
 	onMount(() => {
 		checkIsMobile();
@@ -141,41 +141,46 @@
 </script>
 
 <section
-	class="relative w-full h-[80vh] md:h-[80vh] lg:h-[150vh] mt-[-10vw] bg-cover bg-center"
-	style="background-image: url('/svg/home/ukm/wall behind.svg');"
+	class="relative w-full h-[80vh] md:h-[80vh] xl:h-[150vh] 4xl:h-[200vh] mt-[-10vw] xl:mt-[-20vw]"
 >
-	<div class="absolute inset-0 w-full h-full">
-		<img
+    <div class="absolute inset-0 w-full h-full">
+        
+        <div
+			class="absolute bottom-0 left-0 right-0 bg-cover bg-center 
+                   top-[4%] sm:top-[6%] xl:top-[26%] z-0"
+			style="background-image: url('/svg/home/ukm/wall behind.svg');"
+		></div>
+        <img
 			src="/svg/home/ukm/book floor.svg"
 			alt=""
-			class="absolute bottom-[0%] lg:left-1/2 -translate-x-1/2 max-w-none w-[200%] lg:w-full z-10"
+			class="absolute bottom-[0%] xl:left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-10"
 		/>
 		<img
 			src="/svg/home/ukm/book floor.svg"
 			alt=""
-			class="absolute top-[52%] md:top-[43%] lg:top-[58%] xl:top-[58%] 2xl:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] lg:w-full z-30"
+			class="absolute top-[52%] md:top-[43%] xl:top-[58%] 2xl:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-30"
 		/>
 		<img
 			src="/svg/home/ukm/planks.svg"
 			alt="Bookshelf top"
-			class="absolute top-[4%] sm:top-[6%] lg:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] md:w-[170%] lg:w-[100%] z-50"
+			class="absolute top-[4%] sm:top-[6%] xl:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] md:w-[170%] xl:w-[100%] z-50"
 		/>
 	</div>
 
 	<div class="relative w-full h-full">
 		<div
 			bind:this={topRowContainer}
-			class="absolute top-[26%] md:top-[22%] lg:top-[40%] h-[40%] lg:h-[30%] w-full z-40
-                   overflow-x-auto lg:overflow-visible scrollbar-hide"
+			class="absolute top-[26%] md:top-[22%] xl:top-[40%] h-[40%] xl:h-[30%] w-full z-40
+                   overflow-x-auto xl:overflow-visible scrollbar-hide"
 		>
 			<div
-				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4 pb-8 lg:pb-0 lg:mx-auto lg:justify-center"
+				class="flex items-end h-full w-max xl:w-[65%] gap-x-0 px-4 pb-8 xl:pb-0 xl:mx-auto xl:justify-center"
 			>
 				{#each topRowBooks as book (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
-						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-300 ease-in-out
-                               lg:hover:translate-y-8"
+						class="flex-shrink-0 h-[30vh] xl:h-full transition-transform duration-300 ease-in-out
+                               xl:hover:translate-y-8"
 						class:translate-y-8={isMobile && activeTopBookName === book.name}
 						title={book.name}
 					>
@@ -187,17 +192,17 @@
 
 		<div
 			bind:this={bottomRowContainer}
-			class="absolute bottom-[0%] sm:bottom-[4%] h-[40%] lg:h-[30%] w-full z-20
-                   overflow-x-auto lg:overflow-visible scrollbar-hide"
+			class="absolute bottom-[0%] sm:bottom-[4%] h-[40%] xl:h-[30%] w-full z-20
+                   overflow-x-auto xl:overflow-visible scrollbar-hide"
 		>
 			<div
-				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4 pb-8 lg:pb-0 lg:mx-auto lg:justify-center"
+				class="flex items-end h-full w-max xl:w-[65%] gap-x-0 px-4 pb-8 xl:pb-0 xl:mx-auto xl:justify-center"
 			>
 				{#each bottomRowBooks as book (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
-						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-300 ease-in-out
-                               lg:hover:translate-y-8"
+						class="flex-shrink-0 h-[30vh] xl:h-full transition-transform duration-300 ease-in-out
+                               xl:hover:translate-y-8"
 						class:translate-y-8={isMobile && activeBottomBookName === book.name}
 						title={book.name}
 					>
