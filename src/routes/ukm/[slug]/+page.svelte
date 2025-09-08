@@ -8,7 +8,7 @@
   import Poster from "$lib/components/ukm/Poster.svelte";  
   import AOS from 'aos';
   import 'aos/dist/aos.css'; 
-  import { PUBLIC_API_BASE } from "$env/static/public";
+  import { PUBLIC_API_BASE} from "$env/static/public";
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
   import { checkUserReservation } from "$lib/api";
@@ -56,15 +56,15 @@
     }).format(fee);
   }
 
-  let logoRef: HTMLImageElement | null = null;
-  let titleRef: HTMLHeadingElement | null = null;
-  let introRef: HTMLDivElement | null = null;
-  let overlayRef: HTMLDivElement | null = null;
-  let containerRef: HTMLDivElement | null = null;
+  let logoRef: any = null;
+  let titleRef: any = null;
+  let introRef: any = null;
+  let overlayRef: any = null;
+  let containerRef: any = null;
 
-  let part1Ref: HTMLElement | null = null;
+  let part1Ref: any = null;
 
-  let posterOverlay: HTMLDivElement | null = null;
+  let posterOverlay: any = null;
   
   // Component references
   let backgroundRef: any = null;
@@ -96,15 +96,15 @@
     const { ScrollTrigger } = await import("gsap/ScrollTrigger");
     gsap.registerPlugin(ScrollTrigger);
 
-    if (overlayRef && logoComponentRef && titleComponentRef && introRef && backgroundRef) {
+    if (overlayRef && logoRef && titleRef && introRef && containerRef && part1Ref) {
       // Intro overlay fade
       gsap.to(overlayRef, { opacity: 0.7, duration: 0 });
       gsap.to(overlayRef, { opacity: 0, duration: 1.2, delay: 0.5 });
       
       // Entrance animation
-      gsap.from(logoComponentRef, {x: -200, opacity: 0, duration: 1, delay: 1.2, ease: "power2.out"});
-      gsap.from(titleComponentRef, {opacity: 0, y: 30, duration: 1, delay: 1.5, ease: "power2.out"});
-      
+      gsap.from(logoRef, {x: -200, opacity: 0, duration: 1, delay: 1.2, ease: "power2.out"});
+      gsap.from(titleRef, {opacity: 0, y: 30, duration: 1, delay: 1.5, ease: "power2.out"});
+
       const deltaY = window.innerHeight * 0.25 - (window.innerHeight / 2);
 
       let tl = gsap.timeline({
@@ -216,7 +216,7 @@
     style="background-image: url({bg});">
   </div>
 
-  <Background ref={(el: HTMLDivElement) => (containerRef = el)} className="relative flex flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
+  <Background ref={(el: any) => (containerRef = el)} className="relative flex flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
     <div class="absolute inset-0 bg-black opacity-0" bind:this={overlayRef}></div>
 
     <div class="relative flex flex-col items-center justify-center space-x-2" bind:this={part1Ref}>
@@ -224,9 +224,9 @@
         src="{getImageUrl(selectedUkm?.logo_url) || 'default-logo.png'}"
         alt="LOGO UKM" 
         className="mb-4"
-        ref={(el: HTMLImageElement) => (logoRef = el)}
+        ref={(el: any) => (logoRef = el)}
       />
-      <Title text="{selectedUkm?.name || 'UKM DEFAULT'}" ref={(el: HTMLHeadingElement) => (titleRef = el)} />
+      <Title text="{selectedUkm?.name}" ref={(el:any) => (titleRef = el)} />
 
     </div>
 
