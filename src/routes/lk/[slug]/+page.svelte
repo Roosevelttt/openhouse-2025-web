@@ -12,7 +12,6 @@
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
   import 'aos/dist/aos.css';''
-    import { get } from "svelte/store";
 
   interface Lk {
     id: string;
@@ -89,7 +88,7 @@
 <img class="fixed top-0 left-0 z-[-9]" src="/images/Stars.png" alt="">
 
 {#if selectedLk}
-  <Background className="flex flex-col items-center justify-center text-center p-8 !overflow-visible">
+  <Background className="flex flex-col items-center justify-center text-center p-8 !overflow-visible space-y-5">
     <!-- floating balloon (decorative) -->
     <img
       src="/images/balloon.png"
@@ -106,7 +105,7 @@
       <Logo
         src={getImageUrl(selectedLk?.logo_url)}
         alt="LOGO UKM"
-        className="mb-2 lg:!w-1/2 "
+        className=""
         aos="zoom-out"
       />
     </div>
