@@ -59,6 +59,14 @@
     ],
   });
 
+  // Ensure tableData is properly structured
+  const safeTableData = $derived(() => {
+    if (!tableData || !Array.isArray(tableData.columns)) {
+      return { columns: [] };
+    }
+    return tableData;
+  });
+
   let adminData: Record<string, any> = $state({});
   let ukms: Array<Ukm> = $state([]);
   let participants: Array<Participant> = $state([]);
@@ -71,10 +79,25 @@
         "admin_ukm_name",
         "admin_division_slug",
       ]);
-      ukms = await get("/api/ukms");
-      participants = await get("/api/admin/participants");
+      
+      try {
+        const fetchedUkms = await get("/api/ukms");
+        ukms = Array.isArray(fetchedUkms) ? fetchedUkms : [];
+      } catch (ukmError) {
+        console.error("Failed to fetch UKMs:", ukmError);
+        ukms = [];
+      }
+      
+      try {
+        const fetchedParticipants = await get("/api/admin/participants");
+        participants = Array.isArray(fetchedParticipants) ? fetchedParticipants : [];
+      } catch (participantError) {
+        console.error("Failed to fetch participants:", participantError);
+        participants = [];
+      }
     } catch (e: any) {
       error = e.message;
+      console.error("Failed to fetch admin data:", e);
     }
   });
 
@@ -100,17 +123,21 @@
 
   const ukmOptions = $derived([
     { value: "all", label: "Select UKM" },
-    ...ukms.map(ukm => ({ value: ukm.name, label: ukm.name }))
+    ...(Array.isArray(ukms) ? ukms : []).map(ukm => ({ value: ukm.name, label: ukm.name }))
   ]);
 
   const filteredAndSortedData = $derived(() => {
+    if (!Array.isArray(participants)) {
+      return [];
+    }
+    
     // Start with the original data
-    let processedData = participants;
+    let processedData = [...participants];
 
     // 1. Filtering Logic
     if (searchTerm) {
       const lowerCaseSearch = searchTerm.toLowerCase();
-      processedData = participants.filter((item) =>
+      processedData = processedData.filter((item) =>
         Object.values(item).some((val) =>
           String(val).toLowerCase().includes(lowerCaseSearch),
         ),
@@ -183,13 +210,16 @@
   }
 
   const totalPages = $derived(
-    Math.ceil(filteredAndSortedData().length / itemsPerPage),
+    Math.ceil((Array.isArray(filteredAndSortedData()) ? filteredAndSortedData() : []).length / itemsPerPage),
   );
 
   const paginatedData = $derived(() => {
+    // Ensure filteredAndSortedData returns an array
+    const data = Array.isArray(filteredAndSortedData()) ? filteredAndSortedData() : [];
+    
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-    return filteredAndSortedData().slice(startIndex, endIndex);
+    return data.slice(startIndex, endIndex);
   });
 
   function goToPage(page: number) {
@@ -209,10 +239,6 @@
       currentPage--;
     }
   }
-
-  $effect(() => {
-    console.log("Current totalPages:", totalPages);
-  });
 
   function showPicture(src: string) {
     // Construct the full URL to the payment file on the API server
@@ -344,7 +370,7 @@
       <table class="min-w-full">
         <thead>
           <tr class="bg-admin-background">
-            {#each tableData.columns as column}
+            {#each safeTableData().columns as column}
               <th
                 class="admin-table-header group cursor-pointer text-left"
                 onclick={() => handleSort(column.accessor)}
@@ -410,7 +436,7 @@
           </tr>
         </thead>
         <tbody class="bg-admin-card-bg">
-          {#each paginatedData() as participant (`${participant.id}-${participant.ukm_name}`)}
+          {#each Array.isArray(paginatedData()) ? paginatedData() : [] as participant (`${participant.id}-${participant.ukm_name}`)}
             <tr class="admin-table-row border-b border-admin-border hover:bg-admin-hover transition-colors">
               <td class="admin-table-cell font-mono text-sm">{participant.nrp}</td>
               <td class="admin-table-cell font-medium">{participant.name}</td>

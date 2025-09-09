@@ -15,14 +15,23 @@
   // Check if admin has an UKM
   onMount(async () => {
     try {
-      adminData = await getSessionValues([
+      const data = await getSessionValues([
         "admin_ukm_id",
         "admin_ukm_name",
         "admin_division_slug",
       ]);
-      await get<{ groupchat_link: string }>("/api/admin/ukm/groupchat");
-      manageUKM = true;
-    } catch (e: any) {}
+      adminData = data || {};
+      
+      try {
+        await get<{ groupchat_link: string }>("/api/admin/ukm/groupchat");
+        manageUKM = true;
+      } catch (e: any) {
+        manageUKM = false;
+      }
+    } catch (e: any) {
+      console.error("Failed to fetch admin data:", e);
+      adminData = {};
+    }
   });
 
   let isMenuOpen = $state(false);
