@@ -29,7 +29,7 @@
 		{ name: 'Taekwondo', src: '/svg/home/ukm/books/book taekwondo.svg' },
 		{ name: 'Teater', src: '/svg/home/ukm/books/book teater.svg' },
 		{ name: 'Tenis-Meja', src: '/svg/home/ukm/books/book tenis meja.svg' },
-		{ name: 'VG', src: '/svg/home/ukm/books/book vg(2).svg' },
+		{ name: 'VG', src: '/svg/home/ukm/books/book vg (2).svg' },
 		{ name: 'Voli', src: '/svg/home/ukm/books/book voli.svg' }
 	];
 	const topRowBooks = allBooks.slice(0, 13);
