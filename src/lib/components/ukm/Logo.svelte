@@ -7,6 +7,6 @@
   $: ref && ref(logo);
 </script>
 
-<div bind:this={logo} class="bg-white flex items-center justify-center p-2 rounded-full shadow-lg w-3/4 lg:w-1/2 mx-auto aspect-square">
-  <img src={src} alt={alt}  class={`w-full logo ${className}`} />
+<div bind:this={logo} class="${className} bg-white flex items-center justify-center p-2 rounded-full shadow-lg w-3/4 lg:w-1/2 mx-auto aspect-square">
+  <img src={src} alt={alt}  class={`w-full logo`} />
 </div>
