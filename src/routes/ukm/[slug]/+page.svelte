@@ -226,8 +226,8 @@
     <div class="relative flex flex-col items-center justify-center space-y-5" bind:this={part1Ref}>
       <Logo
         src="{getImageUrl(selectedUkm?.logo_url) || 'default-logo.png'}"
-        alt="LOGO UKM" 
-        className="mb-4"
+        alt="LOGO UKM"
+        className={`mb-4 ${selectedUkm?.slug === "orkestra" ? "!bg-black" : "bg-white"}`}
         ref={(el: any) => (logoRef = el)}
       />
       <Title text="{selectedUkm?.name}" ref={(el:any) => (titleRef = el)} />
