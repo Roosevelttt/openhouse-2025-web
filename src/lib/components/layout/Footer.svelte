@@ -1,5 +1,4 @@
 <script lang="ts">
-	// This component is static, so no script is needed.
 </script>
 
 <footer
@@ -16,12 +15,12 @@
 			<div class="flex justify-center md:justify-end">
 				<div>
 					<h2
-						class="font-moomello text-6xl lg:text-7xl text-[var(--color-off-white)]"
+						class="font-moomello text-6xl lg:text-7xl text-[#fff]"
 					>
 						OPENHOUSE
 					</h2>
 					<div class="mt-1 flex items-center justify-center font-bold md:mt-0 md:justify-end">
-						<span class="font-lexend text-sm text-[var(--color-off-white)]"
+						<span class="font-lexend text-sm text-[#fff]"
 							>brought to you by</span
 						>
 						<img src="/svg/logo/bem-white.svg" alt="BEM Logo" class="ml-2 h-6 w-auto" />
