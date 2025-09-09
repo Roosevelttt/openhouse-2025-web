@@ -168,7 +168,7 @@
         <Title text="Watch Our Story 🎥" />
       </div>
       <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="500">
-        <Video src={getImageUrl(selectedLk.video_url)} className="w-full lg:w-auto h-full" controls={true} />
+        <Video videoSrc={selectedLk.video_url} className="w-full lg:w-auto h-full" controls={true} />
       </div>
     </Background>
   {/if}
