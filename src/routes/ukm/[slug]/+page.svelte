@@ -223,7 +223,7 @@
   <Background ref={(el: any) => (containerRef = el)} className="relative flex flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
     <div class="absolute inset-0 bg-black opacity-0" bind:this={overlayRef}></div>
 
-    <div class="relative flex flex-col items-center justify-center space-x-2" bind:this={part1Ref}>
+    <div class="relative flex flex-col items-center justify-center space-y-5" bind:this={part1Ref}>
       <Logo
         src="{getImageUrl(selectedUkm?.logo_url) || 'default-logo.png'}"
         alt="LOGO UKM" 
