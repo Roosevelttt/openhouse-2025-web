@@ -115,12 +115,21 @@
     font-style: normal;
 }
 
+@font-face {
+    font-display: swap;
+    font-family: "IFC Los Banditos";
+    src: url("/fonts/ifc-los-banditos/IFC LOS BANDITOS.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+}
 @theme {
     --font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
     --font-lexend: "Lexend", sans-serif;
     --font-moomello: "Moomello", sans-serif;
 	--font-spekk: "Spekk", sans-serif;
 	--font-spicyrice: "Spicy Rice", sans-serif;
+	--font-spekk: "Spekk", sans-serif;
+	--font-ifc: "IFC Los Banditos", sans-serif;
 	
 	--color-admin-text-primary: var(--admin-text-primary);
 	--color-admin-text-secondary: var(--admin-text-secondary);
@@ -138,7 +147,9 @@
 ::-webkit-scrollbar {
   display: none;
 }
-
+html {
+	scroll-behavior: smooth;
+}
 
 /* 3D Push (red-orange) --- ukm details*/
 .btn.push {

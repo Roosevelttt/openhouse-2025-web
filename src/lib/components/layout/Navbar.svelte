@@ -114,7 +114,7 @@
 						href="/#lk"
 						on:click={handleNavClick}
 						class="font-spicyrice text-xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-						>LK</a
+						>LK - KBM</a
 					>
 					<div
 						class="w-2 h-2 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
@@ -194,7 +194,7 @@
 	> -->
     <aside
 		transition:fly={{ duration: 400, x: '100%', easing: quintOut }}
-        class="fixed top-0 right-0 h-full w-64 p-6 flex flex-col shadow-2xl z-[120] bg-gradient-to-b from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
+        class="fixed top-0 right-0 h-[100lvh] w-64 p-6 flex flex-col shadow-2xl z-[120] bg-gradient-to-b from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
 
 	>
 		<div class="flex justify-end -mr-2 -mt-2">
@@ -236,7 +236,7 @@
 			<a href="/#lk" on:click={handleMobileLinkClick} class="sidebar-nav-link">
 				<div class="sidebar-nav-link-inner">
 					<div class="sidebar-nav-link-circle"></div>
-					<span class="sidebar-nav-link-text">LK</span>
+					<span class="sidebar-nav-link-text">LK - KBM</span>
 					<div class="sidebar-nav-link-circle"></div>
 				</div>
 			</a>

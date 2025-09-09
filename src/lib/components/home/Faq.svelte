@@ -9,13 +9,13 @@
             id: 1,
             question: 'Apa saja kegiatan Open House 2025?',
             answer:
-                '(Open House 2025) merupakan acara yang mewadahi (seluruh UKM, LK, dan KBM) di Petra Christian University untuk memperkenalkan program dan kegiatan kepada mahasiswa baru. Melalui (pembukaan booth), (penampilan karya), dan (pertunjukan) dari masing-masing (UKM/LK/KBM), acara ini bertujuan mengundang mahasiswa untuk (mengenal), (memilih), serta (bergabung) sesuai dengan (minat dan bakat) mereka.'
+                '(Open House 2025) merupakan acara yang mewadahi (seluruh UKM, LK-KBM) di Petra Christian University untuk memperkenalkan program dan kegiatan kepada mahasiswa baru. Melalui (pembukaan booth), (penampilan karya), dan (pertunjukan) dari masing-masing (UKM/LK-KBM), acara ini bertujuan mengundang mahasiswa untuk (mengenal), (memilih), serta (bergabung) sesuai dengan (minat dan bakat) mereka.'
         },
         {
             id: 2,
             question: 'Kapan & Dimana kegiatan Open House 2025 berlangsung?',
             answer:
-                '(Open House 2025) akan dilaksanakan selama (4 hari), di tanggal (16-19 Sept 2025). (Selasa - Kamis), (16-18 September 2025) di (Gedung W, P, Q). (Jumat), (19 September 2025) di (Gedung Q).'
+                '(Open House 2025) akan dilaksanakan selama (4 hari), di tanggal (16-18 Sept 2025). (Selasa - Kamis), (16-18 September 2025) di (Gedung W, P, Q). (Jumat), (19 September 2025) di (Gedung Q).'
         },
         {
             id: 3,
@@ -62,7 +62,7 @@
         {
             id: 10,
             question: 'Kapan pendaftaran UKM akan ditutup?',
-            answer: 'Pendaftaran UKM akan ditutup pada hari (Jumat, 20 September 2025).'
+            answer: 'Pendaftaran UKM akan ditutup pada hari (Jumat, 19 September 2025).'
         }
     ];
 
@@ -288,7 +288,7 @@
                    lg:top-[15%] lg:left-[16%] lg:translate-x-0 lg:text-left"
             transition:fly={{ y: -20, duration: 400, easing: quintOut }}
         >
-            <h2 class="font-moomello text-[10rem] lg:text-[14rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] lg:z-[0]">
+            <h2 class="font-moomello text-[10rem] lg:text-[14rem] 2xl:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] lg:z-[0]">
                 FAQ
             </h2>
         </div>
@@ -366,7 +366,7 @@
     <div class="absolute bottom-0 left-0 right-0 top-[55%] lg:top-[75%] bg-[#2a121a] z-0" />
 
     <div
-        class="absolute bottom-0 left-0 right-0 top-[650] lg:top-[75%] z-20 flex flex-col items-center justify-center gap-6 px-6 pt-4 pb-12 lg:pb-0 text-white"
+        class="absolute bottom-0 left-0 right-0 top-[65%] lg:top-[75%] z-20 flex flex-col items-center justify-center gap-6 px-6 xl:pt-4 pb-12 lg:pb-0 text-white"
     >
         <div class="w-full max-w-6xl flex items-center justify-center gap-4 lg:gap-8">
             <button

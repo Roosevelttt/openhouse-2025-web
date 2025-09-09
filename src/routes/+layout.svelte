@@ -21,6 +21,17 @@
 </svelte:head>
 
 <script>
+  import Preloader from '$lib/components/layout/Preloader.svelte';
+  import '../app.css'
+</script>
+
+<Preloader />
+
+<main>
+  <slot />
+</main>
+
+<!-- <script>
   import "../app.css"; 
   
   import { afterNavigate, goto } from '$app/navigation';
@@ -77,25 +88,26 @@
     bind:this={cloudSilhouetteLeft}
     src="/svg/home/lk/cloud/cloud silhouette left.svg"
     alt="Cloud Silhouette"
-    class="absolute top-[5%] left-0 w-[100%] h-auto z-0"
+    class="absolute top-[5%] left-0 h-[100%] z-0"
   />
   <img
     bind:this={cloudSilhouetteRight}
     src="/svg/home/lk/cloud/cloud silhouette right.svg"
     alt="Cloud Silhouette"
-    class="absolute top-[5%] right-0 w-[100%] h-auto z-0"
+    class="absolute top-[5%] right-0 h-[100%] z-0"
   />
 
   <img
     bind:this={cloudLeft}
     src="/svg/home/lk/cloud/cloud left.svg"
     alt="Cloud"
-    class="absolute top-[10%] left-0 w-[100%] h-auto z-10"
+    class="absolute top-[10%] left-0 h-[100%] z-10"
   />
   <img
     bind:this={cloudRight}
     src="/svg/home/lk/cloud/cloud right.svg"
     alt="Cloud"
-    class="absolute top-[10%] right-0 w-[100%] h-auto z-10"
+    class="absolute top-[10%] right-0 h-[100%] z-10"
   />
 </div>
+ -->
