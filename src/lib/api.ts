@@ -2,6 +2,20 @@ import { PUBLIC_API_BASE } from "$env/static/public";
 
 const API_BASE = PUBLIC_API_BASE || "";
 
+// fetch CSRF token
+async function getCsrfToken(): Promise<string | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/csrf-tok`, {
+      credentials: "include",
+    });
+    // Get token from header
+    return res.headers.get("x-csrf-token");
+  } catch (error) {
+    console.error("Failed to fetch CSRF token:", error);
+    return null;
+  }
+}
+
 export async function get<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     credentials: "include",
@@ -21,6 +35,11 @@ export async function post<T, U = object>(
   const headers = new Headers(init?.headers);
   if (isJson && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
+  }
+
+  const csrfToken = await getCsrfToken();
+  if (csrfToken) {
+    headers.set("X-CSRF-Token", csrfToken);
   }
 
   const fullUrl = `${API_BASE}${path}`;
@@ -171,6 +190,11 @@ export async function put<T, U = object>(
     headers.set("Content-Type", "application/json");
   }
 
+  const csrfToken = await getCsrfToken();
+  if (csrfToken) {
+    headers.set("X-CSRF-Token", csrfToken);
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
     method: "PUT",
     credentials: "include",
@@ -193,10 +217,19 @@ export async function put<T, U = object>(
 }
 
 export async function del<T>(path: string, init?: RequestInit): Promise<T> {
+  const headers = new Headers(init?.headers);
+  
+  // Add CSRF token to headers
+  const csrfToken = await getCsrfToken();
+  if (csrfToken) {
+    headers.set("X-CSRF-Token", csrfToken);
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
     method: "DELETE",
     credentials: "include",
     ...init,
+    headers,
   });
   const text = await res.text();
   if (!res.ok) throw new Error(text);
