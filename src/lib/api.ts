@@ -238,3 +238,7 @@ export async function del<T>(path: string, init?: RequestInit): Promise<T> {
   // @ts-ignore
   return text ? JSON.parse(text) : undefined;
 }
+
+export async function logout(): Promise<void> {
+  return post("/api/auth/logout", {});
+}
