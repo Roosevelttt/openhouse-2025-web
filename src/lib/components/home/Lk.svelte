@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/dist/ScrollTrigger';
-  import { transitionUrl } from '$lib/stores/transitionStore.js';
+  // import { transitionUrl } from '$lib/stores/transitionStore.js';
 
   let scrollContainer;
   let balloonAssembly;
@@ -88,7 +88,7 @@
       bind:this={backgroundSky}
       src="/background/pink sky v3.webp"
       alt="Purple sky background"
-      class="absolute inset-0 max-w-none w-[102%] h-[150%] object-cover z-[-1]"
+      class="absolute inset-0 max-w-none w-[102%] h-[150vh] object-cover z-[-1]"
     />
 
     <div
@@ -129,9 +129,13 @@
           class:right-balloon={i % 3 === 1}
           class:center-balloon={i % 3 === 2}
         >
-          <a
+          <!-- <a
             href={icon.path}
             on:click|preventDefault={() => transitionUrl.set(icon.path)}
+            class="relative block transition-transform hover:scale-110 cursor-pointer group"
+          > -->
+          <a
+            href={icon.path}
             class="relative block transition-transform hover:scale-110 cursor-pointer group"
           >
             <img 

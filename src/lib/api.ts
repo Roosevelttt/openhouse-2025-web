@@ -73,9 +73,11 @@ export async function post<T, U = object>(
 // Helper function to get session values
 export async function getSessionValues(keys: string[]): Promise<Record<string, any>> {
   try {
-    const response = await post<{ session_values: Record<string, any> }>('/api/user/session/values', {
-      keys: keys
-    });
+    const response = await post<{ session_values: Record<string, any> }>(
+      '/api/user/session/values',
+      { keys: keys },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
     return response.session_values;
   } catch (error) {
     throw new Error('Failed to fetch session values');
@@ -235,4 +237,8 @@ export async function del<T>(path: string, init?: RequestInit): Promise<T> {
   if (!res.ok) throw new Error(text);
   // @ts-ignore
   return text ? JSON.parse(text) : undefined;
+}
+
+export async function logout(): Promise<void> {
+  return post("/api/auth/logout", {});
 }
