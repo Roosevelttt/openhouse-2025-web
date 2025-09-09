@@ -281,7 +281,7 @@
          h-screen max-w-none md:max-h-none"
 >
   <div class="absolute inset-0 w-full h-full">
-    <video playsinline autoplay muted loop poster="poster.jpg" class="w-full h-full object-cover">
+    <video playsinline autoplay muted loop class="w-full h-full object-cover">
       <source src="/videos/teaser-landscape.webm" type="video/webm" />
     </video>
   </div>
@@ -299,7 +299,7 @@
     bind:this={heroTitleMobile}
     class="relative z-0 font-moomello opacity-0 drop-shadow-[0_10px_30px_rgba(96,0,0,0.25)]
           bg-gradient-to-tr from-[#F6BABC] via-[#FEF7EB] to-white bg-clip-text text-transparent
-          px-4 block sm:hidden text-[7rem] translate-y-42" >
+          px-4 block sm:hidden text-[7rem]" >
     <h1>OPENHOUSE</h1>
   </div>
 

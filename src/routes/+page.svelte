@@ -25,7 +25,7 @@ import Navbar from '$lib/components/layout/Navbar.svelte';
 		<Faq />
 	</div>
   
-  <ColorPalette />
+  <!-- <ColorPalette /> -->
 </main>
 
 <style>
