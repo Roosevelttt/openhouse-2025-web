@@ -822,7 +822,7 @@
             <div class="bg-gradient-to-br from-orange-100 to-orange-100 border-4 border-orange-300 rounded-3xl p-8 inline-block relative">
             
               <img 
-                src="/src/lib/images/{ukm.qris_url}" 
+                src="/images/{ukm.qris_url}" 
                 alt="QRIS Payment Code for {ukm.name}"
                 class="max-w-xs mx-auto rounded-2xl shadow-lg border-4 border-white"
               />
