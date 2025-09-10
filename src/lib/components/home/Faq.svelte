@@ -271,12 +271,12 @@
 
 <section bind:this={faqSection} class="relative h-full w-full overflow-hidden bg-transparent">
     <img
-        src="/svg/home/mascot front sep.svg"
+        src="/faq/mascot-front.webp"
         alt="Event Mascot on Stage"
         class="absolute bottom-[42%] lg:bottom-[30%] xl:bottom-[34%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] lg:w-[24%] xl:w-[24%] max-w-none -translate-x-1/2"
     />
     <img
-        src="/svg/home/mascot stage sep.svg"
+        src="/faq/stage-plank.webp"
         alt="Event Mascot on Stage"
         class="absolute bottom-[35%] md:bottom-[32%] lg:bottom-[20%] xl:bottom-[20%] left-1/2 z-10 w-[220%] md:w-[160%] lg:w-[100%] xl:w-[100%] max-w-none -translate-x-1/2"
     />

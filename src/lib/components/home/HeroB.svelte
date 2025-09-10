@@ -304,45 +304,45 @@
   </div>
 
   <div class="absolute inset-0 w-full h-full">
-    <img src="/svg/home/hero/stage bottom v2.svg" alt="Stage bottom" 
+    <img src="/home/stage-bottom.webp" alt="Stage bottom" 
          class="absolute -bottom-30 sm:-bottom-20 md:-bottom-40 lg:-bottom-32 xl:-bottom-40 
                 left-1/2 -translate-x-1/2 max-w-none 
                 w-[300%] sm:w-[130%] md:w-[200%] lg:w-[150%] xl:w-[101%] z-[60]" />
 
-    <img bind:this={behindCurtains} src="/svg/home/hero/curtains behind.svg" alt="Behind curtains" 
+    <img bind:this={behindCurtains} src="/home/curtains-behind.webp" alt="Behind curtains" 
          class="absolute bottom-0 left-1/2 -translate-x-1/2 max-w-none 
                 w-[180%] sm:w-[85%] md:w-[140%] lg:w-[140%] xl:w-[68%] z-10" />
     
-    <img bind:this={behindBanner} src="/svg/home/hero/stage banner - behind.svg" alt="Stage banner background" 
+    <img bind:this={behindBanner} src="/home/behind-banner.webp" alt="Stage banner background" 
          class="absolute top-70 sm:top-50 md:top-30 lg:top-40 xl:top-8 inset-x-0 mx-auto max-w-none 
                 w-[45%] sm:w-[20%] md:w-[40%] lg:w-[36%] xl:w-[16%] z-20" />
 
-    <img bind:this={leftCurtainMiddle} src="/svg/home/hero/curtain-left-middle.svg" alt="Left curtain middle layer" 
+    <img bind:this={leftCurtainMiddle} src="/home/curtain-middle-left.webp" alt="Left curtain middle layer" 
          class="absolute max-w-none -top-2 z-40
                 w-[200%] sm:w-[100%] md:w-[140%] lg:w-[110%] xl:w-[44%]
                 -left-120 sm:-left-60 md:-left-170 lg:-left-140 xl:left-22" />
     
-    <img bind:this={leftCurtainFront} src="/svg/home/hero/curtain left - front (2).svg" alt="Left curtain front layer" 
+    <img bind:this={leftCurtainFront} src="/home/curtain-front-left.webp" alt="Left curtain front layer" 
          class="absolute max-w-none -top-1 z-50
                 w-[180%] sm:w-[48%] md:w-[60%] lg:w-[43%] xl:w-[42%]
                 -left-120 sm:-left-2 md:left-0 lg:-left-2 xl:-left-5" />
 
-    <img bind:this={rightCurtainMiddle} src="/svg/home/hero/curtain-right-middle.svg" alt="Right curtain middle layer" 
+    <img bind:this={rightCurtainMiddle} src="/home/curtain-middle-right.webp" alt="Right curtain middle layer" 
          class="absolute max-w-none -top-2 z-40
                 w-[200%] sm:w-[100%] md:w-[140%] lg:w-[110%] xl:w-[44%]
                 -right-120 sm:-right-60 md:-right-170 lg:-right-140 xl:right-22" />
     
-    <img bind:this={rightCurtainFront} src="/svg/home/hero/curtain right - front (2).svg" alt="Right curtain front layer" 
+    <img bind:this={rightCurtainFront} src="/home/curtain-front-right.webp" alt="Right curtain front layer" 
          class="absolute max-w-none -top-1 z-50
                 w-[180%] sm:w-[48%] md:w-[60%] lg:w-[43%] xl:w-[42%]
                 -right-120 sm:-right-2 md:right-0 lg:-right-2 xl:-right-5" />
 
-    <img bind:this={topCurtain} src="/svg/home/hero/curtain top.svg" alt="Top curtain" 
+    <img bind:this={topCurtain} src="/home/curtain-top.webp" alt="Top curtain" 
         class="absolute left-1/2 -translate-x-1/2 z-[60] max-w-none
                 -top-64 sm:-top-60 md:-top-92 lg:-top-106 xl:-top-140 
                 w-[120%] sm:w-[50%] md:w-[95%] lg:w-[80%] xl:w-1/2" />
     
-    <img bind:this={topBanner} src="/svg/home/hero/banner red.svg" alt="Red banner" 
+    <img bind:this={topBanner} src="home/banner-top.webp" alt="Red banner" 
          class="absolute left-1/2 -translate-x-1/2 z-[70] max-w-none
                 -top-1 sm:-top-1 md:-top-4 lg:-top-4 xl:-top-5 
                 w-[30%] sm:w-[15%] md:w-[20%] lg:w-[20%] xl:w-[8%]" />

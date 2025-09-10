@@ -2,36 +2,34 @@
 	import { onMount } from 'svelte';
 
 	const allBooks = [
-		{ name: 'ASFS', src: '/svg/home/ukm/books/book asfs.svg' },
-		{ name: 'Badminton', src: '/svg/home/ukm/books/book badminton.svg' },
-		{ name: 'Basket', src: '/svg/home/ukm/books/book basket.svg' },
-		{ name: 'Catur', src: '/svg/home/ukm/books/book catur.svg' },
-		{ name: 'Chinese-Art', src: '/svg/home/ukm/books/book chinese art.svg' },
-		// { name: 'Choir', src: '/svg/home/ukm/books/book choir (2).svg' },
-		{ name: 'Dance', src: '/svg/home/ukm/books/book dance.svg' },
-		{ name: 'Dekorasi', src: '/svg/home/ukm/books/book dekorasi.svg' },
-		{ name: 'EMR', src: '/svg/home/ukm/books/book emr.svg' },
-		{ name: 'English-Debate', src: '/svg/home/ukm/books/book english debate.svg' },
-		// { name: 'Esports', src: '/svg/home/ukm/books/book esports (2).svg' },
-		{ name: 'Futsal', src: '/svg/home/ukm/books/book futal.svg' },
-		{ name: 'Kyokushinkai', src: '/svg/home/ukm/books/book illustrasi.svg' },
-		{ name: 'Martografi', src: '/svg/home/ukm/books/book martografi.svg' },
-		{ name: 'Matrapala', src: '/svg/home/ukm/books/book matrapala.svg' },
-		{ name: 'Matrapenza', src: '/svg/home/ukm/books/book matrapenza.svg' },
-		{ name: 'Menwa', src: '/svg/home/ukm/books/book menwa.svg' },
-		{ name: 'Modeling', src: '/svg/home/ukm/books/book modelling.svg' },
-		// { name: 'Orkestra', src: '/svg/home/ukm/books/book orchestra (2).svg' },
-		{ name: 'Choir', src: '/svg/home/ukm/books/book choir (2).svg' },
-		{ name: 'Orkestra', src: '/svg/home/ukm/books/book orchestra (2).svg' },
-		{ name: 'Esports', src: '/svg/home/ukm/books/book esports (2).svg' },
-		{ name: 'PD', src: '/svg/home/ukm/books/book pd.svg' },
-		{ name: 'Renang', src: '/svg/home/ukm/books/book renang.svg' },
-		{ name: 'Taekwondo', src: '/svg/home/ukm/books/book taekwondo.svg' },
-		{ name: 'Teater', src: '/svg/home/ukm/books/book teater.svg' },
-		{ name: 'Tenis-Meja', src: '/svg/home/ukm/books/book tenis meja.svg' },
-		{ name: 'VG', src: '/svg/home/ukm/books/book vg (2).svg' },
-		{ name: 'Voli', src: '/svg/home/ukm/books/book voli.svg' }
+		{ name: 'ASFS', src: '/ukm/book-asfs.webp' },
+		{ name: 'Badminton', src: '/ukm/book-badminton.webp' },
+		{ name: 'Basket', src: '/ukm/book-basket.webp' },
+		{ name: 'Catur', src: '/ukm/book-catur.webp' },
+		{ name: 'Chinese-Art', src: '/ukm/book-chinese-art.webp' },
+		{ name: 'Dance', src: '/ukm/book-dance.webp' },
+		{ name: 'Dekorasi', src: '/ukm/book-dekorasi.webp' },
+		{ name: 'EMR', src: '/ukm/book-emr.webp' },
+		{ name: 'English-Debate', src: '/ukm/book-english-debate.webp' },
+		{ name: 'Futsal', src: '/ukm/book-futsal.webp' },
+		{ name: 'Kyokushinkai', src: '/ukm/book-kyokushinkai.webp' },
+		{ name: 'Martografi', src: '/ukm/book-martografi.webp' },
+		{ name: 'Matrapala', src: '/ukm/book-matrapala.webp' },
+		{ name: 'Matrapenza', src: '/ukm/book-matrapenza.webp' },
+		{ name: 'Menwa', src: '/ukm/book-menwa.webp' },
+		{ name: 'Modeling', src: '/ukm/book-modelling.webp' },
+		{ name: 'Choir', src: '/ukm/book-pcu-choir.webp' },
+		{ name: 'Orkestra', src: '/ukm/book-pcu-orchestra.webp' },
+		{ name: 'Esports', src: '/ukm/book-petra-esports.webp' },
+		{ name: 'PD', src: '/ukm/book-pd.webp' },
+		{ name: 'Renang', src: '/ukm/book-renang.webp' },
+		{ name: 'Taekwondo', src: '/ukm/book-taekwondo.webp' },
+		{ name: 'Teater', src: '/ukm/book-teater.webp' },
+		{ name: 'Tenis-Meja', src: '/ukm/book-tenis-meja.webp' },
+		{ name: 'VG', src: '/ukm/book-vg.webp' },
+		{ name: 'Voli', src: '/ukm/book-voli.webp' }
 	];
+
 	const topRowBooks = allBooks.slice(0, 13);
 	const bottomRowBooks = allBooks.slice(13);
 	const createSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
@@ -151,20 +149,20 @@
         <div
 			class="absolute bottom-0 left-0 right-0 bg-cover bg-center 
                    top-[4%] sm:top-[6%] xl:top-[26%] z-0"
-			style="background-image: url('/svg/home/ukm/wall behind.svg');"
+			style="background-image: url('/ukm/bookshelf-wall.webp');"
 		></div>
         <img
-			src="/svg/home/ukm/book floor.svg"
+			src="/ukm/book-floor.webp"
 			alt=""
 			class="absolute bottom-[0%] xl:left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-10"
 		/>
 		<img
-			src="/svg/home/ukm/book floor.svg"
+			src="/ukm/book-floor.webp"
 			alt=""
 			class="absolute top-[52%] md:top-[43%] xl:top-[58%] 2xl:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-30"
 		/>
 		<img
-			src="/svg/home/ukm/planks.svg"
+			src="/ukm/bookshelf-top.webp"
 			alt="Bookshelf top"
 			class="absolute top-[4%] sm:top-[6%] xl:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] md:w-[170%] xl:w-[100%] z-50"
 		/>
