@@ -282,7 +282,7 @@
 >
   <div class="absolute inset-0 w-full h-full">
     <video playsinline autoplay muted loop class="w-full h-full object-cover">
-      <source src="/videos/teaser-landscape.webm" type="video/webm" />
+      <source src="/videos/teaser-landscape.mp4" type="video/webm" />
     </video>
   </div>
 
