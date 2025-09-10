@@ -824,7 +824,7 @@
               <img 
                 src="/{ukm.qris_url}" 
                 alt="QRIS Payment Code for {ukm.name}"
-                class="max-w-xs mx-auto rounded-2xl shadow-lg border-4 border-white"
+                class="w-full max-w-xs mx-auto rounded-2xl shadow-lg border-4 border-white"
               />
             </div>
             <div class="mt-6 p-4 bg-gradient-to-r from-orange-100 to-orange-100 rounded-2xl border-2 border-orange-300">
