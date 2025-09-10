@@ -275,9 +275,11 @@
 
   </Background>
 
-  <Background className="!h-[150vh] md:!h-screen flex flex-col items-center justify-center space-y-12 p-8 !overflow-visible ">
+  <Background 
+    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8 overflow-x-hidden overflow-y-visible"
+  >
     <div data-aos="fade-down">
-      <Title text="Our Journey✨"></Title>
+      <Title text="Our Journey✨" />
     </div>
 
     <!-- Mobile -->
@@ -313,11 +315,17 @@
         {/each}
       </div>
     {/if}
-
-    <img class="w-[325px] lg:w-[375px] absolute lg:top-[50%] -bottom-[10%] md:-bottom-[20%] md:-left-[10%] lg:left-0 z-[100] rotate-45 lg:rotate-10 " src="/images/ukm/mask.png" alt="">
-    <img class="w-[325px] max-md:hidden lg:w-[375px] absolute -bottom-[15%] -right-[5%] -rotate-90 z-[1]" src="/images/ukm/multi-card.png" alt="">
+    <img 
+      class="w-[325px] lg:w-[375px] absolute lg:top-[50%] -bottom-[10%] md:-bottom-[20%] md:-left-[10%] lg:left-0 z-[100] rotate-45 lg:rotate-10" 
+      src="/images/ukm/mask.png" 
+      alt=""
+    />
+    <img 
+      class="w-[325px] max-md:hidden lg:w-[375px] absolute -bottom-[15%] -right-[5%] -rotate-90 z-[1]" 
+      src="/images/ukm/multi-card.png" 
+      alt=""
+    />
   </Background>
-
 
   {#if selectedUkm?.video_url}
     <Background className="relative flex flex-col items-center justify-center p-8 gap-5">
