@@ -446,7 +446,7 @@
     }
 
     // Skip payment file validation for esport and menwa
-    const isFreeUkm = slug === 'esport' || slug === 'menwa';
+    const isFreeUkm = slug === 'esports' || slug === 'menwa';
     const needsPayment = !isFreeUkm;
     
     if (!ukm || !userNrp || (needsPayment && (!paymentFile || paymentFile.length === 0))) {
@@ -477,7 +477,7 @@
       });
 
       // Submit registration with existing reservation
-      const isFreeUkm = slug === 'esport' || slug === 'menwa';
+      const isFreeUkm = slug === 'esports' || slug === 'menwa';
       const registrationData = {
         ukm_id: ukm.id,
         payment: isFreeUkm ? null : paymentFile[0], // Pass the actual file
@@ -811,7 +811,7 @@
         <input type="hidden" value={ukm.id} />
        
         <!-- QRIS Payment Code -->
-        {#if ukm.qris_url && slug !== 'esport' && slug !== 'menwa'}
+        {#if ukm.qris_url && slug !== 'esports' && slug !== 'menwa'}
           <div class="text-center mb-8">
             <div class="flex items-center justify-center space-x-2 mb-6">
               <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -842,7 +842,7 @@
         {/if}
 
         <!-- Payment Proof Upload -->
-        {#if slug !== 'esport' && slug !== 'menwa'}
+        {#if slug !== 'esports' && slug !== 'menwa'}
           <div class="mb-6">
             <div class="flex items-center space-x-2 mb-3">
               <svg class="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -936,7 +936,7 @@
                   </svg>
                   Free Admission!
                 </p>
-                <p class="text-sm text-orange-700 font-plus-jakarta-sans">No payment required for {slug === 'esport' ? 'Esport' : 'MENWA'} UKM</p>
+                <p class="text-sm text-orange-700 font-plus-jakarta-sans">No payment required for {slug === 'esports' ? 'Esport' : 'MENWA'} UKM</p>
               </div>
             </div>
           </div>
@@ -980,7 +980,7 @@
                 <div class="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                 <span class="font-plus-jakarta-sans">{reservationId ? 'Submitting...' : 'Submitting...'}</span>
               {:else}
-                <span class="font-plus-jakarta-sans">{(slug === 'esport' || slug === 'menwa') ? 'Join the Free Show!' : 'Reserve My Spot & Join!'}</span>
+                <span class="font-plus-jakarta-sans">{(slug === 'esports' || slug === 'menwa') ? 'Join the Free Show!' : 'Reserve My Spot & Join!'}</span>
               {/if}
             </div>
           </button>
