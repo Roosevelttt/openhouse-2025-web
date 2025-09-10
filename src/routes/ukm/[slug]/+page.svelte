@@ -226,7 +226,7 @@
 
   <button 
     on:click={goBack}
-    class="fixed top-4 left-4 z-50 px-4 py-2 rounded-xl shadow-lg 
+    class="fixed flex items-center top-4 left-4 z-50 px-4 py-2 rounded-xl shadow-lg 
           bg-[#fde394] text-[#382e5f] font-semibold 
           hover:bg-[#fcd34d] hover:scale-105 transition-transform duration-200"
   >
