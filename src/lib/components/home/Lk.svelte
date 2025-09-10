@@ -38,7 +38,7 @@
           end: '+=3500',
           scrub: 1.5,
           pin: true,
-          anticipatePin: 1
+          // anticipatePin: 1
         }
       });
 
