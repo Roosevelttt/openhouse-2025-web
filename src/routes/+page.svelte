@@ -6,7 +6,7 @@
 	import Swal from '$lib/components/swal/swal.svelte';
 	import ColorPalette from '$lib/components/home/ColorPalette.svelte';
 	import Navbar from '$lib/components/layout/Navbar.svelte';
-	import Footer from '$lib/components/layout/Footer.svelte'; // <-- 1. IMPORT THE NEW COMPONENT
+	import Footer from '$lib/components/layout/Footer.svelte';
 </script>
 
 <svelte:head>
@@ -23,15 +23,17 @@
 	<div id="ukm">
 		<UkmSection />
 	</div>
-	<div class="relative z-10" id="lk">
+	<div id="lk">
 		<LKSection />
 	</div>
 	<div class="z-20 h-screen sticky top-0 -mt-[100vh]" id="faq">
 		<Faq />
-		<Footer /> 
+		<!-- <Footer />  -->
 	</div>
 
-	<Footer /> 
+	<div id="contact">
+		<Footer /> 	
+	</div>
 </main>
 
 <style>
