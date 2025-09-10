@@ -155,10 +155,10 @@
                         class="w-2 h-2 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
                     ></div>
                     <a
-                        href="#"
+                        href="/#contact"
                         on:click={handleNavClick}
                         class="font-spicyrice text-xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent hover:opacity-80 transition-opacity"
-                        >Contact</a
+                        >CONTACT</a
                     >
                 </div>
             </div>
@@ -268,10 +268,10 @@
                     <div class="sidebar-nav-link-circle"></div>
                 </div>
             </a>
-            <a href="#" on:click={handleMobileLinkClick} class="sidebar-nav-link">
+            <a href="/#contact" on:click={handleMobileLinkClick} class="sidebar-nav-link">
                 <div class="sidebar-nav-link-inner">
                     <div class="sidebar-nav-link-circle"></div>
-                    <span class="sidebar-nav-link-text">Contact</span>
+                    <span class="sidebar-nav-link-text">CONTACT</span>
                     <div class="sidebar-nav-link-circle"></div>
                 </div>
             </a>
