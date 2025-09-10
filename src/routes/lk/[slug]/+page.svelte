@@ -54,6 +54,11 @@
   let posterUrl: string | null = null;
   let posterOverlay: HTMLElement | null = null;
  
+  import { goto } from '$app/navigation';
+  function goBack() {
+    history.length > 1 ? history.back() : goto('/'); 
+  }
+
   onMount(() => {
     AOS.init();
     if (selectedLk) {
@@ -86,6 +91,23 @@
 <!-- bg -->
 <div class="fixed inset-0 bg-gradient-to-b from-[#2e2157] via-[#382e5f] to-[#4a2a6a] z-[-10]"></div>
 <img class="fixed top-0 left-0 z-[-9]" src="/images/Stars.png" alt="">
+
+<button 
+    on:click={goBack}
+    class="fixed flex items-center top-4 left-4 z-50 px-4 py-2 rounded-xl shadow-lg 
+          bg-[#fde394] text-[#382e5f] font-semibold 
+          hover:bg-[#fcd34d] hover:scale-105 transition-transform duration-200"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" 
+        class="w-5 h-5" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor" 
+        stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+    <span class="font-semibold text-[#382e5f]">Back</span>
+  </button>
 
 {#if selectedLk}
   <Background className="flex flex-col items-center justify-center text-center p-8 !overflow-visible space-y-5">

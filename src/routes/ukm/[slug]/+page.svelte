@@ -17,6 +17,10 @@
   import { goto } from '$app/navigation';
   import { checkUserReservation } from "$lib/api";
 
+  function goBack() {
+    history.length > 1 ? history.back() : goto('/'); 
+  }
+
   interface Ukm {
     id: string;
     name: string;
@@ -219,6 +223,24 @@
   <div class="fixed top-0 left-0 w-full h-[100lvh] bg-cover bg-center bg-no-repeat -z-10"
     style="background-image: url({bg});">
   </div>
+
+  <button 
+    on:click={goBack}
+    class="fixed flex items-center top-4 left-4 z-50 px-4 py-2 rounded-xl shadow-lg 
+          bg-[#fde394] text-[#382e5f] font-semibold 
+          hover:bg-[#fcd34d] hover:scale-105 transition-transform duration-200"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" 
+        class="w-5 h-5" 
+        fill="none" 
+        viewBox="0 0 24 24" 
+        stroke="currentColor" 
+        stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+    </svg>
+    <span class="font-semibold text-[#382e5f]">Back</span>
+  </button>
+
 
   <Background ref={(el: any) => (containerRef = el)} className="relative flex flex-col justify-center items-center p-8 sm:p-16 lg:p-20" >
     <div class="absolute inset-0 bg-black opacity-0" bind:this={overlayRef}></div>
