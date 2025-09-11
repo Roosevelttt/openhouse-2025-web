@@ -615,7 +615,7 @@
             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3l14 9-14 9V3z"/>
             </svg>
-            Successful!
+            Registration Submitted!
           </h2>
           <p class="text-lg mb-2">Your registration for <strong class="text-green-800">{ukm?.name}</strong> has been submitted successfully!</p>
           <p class="text-sm mt-3 text-green-600 flex items-center">
@@ -628,7 +628,7 @@
             <svg class="w-4 h-4 mr-2 mt-0.5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
             </svg>
-            <span><strong>Don't forget!</strong> Fill this questionnaire: 
+            <span>To finalize your application, you <strong>must fill out</strong> this questionnaire.
             <a class="text-blue-600 underline hover:text-blue-800 font-medium" href="https://docs.google.com/forms/d/e/1FAIpQLScdreCQ1Uk97NQfMV8K2jRpGerpM2AcJe_qmHWMisCe0xB4tw/viewform" target="_blank">Click Here</a></span>
           </p>
         </div>
