@@ -85,7 +85,7 @@
         style="
           position: absolute;
           top: 0;
-          left: -29.5%;
+          left: -28.5%;
           width: 175%;
           height: 100%;
           clip-path: inset(0 30% 0 5%);
