@@ -22,12 +22,6 @@
     { src: '/svg/logo/tps.svg', path: '/lk/tps', name: 'TPS' }
   ];
 
-  function debugLog(message, data = null) {
-    if (browser) {
-      console.log(`[LK ${componentId}] ${message}`, data || '');
-    }
-  }
-
   function destroyAnimation() {
     if (initTimer) {
       clearTimeout(initTimer);

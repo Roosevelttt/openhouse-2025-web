@@ -35,32 +35,22 @@
   $: if (reservationParam) {
     try {
       const reservationData = JSON.parse(decodeURIComponent(reservationParam));
-      console.log('Parsed reservation data:', reservationData);
       
       reservationId = reservationData.reservation_id;
       
       // Simplified date parsing - expecting RFC3339 format from API
       const expiresAtStr = reservationData.expires_at;
-      console.log('Raw expires_at string:', expiresAtStr);
-      console.log('Type of expires_at:', typeof expiresAtStr);
       
       if (expiresAtStr) {
         // Parse the date directly - should be RFC3339 format
         const parsedDate = new Date(expiresAtStr);
         
-        console.log('Attempting to parse date:', expiresAtStr);
-        console.log('Parsed date result:', parsedDate);
-        console.log('Is valid date:', !isNaN(parsedDate.getTime()));
-        console.log('Current time:', new Date());
-        console.log('Time difference (ms):', parsedDate.getTime() - new Date().getTime());
-        console.log('Time difference (minutes):', (parsedDate.getTime() - new Date().getTime()) / (1000 * 60));
         
         // Check if the date is valid and in the future
         if (!isNaN(parsedDate.getTime())) {
           const timeDiff = parsedDate.getTime() - new Date().getTime();
           if (timeDiff > 0) {
             reservationExpiry = parsedDate;
-            console.log('Final reservation expiry set to:', reservationExpiry);
           } else {
             console.warn('Parsed date is in the past! Diff:', timeDiff);
             reservationExpiry = null;
@@ -103,14 +93,7 @@
     const now = new Date();
     const diff = reservationExpiry.getTime() - now.getTime();
     
-    console.log('updateTimer called:');
-    console.log('  Current time:', now);
-    console.log('  Expiry time:', reservationExpiry);
-    console.log('  Time difference (ms):', diff);
-    console.log('  Time difference (seconds):', Math.floor(diff / 1000));
-    
     if (diff <= 0) {
-      console.log('Timer expired, stopping timer');
       timeRemaining = 0;
       formattedTime = '00:00';
       if (timerInterval) {
@@ -148,8 +131,6 @@
     const seconds = timeRemaining % 60;
     formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     
-    console.log('  Time remaining (seconds):', timeRemaining);
-    console.log('  Formatted time:', formattedTime);
   }
 
   onDestroy(() => {

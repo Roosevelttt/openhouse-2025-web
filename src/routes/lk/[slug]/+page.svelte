@@ -66,7 +66,6 @@
         .map(getImageUrl)
         .filter((img): img is string => !!img);
       logoUrl = getImageUrl(selectedLk.logo_url);
-      console.log(logoUrl);
       if (selectedLk.poster_url) {
         posterUrl = getImageUrl(selectedLk.poster_url);
       }

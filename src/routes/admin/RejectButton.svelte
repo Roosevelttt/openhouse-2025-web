@@ -30,7 +30,6 @@
         requestBody,
       );
 
-      console.log(data);
 
       // If we get here, the request was successful (res.ok was true)
       if (data.message === "true") {

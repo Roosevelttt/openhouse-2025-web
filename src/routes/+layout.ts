@@ -23,5 +23,4 @@ async function session(keysArray: string[]) {
     "admin_division_id",
     "admin_division_slug",
   ]);
-  console.log("Session values:", values);
 })();
