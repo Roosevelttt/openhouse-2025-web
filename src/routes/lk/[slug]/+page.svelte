@@ -87,17 +87,16 @@
     }
   });
 </script>
+<section class="overflow-x-hidden relative min-h-screen">
+  <div class="absolute inset-0 w-full min-h-full">
+    <img
+      src="/background/pink sky v3.webp"
+      alt="Purple sky background"
+      class="absolute inset-0 w-full h-full min-h-screen object-cover z-[-1]"
+    />
+  </div>
 
-<!-- bg -->
-<!-- <div class="fixed inset-0 bg-gradient-to-b from-[#2e2157] via-[#382e5f] to-[#4a2a6a] z-[-10]"></div>
-<img class="fixed top-0 left-0 z-[-9]" src="/images/Stars.png" alt=""> -->
-<img
-  src="/background/pink sky v3.webp"
-  alt="Purple sky background"
-  class="absolute inset-0 max-w-none w-[102%] h-[150lvh] object-cover z-[-1]"
-/>
-
-<button 
+  <button 
     on:click={goBack}
     class="fixed flex items-center top-4 left-4 z-50 px-4 py-2 rounded-xl shadow-lg 
           bg-[#fde394] text-[#382e5f] font-semibold 
@@ -118,7 +117,7 @@
   <Background className="flex flex-col items-center justify-center text-center p-8 !overflow-visible space-y-5">
     <!-- floating balloon (decorative) -->
     <img
-      src="/images/balloon.png"
+      src="/lk/ballon.webp"
       alt="balloon"
       class="absolute -bottom-[10%] md:bottom-0 -left-[15%] md:left-5 w-20 w-[200px] md:w-[250px] animate-bounce-slow opacity-70"
     />
@@ -227,6 +226,7 @@
     <Subtitle text="Sorry, the LK you are looking for does not exist or is unavailable." />
   </div>
 {/if}
+</section>
 
 <style>
   .animate-bounce-slow {
