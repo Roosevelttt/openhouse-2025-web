@@ -29,7 +29,7 @@
     file_validated: number;
     payment_validated: number;
     created_at: string;
-    is_invited: number;
+    registered_at: string;
   };
 
   const validationStatus: Record<number, string> = {
@@ -53,8 +53,7 @@
       { Header: "File", accessor: "payment" },
       { Header: "Line ID", accessor: "line_id" },
       { Header: "Phone", accessor: "phone" },
-      // { Header: "Tanggal Bayar", accessor: "created_at" }, // GA PAKAI kata rose
-      // { Header: "File Validated", accessor: "file_validated" }, // GA PAKAI kata rose
+      { Header: "Registered At", accessor: "registered_at" },
       { Header: "Validated", accessor: "payment_validated" },
     ],
   });
@@ -477,6 +476,7 @@
               </td>
               <td class="admin-table-cell font-mono text-sm">{participant.line_id}</td>
               <td class="admin-table-cell font-mono text-sm">{participant.phone}</td>
+              <td class="admin-table-cell font-mono text-sm">{participant.registered_at || "N/A"}</td>
               <td class="admin-table-cell">
                 <span class="admin-status-badge admin-status-{participant.payment_validated === 0 ? 'pending' : participant.payment_validated === 1 ? 'success' : 'error'}">
                   {validationStatus[participant.payment_validated]}
