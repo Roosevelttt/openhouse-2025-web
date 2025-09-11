@@ -186,7 +186,7 @@
       bind:this={backgroundSky}
       src="/background/pink sky v3.webp"
       alt="Purple sky background"
-      class="absolute inset-0 max-w-none w-[102%] h-[150vh] object-cover z-[-1]"
+      class="absolute inset-0 max-w-none w-[102%] h-[200vh] object-cover z-[-1]"
     />
 
     <div
@@ -214,7 +214,7 @@
 
       <img
         class="max-w-none w-60 sm:w-90 md:w-80 lg:w-70 xl:w-80"
-        src="/svg/home/balloon.svg"
+        src="/lk/balloon.webp"
         alt="Hot air balloon"
       />
     </div>
@@ -232,7 +232,7 @@
             class="relative block transition-transform hover:scale-110 cursor-pointer group"
           >
             <img 
-              src={`/svg/home/balloon ${icon.name.toLowerCase()}.svg`} 
+              src={`/lk/balloon-${icon.name.toLowerCase()}.webp`} 
               alt={`${icon.name} Balloon`} 
               class="w-full h-auto"
             />
