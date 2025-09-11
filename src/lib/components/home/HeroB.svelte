@@ -281,11 +281,17 @@
          h-screen max-w-none md:max-h-none"
 >
   <div class="absolute inset-0 w-full h-full">
-    <video playsinline autoplay muted loop class="w-full h-full object-cover">
-      <source src="/videos/teaser-landscape.webm" type="video/webm" />
-    </video>
+    {#key deviceType}
+      <video playsinline autoplay muted loop class="w-full h-full object-cover">
+        {#if deviceType === 'mobile'}
+          <source src="/videos/teaser-portrait.webm" type="video/webm" />
+        {:else}
+          <source src="/videos/teaser-landscape.webm" type="video/webm" />
+        {/if}
+      </video>
+    {/key}
   </div>
-
+  
   <div
     bind:this={heroTitle}
     class="relative z-0 font-moomello opacity-0 drop-shadow-[0_10px_30px_rgba(96,0,0,0.25)]

@@ -92,7 +92,7 @@
         "
       >
         <object 
-          data="/loader/mascot-loader.svg" 
+          data="/loader/mascot-loader-b.svg" 
           type="image/svg+xml"
           style="
             width: 100%;
