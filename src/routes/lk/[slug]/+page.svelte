@@ -117,7 +117,7 @@
   <Background className="flex flex-col items-center justify-center text-center p-8 !overflow-visible space-y-5">
     <!-- floating balloon (decorative) -->
     <img
-      src="/lk/ballon.webp"
+      src="/lk/balloon.webp"
       alt="balloon"
       class="absolute -bottom-[10%] md:bottom-0 -left-[15%] md:left-5 w-20 w-[200px] md:w-[250px] animate-bounce-slow opacity-70"
     />
