@@ -89,8 +89,13 @@
 </script>
 
 <!-- bg -->
-<div class="fixed inset-0 bg-gradient-to-b from-[#2e2157] via-[#382e5f] to-[#4a2a6a] z-[-10]"></div>
-<img class="fixed top-0 left-0 z-[-9]" src="/images/Stars.png" alt="">
+<!-- <div class="fixed inset-0 bg-gradient-to-b from-[#2e2157] via-[#382e5f] to-[#4a2a6a] z-[-10]"></div>
+<img class="fixed top-0 left-0 z-[-9]" src="/images/Stars.png" alt=""> -->
+<img
+  src="/background/pink sky v3.webp"
+  alt="Purple sky background"
+  class="absolute inset-0 max-w-none w-[102%] h-[150lvh] object-cover z-[-1]"
+/>
 
 <button 
     on:click={goBack}
