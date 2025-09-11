@@ -8,8 +8,13 @@
   
   onMount(() => {
     if (!browser) return;
+
+    let hasLoaded = false;
     
     const handleLoad = () => {
+      if (hasLoaded) return;
+      hasLoaded = true;
+
       setTimeout(() => {
         finishLoading();
       }, 500);
@@ -20,12 +25,11 @@
     } else {
       window.addEventListener('load', handleLoad);
       
-      setTimeout(handleLoad, 3000);
+      return () => {
+        window.removeEventListener('load', handleLoad);
+        clearTimeout(failsafeTimer);
+      };
     }
-
-    return () => {
-      window.removeEventListener('load', handleLoad);
-    };
   });
 
   function finishLoading() {
@@ -40,9 +44,10 @@
     
     setTimeout(() => {
       isLoading = false;
-    }, 600);
+    }, 600);  
   }
 </script>
+
 
 {#if isLoading}
   <div 
@@ -54,7 +59,7 @@
       left: 0;
       width: 100%;
       height: 100vh;
-      background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+      background: linear-gradient(0deg, #20002a, #373d7e, #20002a);
       z-index: 9999;
       display: flex;
       align-items: center;
@@ -80,14 +85,14 @@
         style="
           position: absolute;
           top: 0;
-          left: -37.5%;
+          left: -29.5%;
           width: 175%;
           height: 100%;
           clip-path: inset(0 30% 0 25%);
         "
       >
         <object 
-          data="/svg/loader/loader hat.svg" 
+          data="/loader/mascot-loader.svg" 
           type="image/svg+xml"
           style="
             width: 100%;
