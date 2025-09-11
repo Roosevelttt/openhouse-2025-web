@@ -147,9 +147,8 @@
       ScrollTrigger = scrollTriggerModule.ScrollTrigger;
       
       gsap.registerPlugin(ScrollTrigger);
-      debugLog('GSAP loaded');
     } catch (error) {
-      debugLog('GSAP load error:', error);
+      console.error('GSAP load error:', error);
       return;
     }
 
