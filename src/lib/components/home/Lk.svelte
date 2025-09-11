@@ -88,7 +88,7 @@
       bind:this={backgroundSky}
       src="/background/pink sky v3.webp"
       alt="Purple sky background"
-      class="absolute inset-0 max-w-none w-[102%] h-[150vh] object-cover z-[-1]"
+      class="absolute inset-0 max-w-none w-[102%] h-[150lvh] object-cover z-[-1]"
     />
 
     <div
