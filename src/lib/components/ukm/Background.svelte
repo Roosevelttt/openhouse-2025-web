@@ -6,7 +6,7 @@
   $: ref && ref(background);
 </script>
 
-<section class="relative min-h-screen w-screen {className} overflow-hidden" bind:this={background}>
+<section class="relative min-h-screen w-screen {className}" bind:this={background}>
     <!-- insert other components here -->
     <slot />
 </section>
