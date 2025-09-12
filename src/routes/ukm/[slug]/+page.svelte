@@ -15,7 +15,7 @@
   import { PUBLIC_API_BASE} from "$env/static/public";
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
-  import { checkUserReservation } from "$lib/api";
+  import { checkUserRegistration } from "$lib/api";
 
   function goBack() {
     history.length > 1 ? history.back() : goto('/'); 
@@ -89,8 +89,8 @@
     const ukmId = selectedUkm?.id;
     if (ukmId) {
       try {
-        const res = await checkUserReservation(ukmId);
-        hasRegistered = res.has_reservation;
+        const res = await checkUserRegistration(ukmId);
+        hasRegistered = res.has_registered;
       } catch (e) {
         hasRegistered = false;
       }

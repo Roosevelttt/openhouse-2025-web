@@ -161,6 +161,10 @@ export async function checkUserReservation(ukmId: string): Promise<{has_reservat
   return get(`/api/registrations/check-reservation/${ukmId}`);
 }
 
+export async function checkUserRegistration(ukmId: string): Promise<{has_registered: boolean}> {
+  return get(`/api/registrations/check-registration/${ukmId}`);
+}
+
 export async function registerWithReservation(reservationId: string, registrationData: {
   ukm_id: string;
   payment: File | string | null;
