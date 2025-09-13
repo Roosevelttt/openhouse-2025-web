@@ -286,7 +286,7 @@
   </Background>
 
   <Background 
-    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8 "
+    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8 overflow-hidden"
   >
     <div data-aos="fade-down">
       <Title text="Our Journey✨" />

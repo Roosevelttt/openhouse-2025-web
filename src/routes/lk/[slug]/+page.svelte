@@ -86,7 +86,7 @@
     }
   });
 </script>
-<section class="overflow-x-hidden relative min-h-screen">
+<section class="overflow-hidden relative min-h-screen">
   <div class="absolute inset-0 w-full min-h-full">
     <img
       src="/background/pink sky v3.webp"
