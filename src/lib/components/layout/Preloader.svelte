@@ -1,36 +1,13 @@
 <script>
   import { onMount } from 'svelte';
   import { browser } from '$app/environment';
+  import { navigating } from '$app/stores';
+  import { assetLoadingPromises } from '$lib/asset-loader';
 
   let isLoading = true;
   let loaderElement;
   let backgroundElement;
-  
-  onMount(() => {
-    if (!browser) return;
-
-    let hasLoaded = false;
-    
-    const handleLoad = () => {
-      if (hasLoaded) return;
-      hasLoaded = true;
-
-      setTimeout(() => {
-        finishLoading();
-      }, 500);
-    };
-
-    if (document.readyState === 'complete') {
-      handleLoad();
-    } else {
-      window.addEventListener('load', handleLoad);
-      
-      return () => {
-        window.removeEventListener('load', handleLoad);
-        clearTimeout(failsafeTimer);
-      };
-    }
-  });
+  let isInitialLoad = true;
 
   function finishLoading() {
     if (backgroundElement) {
@@ -44,10 +21,64 @@
     
     setTimeout(() => {
       isLoading = false;
-    }, 600);  
+    }, 600);
   }
-</script>
 
+  function startLoading() {
+    isLoading = true;
+    setTimeout(() => {
+      if (backgroundElement) {
+        backgroundElement.style.opacity = '1';
+      }
+      if (loaderElement) {
+        loaderElement.style.transform = 'translate(-50%, -50%) rotate(0deg) scale(1)';
+        loaderElement.style.opacity = '1';
+      }
+    }, 0);
+  }
+
+  // handle first load
+  onMount(() => {
+    if (!browser) return;
+
+    const handleInitialLoad = () => {
+      if (!isInitialLoad) return;
+      isInitialLoad = false;
+      setTimeout(() => {
+        finishLoading();
+      }, 500);
+    };
+
+    if (document.readyState === 'complete') {
+      handleInitialLoad();
+    } else {
+      window.addEventListener('load', handleInitialLoad);
+      return () => {
+        window.removeEventListener('load', handleInitialLoad);
+      };
+    }
+  });
+
+  let activeNavigation = false;
+
+  $: {
+    if (browser && !isInitialLoad) {
+      if ($navigating) {
+        activeNavigation = true;
+        startLoading();
+      } else if (activeNavigation) {
+        activeNavigation = false;
+        
+        Promise.all($assetLoadingPromises).then(() => {
+          finishLoading();
+          
+          assetLoadingPromises.set([]); 
+        }); 
+      }
+    }
+  }
+
+</script>
 
 {#if isLoading}
   <div 
@@ -74,7 +105,7 @@
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%) rotate(0deg) scale(1);
         width: 400px;
         height: 400px;
         transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);

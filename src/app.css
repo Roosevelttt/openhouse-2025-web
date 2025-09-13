@@ -107,21 +107,6 @@
     font-style: normal;
 }
 
-@font-face {
-    font-display: swap;
-    font-family: "Roxhead";
-    src: url("/fonts/roxhead/Roxhead.otf") format("truetype");
-    font-weight: 500;
-    font-style: normal;
-}
-
-@font-face {
-    font-display: swap;
-    font-family: "IFC Los Banditos";
-    src: url("/fonts/ifc-los-banditos/IFC LOS BANDITOS.ttf") format("truetype");
-    font-weight: 500;
-    font-style: normal;
-}
 @theme {
     --font-plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
     --font-lexend: "Lexend", sans-serif;

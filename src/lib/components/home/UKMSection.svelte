@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { assetLoadingPromises } from '$lib/asset-loader';
 
 	const allBooks = [
 		{ name: 'ASFS', src: '/svg/home/ukm/books/book asfs.svg' },
@@ -122,7 +123,31 @@
 	const checkIsMobile = () => {
 		isMobile = window.innerWidth < 1280;
 	};
+
+	// arrays to hold imageelement refs
+	let topBookImages: HTMLImageElement[] = [];
+	let bottomBookImages: HTMLImageElement[] = [];
 	onMount(() => {
+		const allImageElements = [...topBookImages, ...bottomBookImages].filter(Boolean);
+		const newPromises: Promise<void>[] = [];
+
+		allImageElements.forEach((imgElement) => {
+			const promise = new Promise<void>((resolve) => {
+				// resolve if the browser has assets cached
+				if (imgElement.complete) {
+					resolve();
+				} else {
+					imgElement.addEventListener('load', () => resolve(), { once: true });
+					imgElement.addEventListener('error', () => resolve(), { once: true });
+				}
+			});
+			newPromises.push(promise);
+		});
+
+		if (newPromises.length > 0) {
+			assetLoadingPromises.update((existing) => [...existing, ...newPromises]);
+		}
+		
 		checkIsMobile();
 		window.addEventListener('resize', checkIsMobile);
 		if (topRowContainer) {
@@ -179,15 +204,15 @@
 			<div
 				class="flex items-end h-full w-max xl:w-[65%] gap-x-0 px-4 pb-8 xl:pb-0 xl:mx-auto xl:justify-center"
 			>
-				{#each topRowBooks as book (book.name)}
+				{#each topRowBooks as book, i (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
 						class="flex-shrink-0 h-[30vh] xl:h-full transition-transform duration-300 ease-in-out
-                               xl:hover:translate-y-8"
+							xl:hover:translate-y-8"
 						class:translate-y-8={isMobile && activeTopBookName === book.name}
 						title={book.name}
 					>
-						<img src={book.src} alt={book.name} class="h-full w-auto" />
+						<img src={book.src} alt={book.name} class="h-full w-auto" bind:this={topBookImages[i]} />
 					</a>
 				{/each}
 			</div>
@@ -201,15 +226,15 @@
 			<div
 				class="flex items-end h-full w-max xl:w-[65%] gap-x-0 px-4 pb-8 xl:pb-0 xl:mx-auto xl:justify-center"
 			>
-				{#each bottomRowBooks as book (book.name)}
+				{#each bottomRowBooks as book, i (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
 						class="flex-shrink-0 h-[30vh] xl:h-full transition-transform duration-300 ease-in-out
-                               xl:hover:translate-y-8"
+							xl:hover:translate-y-8"
 						class:translate-y-8={isMobile && activeBottomBookName === book.name}
 						title={book.name}
 					>
-						<img src={book.src} alt={book.name} class="h-full w-auto" />
+						<img src={book.src} alt={book.name} class="h-full w-auto" bind:this={bottomBookImages[i]} />
 					</a>
 				{/each}
 			</div>
