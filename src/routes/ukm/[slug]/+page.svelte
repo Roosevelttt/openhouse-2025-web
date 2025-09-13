@@ -285,8 +285,9 @@
     /> -->
   </Background>
 
-  <Background 
-    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8 overflow-hidden"
+  <div class="overflow-x-hidden relative w-full">
+    <Background 
+    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8"
   >
     <div data-aos="fade-down">
       <Title text="Our Journey✨" />
@@ -325,6 +326,8 @@
         {/each}
       </div>
     {/if}
+    
+    </Background>
     <img 
       class="w-[325px] lg:w-[375px] absolute lg:top-[50%] -bottom-[10%] md:-bottom-[20%] md:-left-[10%] lg:left-0 z-[100] rotate-45 lg:rotate-10" 
       src="/images/ukm/mask.png" 
@@ -335,7 +338,7 @@
       src="/images/ukm/multi-card.png" 
       alt=""
     />
-  </Background>
+  </div>
 
   {#if selectedUkm?.video_url}
     <Background className="relative flex flex-col items-center justify-center p-8 gap-5">
