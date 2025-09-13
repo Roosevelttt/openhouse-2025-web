@@ -27,7 +27,7 @@
 
 <Preloader />
 
-<main class="overflow-x-hidden">
+<main>
   <slot />
 </main>
 
