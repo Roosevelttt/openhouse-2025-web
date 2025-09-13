@@ -3,7 +3,7 @@
     import { writable } from 'svelte/store';
     import { fly } from 'svelte/transition';
     import { quintOut } from 'svelte/easing';
-    import { getCurrentUserInfo } from '$lib/api';
+    import { getCurrentUserInfo, logout } from '$lib/api';
     import { PUBLIC_API_BASE } from '$env/static/public';
     import Swal from 'sweetalert2';
 
@@ -46,32 +46,19 @@
         };
     });
 
-    async function handleLogout() {
-        try {
-            const response = await fetch(`${PUBLIC_API_BASE}/api/auth/logout`, {
-                method: 'POST',
-                credentials: 'include'
-            });
-
-            if (response.ok) {
-                window.location.href = '/'; 
-            } else {
-                console.error('Logout failed');
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Logout Failed',
-                    text: 'There was an error logging out. Please try again.'
-                });
-            }
-        } catch (error) {
-            console.error('Logout error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Logout Failed',
-                text: 'There was an error logging out. Please try again.'
-            });
-        }
-    }
+	async function handleLogout() {
+		try {
+			await logout();
+			window.location.href = '/'; 
+		} catch (error) {
+			console.error('Logout error:', error);
+			Swal.fire({
+				icon: 'error',
+				title: 'Logout Failed',
+				text: 'There was an error logging out. Please try again.'
+			});
+		}
+	}
 
     function toggleSidebar() {
         isSidebarOpen = !isSidebarOpen;
