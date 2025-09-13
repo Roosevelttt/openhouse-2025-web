@@ -285,7 +285,7 @@
     /> -->
   </Background>
 
-  <div class="overflow-x-hidden relative w-full">
+  <div class="overflow-hidden relative w-full">
     <Background 
     className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8"
   >
@@ -334,7 +334,7 @@
       alt=""
     />
     <img 
-      class="w-[325px] max-md:hidden lg:w-[375px] absolute -bottom-[15%] -right-[5%] -rotate-90 z-[1]" 
+      class="w-[325px] max-md:hidden lg:w-[375px] absolute bottom-0 -right-[5%] -rotate-90 z-[1]" 
       src="/images/ukm/multi-card.png" 
       alt=""
     />
