@@ -321,318 +321,311 @@ function stopScroll() {
 </script>
 
 <section bind:this={faqSection} class="relative h-full w-full overflow-hidden bg-transparent">
-    <img
-        src="/faq/mascot-front.webp"
-        alt="Event Mascot on Stage"
-        class="absolute bottom-[42%] xl:bottom-[35%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] xl:w-[24%] max-w-none -translate-x-1/2"
-    />
-    <img
-        src="/faq/stage-plank.webp"
-        alt="Event Mascot on Stage"
-        class="absolute bottom-[35%] md:bottom-[32%] xl:bottom-[20%] left-1/2 z-10 w-[220%] md:w-[160%] xl:w-[100%] max-w-none -translate-x-1/2"
-    />
+	<img
+		src="/faq/mascot-front.webp"
+		alt="Event Mascot on Stage"
+		class="absolute bottom-[42%] xl:bottom-[35%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] xl:w-[24%] max-w-none -translate-x-1/2"
+	/>
+	<img
+		src="/faq/stage-plank.webp"
+		alt="Event Mascot on Stage"
+		class="absolute bottom-[35%] md:bottom-[32%] xl:bottom-[20%] left-1/2 z-10 w-[220%] md:w-[160%] xl:w-[100%] max-w-none -translate-x-1/2"
+	/>
 
-    {#if selectedQuestion === null}
-        <div
-            class="absolute z-20 text-center
-                   top-[5%] left-1/2 -translate-x-1/2
-                   xl:top-[15%] xl:left-[16%] xl:translate-x-0 xl:text-left"
-            transition:fly={{ y: -20, duration: 400, easing: quintOut }}
-        >
-            <h2
-                class="font-moomello text-[10rem] xl:text-[14rem] 2xl:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] xl:z-[0]"
-            >
-                FAQ
-            </h2>
-        </div>
-    {/if}
+	{#if selectedQuestion === null}
+		<div
+			class="absolute z-20 text-center
+                   top-[5%] left-1/2 -translate-x-1/2
+                   xl:top-[15%] xl:left-[16%] xl:translate-x-0 xl:text-left"
+			transition:fly={{ y: -20, duration: 400, easing: quintOut }}
+		>
+			<h2
+				class="font-moomello text-[10rem] xl:text-[14rem] 2xl:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] xl:z-[0]"
+			>
+				FAQ
+			</h2>
+		</div>
+	{/if}
 
-    {#if selectedQuestion !== null}
-        {#key selectedQuestion}
-            <div
-                class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2xl p-4 shadow-2xl backdrop-blur-sm
-                           flex flex-col
-                           top-[5%] left-1/2 -translate-x-1/2
-                           xl:top-[15%] xl:left-auto xl:right-[5%] xl:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
-                transition:fly={{ y: -20, duration: 400, easing: quintOut }}
-            >
-                <p class="text-base text-[var(--text-dark)] font-lexend leading-relaxed">
-                    {@html displayedText}
-                    {#if isTyping}
-                        <span class="typewriter-cursor">|</span>
-                    {/if}
-                </p>
+	{#if selectedQuestion !== null}
+		{#key selectedQuestion}
+			<div
+				class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2xl p-4 shadow-2xl backdrop-blur-sm
+                           flex flex-col
+                           top-[5%] left-1/2 -translate-x-1/2
+                           xl:top-[15%] xl:left-auto xl:right-[5%] xl:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
+				transition:fly={{ y: -20, duration: 400, easing: quintOut }}
+			>
+				<p class="text-base text-[var(--text-dark)] font-lexend leading-relaxed">
+					{@html displayedText}
+					{#if isTyping}
+						<span class="typewriter-cursor">|</span>
+					{/if}
+				</p>
 
-                <div class="bottom-right-controls">
-                    {#if isTyping}
-                        <button
-                            class="control-button skip-button"
-                            on:click={skipCurrentTyping}
-                            title="Skip animation"
-                            aria-label="Skip typing animation"
-                        >
-                            <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                stroke-width="2.5"
-                            >
-                                <path d="m9 18 6-6-6-6" />
-                            </svg>
-                        </button>
-                    {:else if hasMoreSentences && !isCompleted && !hasManuallyNavigated}
-                        <div class="next-indicator">
-                            <div class="next-dot"></div>
-                            <div class="next-dot"></div>
-                            <div class="next-dot"></div>
-                        </div>
-                    {:else if (isCompleted || hasManuallyNavigated) && sentences.length > 1}
-                        <div class="navigation-controls">
-                            <button
-                                class="control-button nav-button"
-                                class:disabled={!hasPreviousSentences}
-                                on:click={previousSentence}
-                                disabled={!hasPreviousSentences}
-                                title="Previous sentence"
-                                aria-label="Go to previous sentence"
-                            >
-                                <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
-                                    <path d="m15 18-6-6 6-6" />
-                                </svg>
-                            </button>
+				<div class="bottom-right-controls">
+					{#if isTyping}
+						<button
+							class="control-button skip-button"
+							on:click={skipCurrentTyping}
+							title="Skip animation"
+						>
+							<svg
+								width="12"
+								height="12"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.5"
+							>
+								<path d="m9 18 6-6-6-6" />
+							</svg>
+						</button>
+					{:else if hasMoreSentences && !isCompleted && !hasManuallyNavigated}
+						<div class="next-indicator">
+							<div class="next-dot" />
+							<div class="next-dot" />
+							<div class="next-dot" />
+						</div>
+					{:else if (isCompleted || hasManuallyNavigated) && sentences.length > 1}
+						<div class="navigation-controls">
+							<button
+								class="control-button nav-button"
+								class:disabled={!hasPreviousSentences}
+								on:click={previousSentence}
+								disabled={!hasPreviousSentences}
+								title="Previous sentence"
+							>
+								<svg
+									width="12"
+									height="12"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+								>
+									<path d="m15 18-6-6 6-6" />
+								</svg>
+							</button>
 
-                            <div class="sentence-counter">
-                                {currentSentenceIndex + 1}/{sentences.length}
-                            </div>
+							<div class="sentence-counter">
+								{currentSentenceIndex + 1}/{sentences.length}
+							</div>
 
-                            <button
-                                class="control-button nav-button"
-                                class:disabled={!hasMoreSentences}
-                                on:click={manualNextSentence}
-                                disabled={!hasMoreSentences}
-                                title="Next sentence"
-                                aria-label="Go to next sentence"
-                            >
-                                <svg
-                                    width="12"
-                                    height="12"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                >
-                                    <path d="m9 18 6-6-6-6" />
-                                </svg>
-                            </button>
-                        </div>
-                    {/if}
-                </div>
-            </div>
-        {/key}
-    {/if}
+							<button
+								class="control-button nav-button"
+								class:disabled={!hasMoreSentences}
+								on:click={manualNextSentence}
+								disabled={!hasMoreSentences}
+								title="Next sentence"
+							>
+								<svg
+									width="12"
+									height="12"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="2.5"
+								>
+									<path d="m9 18 6-6-6-6" />
+								</svg>
+							</button>
+						</div>
+					{/if}
+				</div>
+			</div>
+		{/key}
+	{/if}
 
-    <div class="absolute bottom-0 left-0 right-0 top-[55%] xl:top-[75%] bg-[#25081B] z-0"></div>
+	<div class="absolute bottom-0 left-0 right-0 top-[55%] xl:top-[75%] bg-[#25081B] z-0" />
 
-    <div
-        class="absolute bottom-0 left-0 right-0 top-[65%] md:top-[68%] xl:top-[75%] z-20 flex flex-col items-center justify-start gap-6 px-6 xl:pt-6 pb-12 xl:pb-0 text-white"
-    >
-        <div class="w-full max-w-6xl flex items-center justify-center gap-4 xl:gap-8">
-            <button
-                on:click={prevPage}
-                disabled={currentPage === 0}
-                class="pagination-btn hidden xl:block"
-                class:disabled={currentPage === 0}
-                aria-label="Previous page of questions"
-            >
-                <div
-                    class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] transition-transform hover:scale-105"
-                >
-                    <span
-                        class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
-                    >
-                        <svg
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2.5"
-                            class="arrow-icon"
-                        >
-                            <path d="m15 18-6-6 6-6" />
-                        </svg>
-                    </span>
-                </div>
-            </button>
+	<div
+		class="absolute bottom-0 left-0 right-0 top-[65%] md:top-[68%] xl:top-[75%] z-20 flex flex-col items-center justify-start gap-6 px-6 xl:pt-6 pb-12 xl:pb-0 text-white"
+	>
+		<div class="w-full max-w-6xl flex items-center justify-center gap-4 xl:gap-8">
+			<button
+				on:click={prevPage}
+				disabled={currentPage === 0}
+				class="pagination-btn hidden xl:block"
+				class:disabled={currentPage === 0}
+			>
+				<div
+					class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] transition-transform hover:scale-105"
+				>
+					<span
+						class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
+					>
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+							class="arrow-icon"
+						>
+							<path d="m15 18-6-6 6-6" />
+						</svg>
+					</span>
+				</div>
+			</button>
 
-            <div class="flex-grow w-full rounded-sm relative">
-                <div class="hidden xl:block min-h-[150px] relative overflow-hidden">
-                    {#key currentPage}
-                        <div
-                            class="absolute inset-0 flex items-center justify-center"
-                            in:fly={{
-                                x: animationDirection * 200,
-                                duration: 500,
-                                easing: sineInOut,
-                                delay: 50
-                            }}
-                            out:fly={{
-                                x: animationDirection * -200,
-                                duration: 500,
-                                easing: sineInOut
-                            }}
-                        >
-                            <div class="grid w-full grid-cols-2 gap-8">
-                                {#each visibleFaqs as faq (faq.id)}
-                                    <button
-                                        on:click={() => selectQuestion(faq.id - 1)}
-                                        class="flex items-start gap-4 p-4 text-left transition-opacity duration-200 hover:opacity-100"
-                                        class:active={selectedQuestion === faq.id - 1}
-                                        class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
-                                    >
-                                        <span
-                                            class="font-spicyrice text-7xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
-                                            >{String(faq.id).padStart(2, '0')}</span
-                                        >
-                                        <p class="my-1 text-white/90 font-lexend">{faq.question}</p>
-                                    </button>
-                                {/each}
-                            </div>
-                        </div>
-                    {/key}
-                </div>
+			<div class="flex-grow w-full rounded-sm relative">
+				<div class="hidden xl:block min-h-[150px] relative overflow-hidden">
+					{#key currentPage}
+						<div
+							class="absolute inset-0 flex items-center justify-center"
+							in:fly={{
+								x: animationDirection * 200,
+								duration: 500,
+								easing: sineInOut,
+								delay: 50
+							}}
+							out:fly={{
+								x: animationDirection * -200,
+								duration: 500,
+								easing: sineInOut
+							}}
+						>
+							<div class="grid w-full grid-cols-2 gap-8">
+								{#each visibleFaqs as faq (faq.id)}
+									<button
+										on:click={() => selectQuestion(faq.id - 1)}
+										class="flex items-start gap-4 p-4 text-left transition-opacity duration-200 hover:opacity-100"
+										class:active={selectedQuestion === faq.id - 1}
+										class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
+									>
+										<span
+											class="font-spicyrice text-7xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
+											>{String(faq.id).padStart(2, '0')}</span
+										>
+										<p class="my-1 text-white/90 font-lexend">{faq.question}</p>
+									</button>
+								{/each}
+							</div>
+						</div>
+					{/key}
+				</div>
 
-                <div
-                    class="xl:hidden px-[2px] pb-[2px] rounded-b-lg bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
-                >
-                    <div
-                        bind:this={scrollableContainer}
-                        on:scroll={handleScroll}
-                        class="block h-[25vh] space-y-4 overflow-y-auto py-4 bg-[#1a030b] rounded-b-lg"
-                    >
-                        {#each faqs as faq (faq.id)}
-                            <button
-                                on:click={() => selectQuestion(faq.id - 1)}
-                                class="flex w-full items-start gap-4 p-4 text-left transition-opacity duration-200"
-                                class:active={selectedQuestion === faq.id - 1}
-                                class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
-                            >
-                                <span
-                                    class="font-spicyrice text-6xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
-                                    >{String(faq.id).padStart(2, '0')}</span
-                                >
-                                <p class="mt-1 text-white/90 font-lexend">{faq.question}</p>
-                            </button>
-                        {/each}
-                    </div>
-                </div>
+				<div
+					class="xl:hidden px-[2px] pb-[2px] rounded-b-lg bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
+				>
+					<div
+						bind:this={scrollableContainer}
+						on:scroll={handleScroll}
+						class="block h-[25vh] space-y-4 overflow-y-auto py-4 bg-[#1a030b] rounded-b-lg"
+					>
+						{#each faqs as faq (faq.id)}
+							<button
+								on:click={() => selectQuestion(faq.id - 1)}
+								class="flex w-full items-start gap-4 p-4 text-left transition-opacity duration-200"
+								class:active={selectedQuestion === faq.id - 1}
+								class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
+							>
+								<span
+									class="font-spicyrice text-6xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
+									>{String(faq.id).padStart(2, '0')}</span
+								>
+								<p class="mt-1 text-white/90 font-lexend">{faq.question}</p>
+							</button>
+						{/each}
+					</div>
+				</div>
 
-                <div
-                    class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 flex gap-2 xl:hidden"
-                >
-                <button
-                    on:mousedown={() => startScroll('up')}
-                    on:mouseup={stopScroll}
-                    on:touchstart|preventDefault={() => startScroll('up')}
-                  	 on:touchend={stopScroll}
-                    disabled={!canScrollUp}
-                  	 title="Scroll up"
-                  	 aria-label="Scroll questions up"
-                  	 class="pagination-btn"
-                  	 class:disabled={!canScrollUp}
-              	 >
-                        <div
-                            class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
-                        >
-                            <span
-                                class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
-                            >
-                                <svg
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    stroke="currentColor"
-                                    stroke-width="2.5"
-                                    fill="none"
-                                  	 class="arrow-icon"
-                                >
-                                  	 <path d="m18 15-6-6-6 6" />
-                                </svg>
-                            </span>
-                        </div>
-                  	 </button>
-                	 <button
-                    	 on:mousedown={() => startScroll('down')}
-                    	 on:mouseup={stopScroll}
-                    	 on:touchstart|preventDefault={() => startScroll('down')}
-                    	 on:touchend={stopScroll}
-                    	 disabled={!canScrollDown}
-                    	 title="Scroll down"
-                    	 aria-label="Scroll questions down"
-                    	 class="pagination-btn"
-                    	 class:disabled={!canScrollDown}
-                	 >
-                      	 <div
-                          	 class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
-                      	 >
-                          	 <span
-                              	 class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
-                          	 >
-                              	 <svg
-                                  	 width="24"
-                                  	 height="24"
-                                  	 viewBox="0 0 24 24"
-                                  	 stroke="currentColor"
-                                  	 stroke-width="2.5"
-                                  	 fill="none"
-                                  	 class="arrow-icon"
-                              	 >
-                                  	 <path d="m6 9 6 6 6-6" />
-                              	 </svg>
-                          	 </span>
-                      	 </div>
-                  	 </button>
-              	 </div>
-            </div>
+				<div
+					class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 flex gap-2 xl:hidden"
+				>
+                <button
+                    on:mousedown={() => startScroll('up')}
+                    on:mouseup={stopScroll}
+                    on:touchstart|preventDefault={() => startScroll('up')}
+                    on:touchend={stopScroll}
+                    disabled={!canScrollUp}
+                    title="Scroll up"
+                    class="pagination-btn"
+                    class:disabled={!canScrollUp}
+                >
+						<div
+							class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
+						>
+							<span
+								class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
+							>
+								<svg
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									stroke-width="2.5"
+									fill="none"
+									class="arrow-icon"
+								>
+									<path d="m18 15-6-6-6 6" />
+								</svg>
+							</span>
+						</div>
+					</button>
+                    <button
+                        on:mousedown={() => startScroll('down')}
+                        on:mouseup={stopScroll}
+                        on:touchstart|preventDefault={() => startScroll('down')}
+                        on:touchend={stopScroll}
+                        disabled={!canScrollDown}
+                        title="Scroll down"
+                        class="pagination-btn"
+                        class:disabled={!canScrollDown}
+                    >
+						<div
+							class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
+						>
+							<span
+								class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
+							>
+								<svg
+									width="24"
+									height="24"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+									stroke-width="2.5"
+									fill="none"
+									class="arrow-icon"
+								>
+									<path d="m6 9 6 6 6-6" />
+								</svg>
+							</span>
+						</div>
+					</button>
+				</div>
+			</div>
 
-          	 <button
-            	 on:click={nextPage}
-            	 disabled={currentPage === totalPages - 1}
-            	 class="pagination-btn hidden xl:block"
-            	 class:disabled={currentPage === totalPages - 1}
-            	 aria-label="Next page of questions"
-          	 >
-            	 <div
-              	 class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] transition-transform hover:scale-105"
-            	 >
-              	 <span
-                	 class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
-              	 >
-                	 <svg
-                  	 width="16"
-                  	 height="16"
-                  	 viewBox="0 0 24 24"
-                  	 fill="none"
-                  	 stroke="currentColor"
-                  	 stroke-width="2.5"
-                  	 class="arrow-icon"
-                	 >
-                  	 <path d="m9 18 6-6-6-6" />
-                	 </svg>
-              	 </span>
-            	 </div>
-          	 </button>
-      	 </div>
-  	 </div>
+			<button
+				on:click={nextPage}
+				disabled={currentPage === totalPages - 1}
+				class="pagination-btn hidden xl:block"
+				class:disabled={currentPage === totalPages - 1}
+			>
+				<div
+					class="p-0.5 rounded-full bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] transition-transform hover:scale-105"
+				>
+					<span
+						class="block rounded-full px-3 py-2 bg-gradient-to-r from-[var(--button-violet-primary)] via-[var(--button-violet-secondary)] to-[var(--button-violet-primary)]"
+					>
+						<svg
+							width="16"
+							height="16"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+							class="arrow-icon"
+						>
+							<path d="m9 18 6-6-6-6" />
+						</svg>
+					</span>
+				</div>
+			</button>
+		</div>
+	</div>
 </section>
 
 <style>
@@ -648,11 +641,13 @@ function stopScroll() {
 		z-index: -1;
 	}
 
+	/* Mobile bubble tail (center) */
 	.answer-bubble::after {
 		left: 50%;
 		transform: translateY(50%) translateX(-50%) rotate(45deg);
 	}
 
+	/* UPDATED: Desktop bubble tail (left side, pointing to mascot) */
 	@media (min-width: 1280px) {
 		.answer-bubble::after {
 			left: 20%;
@@ -673,6 +668,7 @@ function stopScroll() {
 		opacity: 1;
 	}
 
+	/* Updated Pagination Button Styles */
 	.pagination-btn {
 		flex-shrink: 0;
 		background: transparent;
@@ -695,6 +691,7 @@ function stopScroll() {
 		transform: none;
 	}
 
+	/* Arrow Icon Styling */
 	.arrow-icon {
 		stroke: var(--color-light-gold);
 		transition: stroke 0.2s ease;
@@ -704,6 +701,7 @@ function stopScroll() {
 		stroke: var(--color-off-white);
 	}
 
+	/* Typewriter Effect Styles */
 	.typewriter-cursor {
 		animation: blink 1s infinite;
 		font-weight: bold;
@@ -721,11 +719,13 @@ function stopScroll() {
 		}
 	}
 
+	/* Keyword Highlighting */
 	:global(.keyword-highlight) {
 		color: #8e183c;
 		font-weight: 600;
 	}
 
+	/* Bottom Right Controls */
 	.bottom-right-controls {
 		display: flex;
 		align-items: center;
@@ -734,6 +734,7 @@ function stopScroll() {
 		margin-top: 2px;
 	}
 
+	/* Control Button Base Styles */
 	.control-button {
 		display: flex;
 		align-items: center;
@@ -759,6 +760,7 @@ function stopScroll() {
 		cursor: not-allowed;
 	}
 
+	/* Skip Button */
 	.skip-button {
 		background: rgba(142, 24, 60, 0.1);
 		border-color: rgba(142, 24, 60, 0.3);
@@ -775,6 +777,7 @@ function stopScroll() {
 		font-weight: 600;
 	}
 
+	/* Navigation Controls */
 	.navigation-controls {
 		display: flex;
 		align-items: center;
@@ -810,6 +813,7 @@ function stopScroll() {
 		padding: 0 4px;
 	}
 
+	/* Next Sentence Indicator */
 	.next-indicator {
 		display: flex;
 		gap: 3px;
