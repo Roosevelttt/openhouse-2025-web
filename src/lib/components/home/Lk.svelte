@@ -1,17 +1,12 @@
 <script>
-  import { onMount, onDestroy, afterUpdate } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { browser } from '$app/environment';
   
   let gsap, ScrollTrigger;
+  let st;
   let scrollContainer;
   let balloonAssembly;
   let backgroundSky;
-  let screenWidth = 1920;
-  let timeline;
-  let resizeHandler;
-  let initTimer;
-  let scrollTriggerInstance;
-  let componentId = Math.random().toString(36).substr(2, 9);
 
   const iconData = [
     { src: '/svg/logo/bem.svg', path: '/lk/bem', name: 'BEM' },
@@ -22,161 +17,77 @@
     { src: '/svg/logo/tps.svg', path: '/lk/tps', name: 'TPS' }
   ];
 
-  function destroyAnimation() {
-    if (initTimer) {
-      clearTimeout(initTimer);
-      initTimer = null;
-    }
-    
-    if (timeline) {
-      timeline.kill();
-      timeline = null;
-    }
-    
-    if (scrollTriggerInstance) {
-      scrollTriggerInstance.kill();
-      scrollTriggerInstance = null;
-    }
-    
-    if (ScrollTrigger) {
-      ScrollTrigger.getAll().forEach(st => st.kill());
-    }
-    
-    // reset elements to initial state, without inline styles
-    if (gsap && balloonAssembly) {
-      gsap.set(balloonAssembly, { clearProps: "all" });
-    }
-    if (gsap && backgroundSky) {
-      gsap.set(backgroundSky, { clearProps: "all" });
-    }
-    if (gsap) {
-      const orgBalloons = gsap.utils.toArray('.org-balloon');
-      orgBalloons.forEach(balloon => {
-        gsap.set(balloon, { 
-          y: '100vh', 
-          x: 0,
-          visibility: 'hidden',
-          clearProps: "transform"
-        });
-      });
-    }
-  }
-
-  async function initializeAnimation() {
-    destroyAnimation();
-
-    const currentScroll = window.scrollY;
-    await new Promise(resolve => setTimeout(resolve, 100));
-    screenWidth = window.innerWidth;
-
-    gsap.set(balloonAssembly, { y: 0, clearProps: "transform" });
-    gsap.set(backgroundSky, { yPercent: 0, clearProps: "transform" });
-    
-    const orgBalloons = gsap.utils.toArray('.org-balloon');
-    
-    orgBalloons.forEach(balloon => {
-      gsap.set(balloon, { 
-        y: '100vh', 
-        x: 0,
-        visibility: 'hidden',
-        clearProps: "transform"
-      });
-    });
-
-    ScrollTrigger.refresh();
-    
-    await new Promise(resolve => setTimeout(resolve, 50));
-
-    const random = (min, max) => Math.random() * (max - min) + min;
-    const animationDistance = screenWidth < 768 ? '-150vh' : '-180vh';
-    
-    // init tl, separate scrolltrigger
-    timeline = gsap.timeline({ paused: true });
-    timeline.to(balloonAssembly, { y: animationDistance }, 0);
-    timeline.to(backgroundSky, { yPercent: -30 }, 0);
-
-    const numBalloons = orgBalloons.length > 1 ? orgBalloons.length : 2;
-    const maxStartTime = 0.5;
-
-    orgBalloons.forEach((balloon, i) => {
-      const flightDurationOnTimeline = random(0.4, 0.6);
-      const startTime = (i / (numBalloons - 1)) * maxStartTime;
-      const horizontalDrift = random(-10, 10);
-
-      timeline.fromTo(
-        balloon,
-        { 
-          y: '100vh',
-          visibility: 'hidden' 
-        },
-        {
-          y: '-100vh',
-          x: `${horizontalDrift}vw`,
-          visibility: 'visible',
-          ease: 'none',
-          duration: flightDurationOnTimeline
-        },
-        startTime
-      );
-    });
-
-    // separate scrolltrigger
-    scrollTriggerInstance = ScrollTrigger.create({
-      trigger: scrollContainer,
-      start: 'top top',
-      end: '+=3500',
-      scrub: 1.5,
-      pin: true,
-      anticipatePin: 1,
-      animation: timeline,
-      invalidateOnRefresh: true,
-      fastScrollEnd: true,
-      preventOverlaps: true,
-    });
-  }
-
   onMount(async () => {
     if (!browser) return;
 
-    // import gsap dynamically instead
-    try {
-      const gsapModule = await import('gsap');
-      const scrollTriggerModule = await import('gsap/dist/ScrollTrigger');
-      
-      gsap = gsapModule.gsap;
-      ScrollTrigger = scrollTriggerModule.ScrollTrigger;
-      
-      gsap.registerPlugin(ScrollTrigger);
-    } catch (error) {
-      console.error('GSAP load error:', error);
-      return;
-    }
+    const gsapModule = await import('gsap');
+    const scrollTriggerModule = await import('gsap/dist/ScrollTrigger');
+    gsap = gsapModule.gsap;
+    ScrollTrigger = scrollTriggerModule.ScrollTrigger;
+    
+    gsap.registerPlugin(ScrollTrigger);
 
-    resizeHandler = () => {
-      clearTimeout(initTimer);
-      initTimer = setTimeout(() => {
-        initializeAnimation();
-      }, 150);
-    };
-    window.addEventListener('resize', resizeHandler);
+    const screenWidth = window.innerWidth;
+    const random = (min, max) => Math.random() * (max - min) + min;
 
-    initTimer = setTimeout(() => {
-      initializeAnimation();
-    }, 500);
+
+    const initTimer = setTimeout(() => {
+      const tl = gsap.timeline();
+
+      const animationDistance = screenWidth < 768 ? '-150vh' : '-180vh';
+      tl.to(balloonAssembly, { y: animationDistance }, 0);
+      tl.to(backgroundSky, { yPercent: -30 }, 0);
+
+      const orgBalloons = gsap.utils.toArray('.org-balloon');
+      const numBalloons = orgBalloons.length > 1 ? orgBalloons.length : 2;
+      const maxStartTime = 0.5;
+
+      orgBalloons.forEach((balloon, i) => {
+        const flightDurationOnTimeline = random(0.4, 0.6);
+        const startTime = (i / (numBalloons - 1)) * maxStartTime;
+        const horizontalDrift = random(-10, 10);
+
+        tl.fromTo(
+          balloon,
+          { y: '100vh', visibility: 'hidden' },
+          {
+            y: '-100vh',
+            x: `${horizontalDrift}vw`,
+            visibility: 'visible',
+            ease: 'none',
+            duration: flightDurationOnTimeline
+          },
+          startTime
+        );
+      });
+
+      st = ScrollTrigger.create({
+        animation: tl,
+        trigger: scrollContainer,
+        start: 'top top',
+        end: '+=3500',
+        scrub: 1.5,
+        pin: true,
+        invalidateOnRefresh: true
+      });
+
+    }, 100);
 
     return () => {
-      destroyAnimation();
-      if (resizeHandler) {
-        window.removeEventListener('resize', resizeHandler);
+      clearTimeout(initTimer);
+      
+      if (st) {
+        st.kill();
+      }
+      
+      gsap.killTweensOf([balloonAssembly, backgroundSky, '.org-balloon']);
+      
+      if (gsap) {
+        gsap.set(balloonAssembly, { clearProps: "all" });
+        gsap.set(backgroundSky, { clearProps: "all" });
+        gsap.set('.org-balloon', { clearProps: "all" });
       }
     };
-  });
-
-  onDestroy(() => {
-    destroyAnimation();
-    if (resizeHandler) {
-      window.removeEventListener('resize', resizeHandler);
-    }
   });
 </script>
 
@@ -186,7 +97,7 @@
       bind:this={backgroundSky}
       src="/background/pink sky v3.webp"
       alt="Purple sky background"
-      class="absolute inset-0 max-w-none w-[102%] h-[200vh] object-cover z-[-1]"
+      class="absolute inset-0 max-w-none w-[102%] h-[150lvh] object-cover z-[-1]"
     />
 
     <div
@@ -239,7 +150,7 @@
             
             <span
               class="font-spicyrice tracking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent
-                     absolute -bottom-12 md:-bottom-15 left-1/2 -translate-x-1/2 text-3xl md:text-5xl whitespace-nowrap drop-shadow-md"
+                       absolute -bottom-12 md:-bottom-15 left-1/2 -translate-x-1/2 text-3xl md:text-5xl whitespace-nowrap drop-shadow-md"
             >
               {icon.name}
             </span>
