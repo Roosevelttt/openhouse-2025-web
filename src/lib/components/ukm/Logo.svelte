@@ -8,5 +8,5 @@
 </script>
 
 <div bind:this={logo} class="${className} bg-white flex items-center justify-center p-2 rounded-full shadow-lg w-3/4 lg:w-1/4 mx-auto aspect-square">
-  <img src={src} alt={alt}  class={`w-full logo`} />
+  <img src={src} alt={alt}  class={`w-full logo object-contain rounded-full`} />
 </div>

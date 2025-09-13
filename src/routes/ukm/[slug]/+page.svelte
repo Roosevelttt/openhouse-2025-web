@@ -273,10 +273,20 @@
       />
     </div>
 
+    <!-- <img 
+      class="w-[325px] max-md:hidden lg:w-[375px] absolute -bottom-[15%] -left-[5%] -rotate-90 z-[1]" 
+      src="/images/ukm/single-card.png" 
+      alt=""
+    />
+       <img 
+      class="w-[325px] max-md:hidden lg:w-[375px] absolute -bottom-[15%] -right-[5%] -rotate-90 z-[1]" 
+      src="/images/ukm/multi-card.png" 
+      alt=""
+    /> -->
   </Background>
 
   <Background 
-    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8 overflow-x-hidden overflow-y-visible"
+    className="relative h-[150vh] md:h-screen flex flex-col items-center justify-center space-y-12 p-8 "
   >
     <div data-aos="fade-down">
       <Title text="Our Journey✨" />
