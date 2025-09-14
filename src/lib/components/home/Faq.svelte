@@ -322,7 +322,7 @@ function stopScroll() {
 
 <section bind:this={faqSection} class="relative h-full w-full overflow-hidden bg-transparent">
 	<img
-		src="/faq/mascot-front.webp"
+		src="/faq/mascot-front.svg"
 		alt="Event Mascot on Stage"
 		class="absolute bottom-[42%] xl:bottom-[35%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] xl:w-[24%] max-w-none -translate-x-1/2"
 	/>
