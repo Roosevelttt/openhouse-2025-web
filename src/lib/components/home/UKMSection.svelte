@@ -189,7 +189,7 @@
 			class="absolute top-[52%] md:top-[43%] xl:top-[58%] 2xl:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-30"
 		/>
 		<img
-			src="/ukm/bookshelf-top.webp"
+			src="/ukm/bookshelf-top.svg"
 			alt="Bookshelf top"
 			class="absolute top-[4%] sm:top-[6%] xl:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] md:w-[170%] xl:w-[100%] z-50"
 		/>
