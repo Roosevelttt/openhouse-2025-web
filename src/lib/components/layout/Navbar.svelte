@@ -88,7 +88,7 @@
         <div class="group relative flex items-center z-10">
             <a href="/#hero" on:click={handleNavClick} aria-label="Go to homepage hero section">
                 <img
-                    src="/png/openhouse logo.png"
+                    src="/png/oh-logo-small.png"
                     alt="OpenHouse 2025 Logo"
                     class="w-24 md:w-32 transition-transform hover:rotate-[-5deg] drop-shadow-[0_4px_8px_rgba(96,0,0,0.35)]"
                 />

@@ -204,7 +204,7 @@
       transform: translateX(-50%);
     }
   }
-  .pin-spacer {
-    background-color: black !important;
+  :global(.pin-spacer) {
+    background-color: #20002a !important;
   }
 </style>

@@ -82,7 +82,7 @@
   let hasRegistered = false;
   let loadingReservation = true;
 
-  const bg = '/background/table-bg.png';
+  const bg = '/background/table-bg.webp';
 
   onMount(async () => {
     loadingReservation = true;
