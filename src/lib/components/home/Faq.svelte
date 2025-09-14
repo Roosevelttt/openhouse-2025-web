@@ -322,7 +322,7 @@ function stopScroll() {
 
 <section bind:this={faqSection} class="relative min-h-screen flex flex-col w-full bg-transparent">
 	<img
-		src="/faq/mascot-front.svg"
+		src="/faq/mascot-front.webp"
 		alt="Event Mascot on Stage"
 		class="absolute bottom-[42%] lg:bottom-[35%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] lg:w-[24%] max-w-none -translate-x-1/2"
 	/>
@@ -340,7 +340,7 @@ function stopScroll() {
 			transition:fly={{ y: -20, duration: 400, easing: quintOut }}
 		>
 			<h2
-				class="font-moomello text-[10rem] lg:text-[14rem] 2lg:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] lg:z-[0]"
+				class="font-moomello text-[10rem] lg:text-[14rem] 2xl:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] xl:z-[0]"
 			>
 				FAQ
 			</h2>
@@ -350,7 +350,7 @@ function stopScroll() {
 	{#if selectedQuestion !== null}
 		{#key selectedQuestion}
 			<div
-				class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2lg p-4 shadow-2lg backdrop-blur-sm
+				class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2xl p-4 shadow-2xl backdrop-blur-sm
                            flex flex-col
                            top-[5%] left-1/2 -translate-x-1/2
                            lg:top-[15%] lg:left-auto lg:right-[5%] lg:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
@@ -442,7 +442,7 @@ function stopScroll() {
 	<div
 		class="absolute bottom-0 left-0 right-0 top-[65%] md:top-[68%] lg:top-[75%] z-20 flex flex-col items-center justify-start gap-6 px-6 lg:pt-6 pb-12 lg:pb-0 text-white"
 	>
-		<div class="w-full max-w-6lg flex items-center justify-center gap-4 lg:gap-8">
+		<div class="w-full max-w-6xl flex items-center justify-center gap-4 lg:gap-8">
 			<button
 				on:click={prevPage}
 				disabled={currentPage === 0}
@@ -496,7 +496,7 @@ function stopScroll() {
 										class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
 									>
 										<span
-											class="font-spicyrice text-7lg font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
+											class="font-spicyrice text-7xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
 											>{String(faq.id).padStart(2, '0')}</span
 										>
 										<p class="my-1 text-white/90 font-lexend">{faq.question}</p>
@@ -523,7 +523,7 @@ function stopScroll() {
 								class:inactive={selectedQuestion !== null && selectedQuestion !== faq.id - 1}
 							>
 								<span
-									class="font-spicyrice text-6lg font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
+									class="font-spicyrice text-6xl font-light bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)] bg-clip-text text-transparent"
 									>{String(faq.id).padStart(2, '0')}</span
 								>
 								<p class="mt-1 text-white/90 font-lexend">{faq.question}</p>
