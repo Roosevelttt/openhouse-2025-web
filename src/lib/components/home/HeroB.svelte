@@ -310,10 +310,10 @@
   </div>
 
   <div class="absolute inset-0 w-full h-full">
-    <img src="/home/stage-bottom.webp" alt="Stage bottom" 
+    <!-- <img src="/home/stage-bottom.webp" alt="Stage bottom" 
          class="absolute -bottom-30 sm:-bottom-20 md:-bottom-40 lg:-bottom-32 xl:-bottom-40 
                 left-1/2 -translate-x-1/2 max-w-none 
-                w-[300%] sm:w-[130%] md:w-[200%] lg:w-[150%] xl:w-[101%] z-[60]" />
+                w-[300%] sm:w-[130%] md:w-[200%] lg:w-[150%] xl:w-[101%] z-[60]" /> -->
 
     <img bind:this={behindCurtains} src="/home/curtains-behind.webp" alt="Behind curtains" 
          class="absolute bottom-0 left-1/2 -translate-x-1/2 max-w-none 
@@ -349,7 +349,7 @@
                 w-[120%] sm:w-[50%] md:w-[95%] lg:w-[80%] xl:w-1/2" />
     
     <img bind:this={topBanner} src="home/banner-top.webp" alt="Red banner" 
-         class="absolute left-1/2 -translate-x-1/2 z-[70] max-w-none
+         class="absolute left-1/2 -translate-x-1/2 z-[60] max-w-none
                 -top-1 sm:-top-1 md:-top-4 lg:-top-4 xl:-top-5 
                 w-[30%] sm:w-[15%] md:w-[20%] lg:w-[20%] xl:w-[8%]" />
   </div>

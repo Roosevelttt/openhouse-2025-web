@@ -8,12 +8,10 @@
 		{ name: 'Basket', src: '/svg/home/ukm/books/book basket.svg' },
 		{ name: 'Catur', src: '/svg/home/ukm/books/book catur.svg' },
 		{ name: 'Chinese-Art', src: '/svg/home/ukm/books/book chinese art.svg' },
-		// { name: 'Choir', src: '/svg/home/ukm/books/book choir (2).svg' },
 		{ name: 'Dance', src: '/svg/home/ukm/books/book dance.svg' },
 		{ name: 'Dekorasi', src: '/svg/home/ukm/books/book dekorasi.svg' },
 		{ name: 'EMR', src: '/svg/home/ukm/books/book emr.svg' },
 		{ name: 'English-Debate', src: '/svg/home/ukm/books/book english debate.svg' },
-		// { name: 'Esports', src: '/svg/home/ukm/books/book esports (2).svg' },
 		{ name: 'Futsal', src: '/svg/home/ukm/books/book futal.svg' },
 		{ name: 'Kyokushinkai', src: '/svg/home/ukm/books/book illustrasi.svg' },
 		{ name: 'Martografi', src: '/svg/home/ukm/books/book martografi.svg' },
@@ -21,7 +19,6 @@
 		{ name: 'Matrapenza', src: '/svg/home/ukm/books/book matrapenza.svg' },
 		{ name: 'Menwa', src: '/svg/home/ukm/books/book menwa.svg' },
 		{ name: 'Modeling', src: '/svg/home/ukm/books/book modelling.svg' },
-		// { name: 'Orkestra', src: '/svg/home/ukm/books/book orchestra (2).svg' },
 		{ name: 'Choir', src: '/svg/home/ukm/books/book choir (2).svg' },
 		{ name: 'Orkestra', src: '/svg/home/ukm/books/book orchestra (2).svg' },
 		{ name: 'Esports', src: '/svg/home/ukm/books/book esports (2).svg' },
@@ -36,9 +33,7 @@
 	const topRowBooks = allBooks.slice(0, 13);
 	const bottomRowBooks = allBooks.slice(13);
 	const createSlug = (name: string) => name.toLowerCase().replace(/\s+/g, '-');
-	
-	// let activeTopBookName: string | null = topRowBooks[0]?.name || null;
-	// let activeBottomBookName: string | null = bottomRowBooks[0]?.name || null;
+
 	let activeTopBookName: string | null = null;
 	let activeBottomBookName: string | null = null;
 
@@ -47,7 +42,6 @@
 	let isMobile = false;
 	let ticking = false;
 
-	// store last scroll position, detect direction.
 	let lastScrollTop = 0;
 	let lastScrollBottom = 0;
 
@@ -73,7 +67,6 @@
 		setActiveBook(closest.name);
 	};
 
-	// update handlers
 	const handleScrollTop = () => {
 		if (!ticking) {
 			window.requestAnimationFrame(() => {
@@ -83,13 +76,15 @@
 				if (currentScroll > lastScrollTop) {
 					positionRatio = 0.85;
 				}
-				
+
 				updateActiveBookByPosition(
 					topRowContainer,
-					(name) => { activeTopBookName = name; },
+					(name) => {
+						activeTopBookName = name;
+					},
 					positionRatio
 				);
-				
+
 				lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
 				ticking = false;
 			});
@@ -109,10 +104,12 @@
 
 				updateActiveBookByPosition(
 					bottomRowContainer,
-					(name) => { activeBottomBookName = name; },
+					(name) => {
+						activeBottomBookName = name;
+					},
 					positionRatio
 				);
-				
+
 				lastScrollBottom = currentScroll <= 0 ? 0 : currentScroll;
 				ticking = false;
 			});
@@ -121,10 +118,10 @@
 	};
 
 	const checkIsMobile = () => {
-		isMobile = window.innerWidth < 1280;
+		// Changed breakpoint from 1280 (xl) to 1024 (lg)
+		isMobile = window.innerWidth < 1024;
 	};
 
-	// arrays to hold imageelement refs
 	let topBookImages: HTMLImageElement[] = [];
 	let bottomBookImages: HTMLImageElement[] = [];
 	onMount(() => {
@@ -133,7 +130,6 @@
 
 		allImageElements.forEach((imgElement) => {
 			const promise = new Promise<void>((resolve) => {
-				// resolve if the browser has assets cached
 				if (imgElement.complete) {
 					resolve();
 				} else {
@@ -147,7 +143,7 @@
 		if (newPromises.length > 0) {
 			assetLoadingPromises.update((existing) => [...existing, ...newPromises]);
 		}
-		
+
 		checkIsMobile();
 		window.addEventListener('resize', checkIsMobile);
 		if (topRowContainer) {
@@ -169,46 +165,45 @@
 </script>
 
 <section
-	class="relative w-full h-[80vh] md:h-[80vh] xl:h-[150vh] 4xl:h-[200vh] mt-[-10vw] xl:mt-[-20vw]"
+	class="relative w-full h-[80vh] md:h-[80vh] lg:h-[150vh] 4xl:h-[200vh] mt-[-10vw] lg:mt-[-20vw]"
 >
-    <div class="absolute inset-0 w-full h-full">
-        
-        <div
+	<div class="absolute inset-0 w-full h-full">
+		<div
 			class="absolute bottom-0 left-0 right-0 bg-cover bg-center 
-                   top-[4%] sm:top-[6%] xl:top-[26%] z-0"
+                   top-[4%] sm:top-[6%] lg:top-[26%] z-0"
 			style="background-image: url('/ukm/bookshelf-wall.webp');"
 		></div>
-        <img
+		<img
 			src="/ukm/book-floor.webp"
 			alt=""
-			class="absolute bottom-[0%] xl:left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-10"
+			class="absolute bottom-[0%] lg:left-1/2 -translate-x-1/2 max-w-none w-[200%] lg:w-full z-10"
 		/>
 		<img
 			src="/ukm/book-floor.webp"
 			alt=""
-			class="absolute top-[52%] md:top-[43%] xl:top-[58%] 2xl:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] xl:w-full z-30"
+			class="absolute top-[52%] md:top-[43%] lg:top-[58%] 2xl:top-[58%] left-1/2 -translate-x-1/2 max-w-none w-[200%] lg:w-full z-30"
 		/>
 		<img
 			src="/ukm/bookshelf-top.svg"
 			alt="Bookshelf top"
-			class="absolute top-[4%] sm:top-[6%] xl:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] md:w-[170%] xl:w-[100%] z-50"
+			class="absolute top-[4%] sm:top-[6%] lg:top-[26%] left-1/2 -translate-x-1/2 max-w-none w-[280%] md:w-[170%] lg:w-[100%] z-50"
 		/>
 	</div>
 
 	<div class="relative w-full h-full">
 		<div
 			bind:this={topRowContainer}
-			class="absolute top-[26%] md:top-[22%] xl:top-[40%] h-[40%] xl:h-[30%] w-full z-40
-                   overflow-x-auto xl:overflow-visible scrollbar-hide"
+			class="absolute top-[26%] md:top-[22%] lg:top-[40%] h-[40%] lg:h-[30%] w-full z-40
+                   overflow-x-auto lg:overflow-visible scrollbar-hide"
 		>
 			<div
-				class="flex items-end h-full w-max xl:w-[65%] gap-x-0 px-4 pb-8 xl:pb-0 xl:mx-auto xl:justify-center"
+				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4 pb-8 lg:pb-0 lg:mx-auto lg:justify-center"
 			>
 				{#each topRowBooks as book, i (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
-						class="flex-shrink-0 h-[30vh] xl:h-full transition-transform duration-300 ease-in-out
-							xl:hover:translate-y-8"
+						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-300 ease-in-out
+                               lg:hover:translate-y-8"
 						class:translate-y-8={isMobile && activeTopBookName === book.name}
 						title={book.name}
 					>
@@ -220,21 +215,26 @@
 
 		<div
 			bind:this={bottomRowContainer}
-			class="absolute bottom-[0%] sm:bottom-[4%] h-[40%] xl:h-[30%] w-full z-20
-                   overflow-x-auto xl:overflow-visible scrollbar-hide"
+			class="absolute bottom-[0%] sm:bottom-[4%] h-[40%] lg:h-[30%] w-full z-20
+                   overflow-x-auto lg:overflow-visible scrollbar-hide"
 		>
 			<div
-				class="flex items-end h-full w-max xl:w-[65%] gap-x-0 px-4 pb-8 xl:pb-0 xl:mx-auto xl:justify-center"
+				class="flex items-end h-full w-max lg:w-[65%] gap-x-0 px-4 pb-8 lg:pb-0 lg:mx-auto lg:justify-center"
 			>
 				{#each bottomRowBooks as book, i (book.name)}
 					<a
 						href="/ukm/{createSlug(book.name)}"
-						class="flex-shrink-0 h-[30vh] xl:h-full transition-transform duration-300 ease-in-out
-							xl:hover:translate-y-8"
+						class="flex-shrink-0 h-[30vh] lg:h-full transition-transform duration-300 ease-in-out
+                               lg:hover:translate-y-8"
 						class:translate-y-8={isMobile && activeBottomBookName === book.name}
 						title={book.name}
 					>
-						<img src={book.src} alt={book.name} class="h-full w-auto" bind:this={bottomBookImages[i]} />
+						<img
+							src={book.src}
+							alt={book.name}
+							class="h-full w-auto"
+							bind:this={bottomBookImages[i]}
+						/>
 					</a>
 				{/each}
 			</div>
