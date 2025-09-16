@@ -320,27 +320,27 @@ function stopScroll() {
 	});
 </script>
 
-<section bind:this={faqSection} class="relative h-full w-full overflow-hidden bg-transparent">
+<section bind:this={faqSection} class="relative min-h-screen flex flex-col w-full bg-transparent">
 	<img
 		src="/faq/mascot-front.webp"
 		alt="Event Mascot on Stage"
-		class="absolute bottom-[42%] xl:bottom-[35%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] xl:w-[24%] max-w-none -translate-x-1/2"
+		class="absolute bottom-[42%] lg:bottom-[35%] left-1/2 z-40 w-[54%] sm:w-[44%] md:w-[34%] lg:w-[24%] max-w-none -translate-x-1/2"
 	/>
 	<img
 		src="/faq/stage-plank.webp"
 		alt="Event Mascot on Stage"
-		class="absolute bottom-[35%] md:bottom-[32%] xl:bottom-[20%] left-1/2 z-10 w-[220%] md:w-[160%] xl:w-[100%] max-w-none -translate-x-1/2"
+		class="absolute bottom-[35%] md:bottom-[32%] lg:bottom-[20%] left-1/2 z-10 w-[220%] md:w-[160%] lg:w-[100%] max-w-none -translate-x-1/2"
 	/>
 
 	{#if selectedQuestion === null}
 		<div
 			class="absolute z-20 text-center
                    top-[5%] left-1/2 -translate-x-1/2
-                   xl:top-[15%] xl:left-[16%] xl:translate-x-0 xl:text-left"
+                   lg:top-[15%] lg:left-[16%] lg:translate-x-0 lg:text-left"
 			transition:fly={{ y: -20, duration: 400, easing: quintOut }}
 		>
 			<h2
-				class="font-moomello text-[10rem] xl:text-[14rem] 2xl:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] xl:z-[0]"
+				class="font-moomello text-[10rem] lg:text-[14rem] 2xl:text-[18rem] racking-tight bg-gradient-to-tr from-[var(--text-secondary)] via-[var(--text-primary)] to-[var(--color-white)] bg-clip-text text-transparent z-[-1] xl:z-[0]"
 			>
 				FAQ
 			</h2>
@@ -353,7 +353,7 @@ function stopScroll() {
 				class="answer-bubble absolute z-40 w-[90%] max-w-lg rounded-2xl p-4 shadow-2xl backdrop-blur-sm
                            flex flex-col
                            top-[5%] left-1/2 -translate-x-1/2
-                           xl:top-[15%] xl:left-auto xl:right-[5%] xl:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
+                           lg:top-[15%] lg:left-auto lg:right-[5%] lg:translate-x-0 bg-gradient-to-tr from-[#F6BABC] to-[#FFF1E5]"
 				transition:fly={{ y: -20, duration: 400, easing: quintOut }}
 			>
 				<p class="text-base text-[var(--text-dark)] font-lexend leading-relaxed">
@@ -437,16 +437,16 @@ function stopScroll() {
 		{/key}
 	{/if}
 
-	<div class="absolute bottom-0 left-0 right-0 top-[55%] xl:top-[75%] bg-[#25081B] z-0" />
+	<div class="absolute bottom-0 left-0 right-0 top-[55%] lg:top-[75%] bg-[#25081B] z-0" />
 
 	<div
-		class="absolute bottom-0 left-0 right-0 top-[65%] md:top-[68%] xl:top-[75%] z-20 flex flex-col items-center justify-start gap-6 px-6 xl:pt-6 pb-12 xl:pb-0 text-white"
+		class="absolute bottom-0 left-0 right-0 top-[65%] md:top-[68%] lg:top-[75%] z-20 flex flex-col items-center justify-start gap-6 px-6 lg:pt-6 pb-12 lg:pb-0 text-white"
 	>
-		<div class="w-full max-w-6xl flex items-center justify-center gap-4 xl:gap-8">
+		<div class="w-full max-w-6xl flex items-center justify-center gap-4 lg:gap-8">
 			<button
 				on:click={prevPage}
 				disabled={currentPage === 0}
-				class="pagination-btn hidden xl:block"
+				class="pagination-btn hidden lg:block"
 				class:disabled={currentPage === 0}
 			>
 				<div
@@ -471,7 +471,7 @@ function stopScroll() {
 			</button>
 
 			<div class="flex-grow w-full rounded-sm relative">
-				<div class="hidden xl:block min-h-[150px] relative overflow-hidden">
+				<div class="hidden lg:block min-h-[150px] relative overflow-hidden">
 					{#key currentPage}
 						<div
 							class="absolute inset-0 flex items-center justify-center"
@@ -508,7 +508,7 @@ function stopScroll() {
 				</div>
 
 				<div
-					class="xl:hidden px-[2px] pb-[2px] rounded-b-lg bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
+					class="lg:hidden px-[2px] pb-[2px] rounded-b-lg bg-gradient-to-t from-[var(--color-light-gold)] to-[var(--color-off-white)]"
 				>
 					<div
 						bind:this={scrollableContainer}
@@ -533,7 +533,7 @@ function stopScroll() {
 				</div>
 
 				<div
-					class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 flex gap-2 xl:hidden"
+					class="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 flex gap-2 lg:hidden"
 				>
                 <button
                     on:mousedown={() => startScroll('up')}
@@ -601,7 +601,7 @@ function stopScroll() {
 			<button
 				on:click={nextPage}
 				disabled={currentPage === totalPages - 1}
-				class="pagination-btn hidden xl:block"
+				class="pagination-btn hidden lg:block"
 				class:disabled={currentPage === totalPages - 1}
 			>
 				<div

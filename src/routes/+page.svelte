@@ -17,10 +17,17 @@
 <Navbar />
 
 <main class="relative overflow-x-hidden">
-	<div id="hero">
-		<HeroB />
+	<div class="relative">
+		<div id="hero" class="overflow-hidden">
+			<HeroB />
+		</div>
+		<img src="/home/stage-bottom.webp" alt="Stage bottom" 
+			class="absolute -bottom-30 sm:-bottom-20 md:-bottom-40 lg:-bottom-52 xl:-bottom-40 
+					left-1/2 -translate-x-1/2 max-w-none 
+					w-[300%] sm:w-[130%] md:w-[200%] lg:w-[150%] xl:w-[101%] z-[60]" />
 	</div>
-	<div id="ukm">
+
+	<div id="ukm" class="z-10">
 		<UkmSection />
 	</div>
 	<div id="lk">
