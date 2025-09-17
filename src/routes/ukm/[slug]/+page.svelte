@@ -16,6 +16,8 @@
   import { onMount, tick } from "svelte";
   import { goto } from '$app/navigation';
   import { checkUserRegistration } from "$lib/api";
+  import { assetLoadingPromises, loadImage } from '$lib/asset-loader';
+
 
   function goBack() {
     history.length > 1 ? history.back() : goto('/'); 
@@ -96,6 +98,20 @@
       }
     }
     loadingReservation = false;
+
+    if (selectedUkm) {
+      const imageUrls = [
+        bg,
+        getImageUrl(selectedUkm.logo_url),
+        getImageUrl(selectedUkm.poster_url),
+        ...parseImageUrls(selectedUkm.image_urls).map(url => getImageUrl(url)),
+        '/images/ukm/mask.png',
+        '/images/ukm/multi-card.png'
+      ];
+
+      const promises = imageUrls.map(loadImage);
+      assetLoadingPromises.set(promises);
+    }
 
     await tick();
     AOS.init();
