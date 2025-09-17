@@ -345,7 +345,7 @@
     
     </Background>
     <img 
-      class="w-[325px] lg:w-[375px] absolute lg:top-[50%] -bottom-[10%] md:-bottom-[20%] md:-left-[10%] lg:left-0 z-[100] rotate-45 lg:rotate-10" 
+      class="w-[325px] lg:w-[375px] absolute lg:top-[50%] md:-left-[10%] lg:left-0 z-[100] rotate-45 lg:rotate-10" 
       src="/images/ukm/mask.png" 
       alt=""
     />
