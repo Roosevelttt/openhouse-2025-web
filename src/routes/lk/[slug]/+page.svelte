@@ -12,6 +12,7 @@
   import Video from "$lib/components/ukm/Video.svelte";
   import AOS from 'aos';
   import 'aos/dist/aos.css';''
+  import { assetLoadingPromises, loadImage } from '$lib/asset-loader';
 
   interface Lk {
     id: string;
@@ -59,7 +60,24 @@
     history.length > 1 ? history.back() : goto('/'); 
   }
 
-  onMount(() => {
+  onMount(async () => {
+    if (selectedLk) {
+      const imageUrls = [
+        "/background/pink sky v3.webp",
+        "/lk/balloon.webp",
+        "/images/fireworks-1.png",
+        "/images/clouds.png",
+        "/images/fireworks-2.png",
+        "/images/fireworks-3.png",
+        getImageUrl(selectedLk.logo_url),
+        getImageUrl(selectedLk.poster_url),
+        ...parseImageUrls(selectedLk.image_urls).map(url => getImageUrl(url))
+      ];
+
+      const promises = imageUrls.map(loadImage);
+      assetLoadingPromises.set(promises);
+    }
+
     AOS.init();
     if (selectedLk) {
       galleryImages = parseImageUrls(selectedLk.image_urls)
