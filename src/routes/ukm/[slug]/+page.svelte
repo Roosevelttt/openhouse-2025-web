@@ -402,11 +402,6 @@
               <Subtitle text="Click the button below to visit our official website for more information and registration." 
                 className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
             {/if}
-            {#if isRegistrationClosed()}
-              <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-4 w-full">
-                <p class="font-bold">Registration Closed</p>
-              </div>
-            {/if}
             <button 
               on:click={handleRegisterClick}
               class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
@@ -444,11 +439,6 @@
           {:else}
             <Subtitle text="Click the button below to visit our official website for more information and registration." 
               className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
-          {/if}
-          {#if isRegistrationClosed()}
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-4 w-full">
-              <p class="font-bold">Registration Closed</p>
-            </div>
           {/if}
           <button 
             on:click={handleRegisterClick}
