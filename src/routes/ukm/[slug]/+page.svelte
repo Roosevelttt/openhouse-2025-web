@@ -84,6 +84,19 @@
   let hasRegistered = false;
   let loadingReservation = true;
 
+  function isRegistrationClosed(): boolean {
+    // Create date in Asia/Jakarta timezone
+    const now = new Date();
+    const jakartaTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+    const jakartaOffset = 7; 
+    
+    // deadline: September 25, 2025, 00:00 WIB
+    const deadline = new Date(2025, 8, 25, 0, 0, 0); 
+    deadline.setHours(deadline.getHours() - jakartaOffset); 
+    
+    return jakartaTime >= deadline;
+  }
+
   const bg = '/background/table-bg.webp';
 
   onMount(async () => {
@@ -266,9 +279,9 @@
         src="{getImageUrl(selectedUkm?.logo_url) || 'default-logo.png'}"
         alt="LOGO UKM"
         className={`mb-4 ${selectedUkm?.slug === "orkestra" ? "!bg-black" : "bg-white"}`}
-        ref={(el: any) => (logoRef = el)}
+        bind:this={logoRef}
       />
-      <Title text="{selectedUkm?.name}" ref={(el:any) => (titleRef = el)} />
+      <Title text="{selectedUkm?.name}" bind:this={titleRef} />
 
     </div>
 
@@ -389,16 +402,23 @@
               <Subtitle text="Click the button below to visit our official website for more information and registration." 
                 className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
             {/if}
+            {#if isRegistrationClosed()}
+              <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-4 w-full">
+                <p class="font-bold">Registration Closed</p>
+              </div>
+            {/if}
             <button 
               on:click={handleRegisterClick}
               class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                     transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-              disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
+              disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered || isRegistrationClosed()) || loadingReservation}
             >
               {#if loadingReservation}
                 Checking...
               {:else if isUkmWebsite()}
                 Visit Website
+              {:else if isRegistrationClosed()}
+                Registration Closed
               {:else}
                 {hasRegistered
                   ? "Already Registered 🙅‍♂️"
@@ -425,14 +445,21 @@
             <Subtitle text="Click the button below to visit our official website for more information and registration." 
               className="font-extrabold text-xl md:text-2xl lg:text-3xl text-yellow-600 drop-shadow-sm" />
           {/if}
+          {#if isRegistrationClosed()}
+            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-r-lg mb-4 w-full">
+              <p class="font-bold">Registration Closed</p>
+            </div>
+          {/if}
           <button 
             on:click={handleRegisterClick}
             class="btn push relative px-4 py-2 rounded-[8px] font-bold cursor-pointer overflow-hidden transition-all
                   transition-duration-300 text-white bg-[#333] text-centerfont-lexend mt-4 md:px-8 md:py-3 text-lg md:text-xl"
-            disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered) || loadingReservation}
+            disabled={!isUkmWebsite() && (isSlotFull() || hasRegistered || isRegistrationClosed()) || loadingReservation}
           >
             {#if isUkmWebsite()}
               Visit Website
+            {:else if isRegistrationClosed()}
+              Registration Closed
             {:else}
               {hasRegistered? "Already Registered 🙅‍♂️"
                 : isSlotFull()

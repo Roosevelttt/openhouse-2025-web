@@ -28,6 +28,17 @@
   let timerInterval: any = null;
   let formattedTime = '00:00';
 
+  function isRegistrationClosed(): boolean {
+    const now = new Date();
+    const jakartaTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+    const jakartaOffset = 7; 
+    
+    const deadline = new Date(2025, 8, 25, 0, 0, 0); 
+    deadline.setHours(deadline.getHours() - jakartaOffset); 
+    
+    return jakartaTime >= deadline;
+  }
+
   // Get reservation data from URL parameters
   $: reservationParam = $page.url.searchParams.get('reservation');
   
@@ -141,6 +152,29 @@
 
   onMount(async () => {
     try {
+      if (isRegistrationClosed()) {
+        await Swal.fire({
+          icon: 'error',
+          title: 'Registration Closed',
+          html: `
+            <div class="text-center">
+              <p class="text-lg mb-3">Registration for UKM Open House 2025 is now closed.</p>
+            </div>
+          `,
+          confirmButtonText: 'Go to Homepage',
+          confirmButtonColor: '#ea580c',
+          allowOutsideClick: false,
+          customClass: {
+            popup: 'rounded-3xl border-4 border-red-300',
+            title: 'text-red-800 font-bold',
+            confirmButton: 'rounded-full px-6 py-3 font-bold'
+          }
+        });
+        
+        goto('/');
+        return;
+      }
+
       // Get user info (NRP and name) from session
       const userInfo = await getCurrentUserInfo();
       
@@ -630,7 +664,7 @@
       <div class="bg-white/95 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border-4 border-red-400 max-w-lg mx-auto">
         <div class="flex justify-center mb-4">
           <svg class="w-16 h-16 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
           </svg>
         </div>
         <div class="bg-red-50 border-l-4 border-red-500 text-red-800 px-6 py-6 rounded-r-xl mb-6">

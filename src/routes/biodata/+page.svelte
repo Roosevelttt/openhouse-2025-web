@@ -30,8 +30,42 @@
 		phone: ''
 	};
 
+	function isRegistrationClosed(): boolean {
+		const now = new Date();
+		const jakartaTime = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+		const jakartaOffset = 7; 
+		
+		const deadline = new Date(2025, 8, 25, 0, 0, 0);
+		deadline.setHours(deadline.getHours() - jakartaOffset); 
+		
+		return jakartaTime >= deadline;
+	}
+
 	onMount(async () => {
 		try {
+			if (isRegistrationClosed()) {
+				await Swal.fire({
+					icon: 'error',
+					title: 'Registration Closed',
+					html: `
+						<div class="text-center">
+							<p class="text-lg mb-3">Registration for UKM Open House 2025 is now closed.</p>
+						</div>
+					`,
+					confirmButtonText: 'Go to Homepage',
+					confirmButtonColor: '#ea580c',
+					allowOutsideClick: false,
+					customClass: {
+						popup: 'rounded-3xl border-4 border-red-300',
+						title: 'text-red-800 font-bold',
+						confirmButton: 'rounded-full px-6 py-3 font-bold'
+					}
+				});
+				
+				goto('/');
+				return;
+			}
+
 			// Get user info from session
 			const userInfo = await getCurrentUserInfo();
 			if (userInfo) {
@@ -156,6 +190,30 @@
 					setTimeout(async () => {
 						Swal.close();
 						if (ukmSlug) {
+							// Check if registration is closed
+							if (isRegistrationClosed()) {
+								await Swal.fire({
+									icon: 'error',
+									title: 'Registration Closed',
+									html: `
+										<div class="text-center">
+											<p class="text-lg mb-3">Registration for UKM Open House 2025 is now closed.</p>
+										</div>
+									`,
+									confirmButtonText: 'Go to Homepage',
+									confirmButtonColor: '#ea580c',
+									allowOutsideClick: false,
+									customClass: {
+										popup: 'rounded-3xl border-4 border-red-300',
+										title: 'text-red-800 font-bold',
+										confirmButton: 'rounded-full px-6 py-3 font-bold'
+									}
+								});
+								
+								goto('/');
+								return;
+							}
+							
 							try {
 								// Get UKM data to find the ID
 								const ukms = await get('/api/ukms') as any[];
@@ -243,6 +301,30 @@
 	};
 
 	const handleGoToRegistration = async () => {
+		// Check if registration is closed
+		if (isRegistrationClosed()) {
+			await Swal.fire({
+				icon: 'error',
+				title: 'Registration Closed',
+				html: `
+					<div class="text-center">
+						<p class="text-lg mb-3">Registration for UKM Open House 2025 is now closed.</p>
+					</div>
+				`,
+				confirmButtonText: 'Go to Homepage',
+				confirmButtonColor: '#ea580c',
+				allowOutsideClick: false,
+				customClass: {
+					popup: 'rounded-3xl border-4 border-red-300',
+					title: 'text-red-800 font-bold',
+					confirmButton: 'rounded-full px-6 py-3 font-bold'
+				}
+			});
+			
+			goto('/');
+			return;
+		}
+
 		if (ukmSlug) {
 			// This is "Go to Payment" - check slot availability first
 			Swal.fire({
